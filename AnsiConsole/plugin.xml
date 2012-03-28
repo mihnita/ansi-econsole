@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+<extension point="org.eclipse.ui.preferencePages">
+	<page name="Ansi Console" class="mnita.ansiconsole.preferences.AnsiConsolePreferencePage" id="mnita.ansiconsole.preferences.AnsiConsolePreferencePage" />
+</extension>
+
+<extension point="org.eclipse.core.runtime.preferences">
+	<initializer class="mnita.ansiconsole.preferences.AnsiConsolePreferenceInitializer" />
+</extension>
+
+<extension point="org.eclipse.ui.console.consolePageParticipants">
+	<consolePageParticipant class="mnita.ansiconsole.participants.AnsiConsolePageParticipant" id="mnita.ansiconsole.participants.AnsiConsolePageParticipant">
+		<enablement>
+			<instanceof value="org.eclipse.ui.console.IConsole" />
+		</enablement>
+	</consolePageParticipant>
+</extension>
+
+<extension point="org.eclipse.ui.viewActions">
+	<viewContribution id="mnita.ansiconsole.viewConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
+		<action
+			class="mnita.ansiconsole.actions.AnsiConsoleClickIconAction"
+			icon="icons/ansiconsole.gif"
+			disabledIcon="icons/ansiconsole_dis.gif"
+			id="mnita.ansiconsole.AnsiConsoleClickIconAction"
+			label="Enable/disable Ansi Console"
+			style="push"
+			toolbarPath="additions">
+		</action>
+	</viewContribution>
+</extension>
+
+</plugin>

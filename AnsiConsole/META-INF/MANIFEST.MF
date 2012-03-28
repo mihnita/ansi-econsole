@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ansi Console
+Bundle-SymbolicName: net.mihai-nita.ansicon.plugin; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: mnita.ansiconsole.AnsiConsoleActivator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.console
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Mihai Nita

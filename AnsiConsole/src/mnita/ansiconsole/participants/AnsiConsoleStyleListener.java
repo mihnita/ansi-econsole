@@ -89,7 +89,6 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
     private void addRange(List<StyleRange> ranges, int start, int length, Color foreground, boolean isCode) {
         StyleRange range = new StyleRange( start, length, foreground, null );
         lastAttributes.updateRangeStyle(range);
-
         if( isCode ) {
             boolean showEscapeCodes = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
             if( showEscapeCodes )
@@ -97,9 +96,6 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
             else
                 range.metrics = new GlyphMetrics(0, 0, 0);
         }
-        else
-            lastAttributes = currentAttributes.clone();
-
         ranges.add(range);
         lastRangeEnd = lastRangeEnd + range.length;
     }
@@ -108,7 +104,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
     public void lineGetStyle(LineStyleEvent event) {
         if( (event == null) || (event.lineText == null) || (event.lineText.length() == 0) )
             return;
-        
+
         boolean isAnsiconEnabled = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
         if( ! isAnsiconEnabled )
             return;
@@ -142,12 +138,14 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
                 interpretCommand(cmd);
 
             if( lastRangeEnd != start )
-                addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false);
+                addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false );
+            lastAttributes = currentAttributes.clone();
 
-            addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true);
+            addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true );
         }
         if( lastRangeEnd != currentText.length() )
-            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
+            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false );
+        lastAttributes = currentAttributes.clone();
 
         if( !ranges.isEmpty() )
             event.styles = ranges.toArray(new StyleRange[ranges.size()]);

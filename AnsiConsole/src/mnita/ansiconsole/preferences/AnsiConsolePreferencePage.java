@@ -21,13 +21,10 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 "Enabled", getFieldEditorParent()));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
-                "Use &Windows color mapping", getFieldEditorParent()));
+                "Use &Windows color mapping (bold => intense, italic => reverse)", getFieldEditorParent()));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES,
                 "&Show the escape sequences", getFieldEditorParent()));
-
-        addField(new ColorFieldEditor(AnsiConsolePreferenceConstants.PREF_BGCOLOR,
-                "&Background color:", getFieldEditorParent()));
 
          addField(new RadioGroupFieldEditor( AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE,
              "&Color palette", 1, new String[][] {

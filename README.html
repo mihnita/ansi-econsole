@@ -16,9 +16,8 @@
 <p>Ansi Console uses ANSI escape sequences to color the console output. This can be pretty handy when using something like <a href="http://jansi.fusesource.org">jansi</a></p>
 <p>But is also works if you output escape sequences directly from Java. Or from Perl, C++, or Groovy, or any other Eclipse hosted language.</p>
 
-
 <p>
-<img src="AECSample.jpg" />
+<a href="AECSample.jpg"><img width="640" src="AECSample.jpg" /></a>
 </p>
 
 <h2>Installation</h2>
@@ -28,6 +27,72 @@
 http://www.mihai-nita.net/eclipse</p>
 
 <p>You can then select the site in the "Work with" list and continue the installation like with any other plugin.</p>
+
+<h2>Features</h2>
+
+<p>Since this plugin hooks into <code>LineStyleListener</code>, it cannot do anything other than changing the style of the current output.
+So no cursor movements, clear screen, etc.</p>
+
+<p>OK, so what CAN it do, you will ask.</p>
+
+<p>From the <i>“SGR (Select Graphic Rendition) parameters”</i> table at
+<a href="http://en.wikipedia.org/wiki/ANSI_escape_code">http://en.wikipedia.org/wiki/ANSI_escape_code</a>
+it can handle the following subset:</p>
+
+<ul>
+  <li>0 &ndash; Reset / Normal</li>
+  <li>1 &ndash; Bold: treated as intensity under Windows console, user option in this plugin)</li>
+  <li>2 &ndash; Intensity faint: “kind of” supported :-) It resets the intensity to normal.</li>
+  <li>3 &ndash; Italic: on (treated as inverse under Windows console, user option in this plugin)</li>
+  <li>4 &ndash; Underline</li>
+  <li>7 &ndash; Negative</li>
+  <li>8 &ndash; Conceal</li>
+  <li>9 &ndash; Crossed-out</li>
+  <li>21 &ndash; Bold off</li>
+  <li>22 &ndash; Normal color or intensity</li>
+  <li>23 &ndash; Not italic</li>
+  <li>24 &ndash; Underline: None</li>
+  <li>27 &ndash; Image: Positive</li>
+  <li>28 &ndash; Reveal (conceal off)</li>
+  <li>29 &ndash; Not crossed out</li>
+  <li>30-37 &ndash; Set text color</li>
+  <li>38 &ndash; Set xterm-256 text color</li>
+  <li>39 &ndash; Default text color</li>
+  <li>40 &ndash; 47 - Set background color</li>
+  <li>48 &ndash; Set xterm-256 background color</li>
+  <li>49 &ndash; Default background color</li>
+  <li>90-97 &ndash; Set foreground color, high intensity</li>
+  <li>100-107 &ndash; Set background color, high intensity</li>
+</ul>
+
+<p>The reasons for choosing these and not others are the limitations in the Eclipse console (for instance no blink :-), or limitation in the existing OS consoles (what’s the point in supporting something that can’t be used outside Eclipse).</p>
+
+<p>But the final result is reasonable close to what you get in a real console in terms of colors (so no cursor movements, clear console, etc.)</p>
+
+<p>For more functionality I might have to hook some more Eclipse events, or even to come up with my own console. But then I am not sure it can be used by applications in all kind of languages without code changes.
+Considering that this started as a week-end toy project, it does not have such ambitions.
+But if someone can point me to some simple methods that would allow me to implement that without tons of work, or even contribute code, I might take it there :-)</p>
+
+<p>I have also tried to emulate Windows look (optional), with bold rendered as high intensity color, and italic as revere, and other attributes ignored.
+It is debatable how close you can get to the right thing. Probably nobody knows what the ancient ANSI.SYS supported. And at the time the DOS console did not support 256 colors.
+Nowdays the Windows options that I am aware of are <a href="http://jansi.fusesource.org/">jansi</a>, <a href="http://adoxa.hostmyway.net/ansicon/">ansicon</a>, and <a href="http://code.google.com/p/conemu-maximus5">conemu</a>.
+Between these three options, the support is uneven, and inconsistent.<br />
+In the non-Windows world there are also many terminals, also inconsistent, some of them with their own configurable options for how to treat various attributes.
+So I don't plan to try and emulate all the possible terminals.<br />
+But if you notice some glaring differences, let me know and I will try to do something about it.
+</p>
+
+<h2>Note for jansi</h2>
+
+<p>If you use jansi, it might look like the plugin does not work.</p>
+
+<p>That is because <strong>jansi</strong> detects when the standard output is redirected and does not output the escape sequences anymore.<br/>
+So try adding this to your code, before using <strong>jansi</strong>: <code>System.setProperty("jansi.passthrough", "true");</code>
+</p>
+
+<h2>Sources</h2>
+
+<p>On GitHub, at <a href="https://github.com/mihnita/ansi-econsole">https://github.com/mihnita/ansi-econsole</a>.</p>
 
 <h2>License</h2>
 
@@ -40,7 +105,6 @@ distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />
 See the License for the specific language governing permissions and
 limitations under the License.</p>
-
 
 </body>
 </html>

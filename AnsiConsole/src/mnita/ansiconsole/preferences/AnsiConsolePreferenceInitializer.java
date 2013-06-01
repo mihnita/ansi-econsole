@@ -13,7 +13,6 @@ public class AnsiConsolePreferenceInitializer extends AbstractPreferenceInitiali
         IPreferenceStore store = AnsiConsoleActivator.getDefault().getPreferenceStore();
         store.setDefault(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, true);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES, false);
-        store.setDefault(AnsiConsolePreferenceConstants.PREF_BGCOLOR, "255,255,255");
 
         String os = System.getProperty("os.name");
         if (os == null || os.startsWith("Windows"))

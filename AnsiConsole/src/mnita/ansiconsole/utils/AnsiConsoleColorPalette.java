@@ -103,11 +103,34 @@ public class AnsiConsoleColorPalette {
     private static RGB [] palette = paletteXP;
     private static String currentPaletteName = PALETTE_WINXP;
 
-    public static RGB getColor(int index) {
-        if( index < 0 || index > palette.length )
-            return new RGB(0x00,0x00,0x00);
+    static int safe256(int value, int modulo) {
+        int result = value * 256 / modulo;
+        return result < 256 ? result : 255;
+    }
 
-        return palette[index];
+    public static RGB getColor(Integer index) {
+        if (null == index)
+            return null;
+
+        if( index >= 0 && index < palette.length ) // basic, 16 color palette
+            return palette[index];
+
+        if (index >= 16 && index < 232) { // 6x6x6 color matrix
+            int color = index - 16;
+            int blue = color % 6;
+            color = color / 6;
+            int green = color % 6;
+            int red = color / 6;
+
+            return new RGB(safe256(red, 6), safe256(green, 6), safe256(blue, 6));
+        }
+
+        if (index >= 232 && index < 256) { // grayscale
+            int gray = safe256(index - 232, 24);
+            return new RGB(gray, gray, gray);
+        }
+
+        return null;
     }
 
     public static String getPalette() {
@@ -116,15 +139,15 @@ public class AnsiConsoleColorPalette {
 
     public static void setPalette(String paletteName) {
         currentPaletteName = paletteName;
-        if( "paletteVGA".equalsIgnoreCase(paletteName) )
+        if( PALETTE_VGA.equalsIgnoreCase(paletteName) )
             palette = paletteVGA;
-        else if ( "paletteXP".equalsIgnoreCase(paletteName) )
+        else if ( PALETTE_WINXP.equalsIgnoreCase(paletteName) )
             palette = paletteXP;
-        else if ( "paletteIOS".equalsIgnoreCase(paletteName) )
+        else if ( PALETTE_MAC.equalsIgnoreCase(paletteName) )
             palette = paletteMac;
-        else if ( "palettePuTTY".equalsIgnoreCase(paletteName) )
+        else if ( PALETTE_PUTTY.equalsIgnoreCase(paletteName) )
             palette = palettePuTTY;
-        else if ( "paletteXTerm".equalsIgnoreCase(paletteName) )
+        else if ( PALETTE_XTERM.equalsIgnoreCase(paletteName) )
             palette = paletteXTerm;
         else {
             String os = System.getProperty("os.name");

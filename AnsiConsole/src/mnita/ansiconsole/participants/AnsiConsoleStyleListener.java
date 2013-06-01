@@ -1,12 +1,14 @@
 package mnita.ansiconsole.participants;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
+import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 
@@ -17,7 +19,6 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GlyphMetrics;
-import org.eclipse.swt.graphics.RGB;
 
 import static mnita.ansiconsole.utils.AnsiCommands.*;
 
@@ -28,66 +29,69 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
     int lastRangeEnd = 0;
 
-    private static int tryParseInteger(String text) {
-        if( "".equals(text) )
-            return 0;
-
-        try {
-            return Integer.parseInt(text);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
-    private boolean interpretCommand(String cmd) {
+    private boolean interpretCommand(List<Integer> nCommands) {
         boolean result = false;
 
-        int nCmd = tryParseInteger(cmd);
+        Iterator<Integer> iter = nCommands.iterator();
+        while (iter.hasNext()) {
+            int nCmd = iter.next();
+            switch( nCmd ) {
+                case COMMAND_ATTR_RESET:             currentAttributes.reset(); break;
 
-        switch( nCmd ) {
-            case COMMAND_ATTR_RESET:             currentAttributes.reset(); break;
+                case COMMAND_ATTR_INTENSITY_BRIGHT:  currentAttributes.bold = true; break;
+                case COMMAND_ATTR_INTENSITY_FAINT:   currentAttributes.bold = false; break;
+                case COMMAND_ATTR_INTENSITY_NORMAL:  currentAttributes.bold = false; break;
 
-            case COMMAND_ATTR_INTENSITY_BRIGHT:  currentAttributes.bold = true; break;
-            case COMMAND_ATTR_INTENSITY_FAINT:   currentAttributes.bold = false; break;
-            case COMMAND_ATTR_INTENSITY_NORMAL:  currentAttributes.bold = false; break;
+                case COMMAND_ATTR_ITALIC:            currentAttributes.italic = true; break;
+                case COMMAND_ATTR_ITALIC_OFF:        currentAttributes.italic = false; break;
 
-            case COMMAND_ATTR_ITALIC:            currentAttributes.italic = true; break;
-            case COMMAND_ATTR_ITALIC_OFF:        currentAttributes.italic = false; break;
+                case COMMAND_ATTR_UNDERLINE:         currentAttributes.underline = true; break;
+                case COMMAND_ATTR_UNDERLINE_OFF:     currentAttributes.underline = false; break;
 
-            case COMMAND_ATTR_UNDERLINE:         currentAttributes.underline = true; break;
-            case COMMAND_ATTR_UNDERLINE_OFF:     currentAttributes.underline = false; break;
+                case COMMAND_ATTR_CROSSOUT_ON:       currentAttributes.strike = true; break;
+                case COMMAND_ATTR_CROSSOUT_OFF:      currentAttributes.strike = false; break;
 
-            case COMMAND_ATTR_NEGATIVE_ON:       currentAttributes.invert = true; break;
-            case COMMAND_ATTR_NEGATIVE_Off:      currentAttributes.invert = false; break;
+                case COMMAND_ATTR_NEGATIVE_ON:       currentAttributes.invert = true; break;
+                case COMMAND_ATTR_NEGATIVE_OFF:      currentAttributes.invert = false; break;
 
-            case COMMAND_COLOR_FOREGROUND_RESET: currentAttributes.currentFgColor = null; break;
-            case COMMAND_COLOR_BACKGROUND_RESET: currentAttributes.currentBgColor = null; break;
+                case COMMAND_ATTR_CONCEAL_ON:        currentAttributes.conceal = true; break;
+                case COMMAND_ATTR_CONCEAL_OFF:       currentAttributes.conceal = false; break;
 
-            default:
-                if( nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST ) // text color
-                    currentAttributes.currentFgColor = Integer.valueOf(nCmd - COMMAND_COLOR_FOREGROUND_FIRST);
-                else if( nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST ) // background color
-                    currentAttributes.currentBgColor = Integer.valueOf(nCmd - COMMAND_COLOR_BACKGROUND_FIRST);
+                case COMMAND_COLOR_FOREGROUND_RESET: currentAttributes.currentFgColor = null; break;
+                case COMMAND_COLOR_BACKGROUND_RESET: currentAttributes.currentBgColor = null; break;
+
+                case COMMAND_256COLOR_FOREGROUND:
+                case COMMAND_256COLOR_BACKGROUND: // {esc}[48;5;{color}m
+                    int nMustBe5 = iter.hasNext() ? iter.next() : -1;
+                    if (nMustBe5 == 5) { // 256 colors
+                        int color = iter.hasNext() ? iter.next() : -1;
+                        if (color >= 0 && color < 256)
+                            if (nCmd == COMMAND_256COLOR_FOREGROUND)
+                                currentAttributes.currentFgColor = color;
+                            else
+                                currentAttributes.currentBgColor = color;
+                    }
+                    break;
+
+                case -1: /* do nothing */ break;
+
+                default:
+                    if( nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST ) // text color
+                        currentAttributes.currentFgColor = nCmd - COMMAND_COLOR_FOREGROUND_FIRST;
+                    else if( nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST ) // background color
+                        currentAttributes.currentBgColor = nCmd - COMMAND_COLOR_BACKGROUND_FIRST;
+                    else if( nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST ) // text color
+                        currentAttributes.currentFgColor = nCmd - COMMAND_HICOLOR_FOREGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
+                    else if( nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST ) // background color
+                        currentAttributes.currentBgColor = nCmd - COMMAND_HICOLOR_BACKGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
+            }
         }
 
-        return result;
-    }
-
-    private static Color prefGetColor(String id) {
-        Color result = null;
-        String strBgColor = AnsiConsoleActivator.getDefault().getPreferenceStore().getString(id);
-        String[] splitted = strBgColor.split(",");
-        if(splitted != null && splitted.length == 3) {
-            int red = tryParseInteger(splitted[0]);
-            int green = tryParseInteger(splitted[1]);
-            int blue = tryParseInteger(splitted[2]);
-            result = new Color(null, new RGB(red,green,blue));
-        }
         return result;
     }
 
     private void addRange(List<StyleRange> ranges, int start, int length, Color foreground, boolean isCode) {
-        StyleRange range = new StyleRange( start, length, foreground, null );
+        StyleRange range = new StyleRange(start, length, foreground, null);
         lastAttributes.updateRangeStyle(range);
         if( isCode ) {
             boolean showEscapeCodes = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
@@ -116,7 +120,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
         if (event.styles != null && event.styles.length > 0) {
             defStyle = (StyleRange) event.styles[0].clone();
             if (defStyle.background == null)
-                defStyle.background = prefGetColor(AnsiConsolePreferenceConstants.PREF_BGCOLOR);
+                defStyle.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
         }
         else {
             defStyle = new StyleRange(1, lastRangeEnd,
@@ -134,8 +138,10 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
             int end = matcher.end();
 
             String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
+            List<Integer> nCommands = new ArrayList<Integer>();
             for( String cmd : theEscape.split(";") )
-                interpretCommand(cmd);
+                nCommands.add(AnsiConsolePreferenceUtils.tryParseInteger(cmd));
+            interpretCommand(nCommands);
 
             if( lastRangeEnd != start )
                 addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false );

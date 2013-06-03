@@ -9,8 +9,10 @@ import java.util.regex.Pattern;
 import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
-import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
+import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
+
+import static mnita.ansiconsole.utils.AnsiCommands.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.LineStyleEvent;
@@ -19,8 +21,6 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GlyphMetrics;
-
-import static mnita.ansiconsole.utils.AnsiCommands.*;
 
 public class AnsiConsoleStyleListener implements LineStyleListener {
     private AnsiConsoleAttributes lastAttributes = new AnsiConsoleAttributes();
@@ -35,7 +35,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
         Iterator<Integer> iter = nCommands.iterator();
         while (iter.hasNext()) {
             int nCmd = iter.next();
-            switch( nCmd ) {
+            switch (nCmd) {
                 case COMMAND_ATTR_RESET:             currentAttributes.reset(); break;
 
                 case COMMAND_ATTR_INTENSITY_BRIGHT:  currentAttributes.bold = true; break;
@@ -77,16 +77,16 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
                     }
                     break;
 
-                case -1: /* do nothing */ break;
+                case -1: break; // do nothing
 
                 default:
-                    if( nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST ) // text color
+                    if (nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST) // text color
                         currentAttributes.currentFgColor = nCmd - COMMAND_COLOR_FOREGROUND_FIRST;
-                    else if( nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST ) // background color
+                    else if (nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST) // background color
                         currentAttributes.currentBgColor = nCmd - COMMAND_COLOR_BACKGROUND_FIRST;
-                    else if( nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST ) // text color
+                    else if (nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST) // text color
                         currentAttributes.currentFgColor = nCmd - COMMAND_HICOLOR_FOREGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
-                    else if( nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST ) // background color
+                    else if (nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST) // background color
                         currentAttributes.currentBgColor = nCmd - COMMAND_HICOLOR_BACKGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
             }
         }
@@ -97,9 +97,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
     private void addRange(List<StyleRange> ranges, int start, int length, Color foreground, boolean isCode) {
         StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, lastAttributes);
-        if( isCode ) {
+        if (isCode) {
             boolean showEscapeCodes = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
-            if( showEscapeCodes )
+            if (showEscapeCodes)
                 range.font = new Font(null, "Monospaced", 6, SWT.NORMAL);
             else
                 range.metrics = new GlyphMetrics(0, 0, 0);
@@ -110,11 +110,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
-        if( (event == null) || (event.lineText == null) || (event.lineText.length() == 0) )
+        if (event == null || event.lineText == null || event.lineText.length() == 0)
             return;
 
         boolean isAnsiconEnabled = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
-        if( ! isAnsiconEnabled )
+        if (!isAnsiconEnabled)
             return;
 
         String currentPalette = AnsiConsoleActivator.getDefault().getPreferenceStore().getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
@@ -125,8 +125,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
             defStyle = (StyleRange) event.styles[0].clone();
             if (defStyle.background == null)
                 defStyle.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
-        }
-        else {
+        } else {
             defStyle = new StyleRange(1, lastRangeEnd,
                     new Color(null, AnsiConsoleColorPalette.getColor(0)),
                     new Color(null, AnsiConsoleColorPalette.getColor(15)),
@@ -143,21 +142,21 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
             String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
             List<Integer> nCommands = new ArrayList<Integer>();
-            for( String cmd : theEscape.split(";") )
+            for (String cmd : theEscape.split(";"))
                 nCommands.add(AnsiConsolePreferenceUtils.tryParseInteger(cmd));
             interpretCommand(nCommands);
 
-            if( lastRangeEnd != start )
-                addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false );
+            if (lastRangeEnd != start)
+                addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false);
             lastAttributes = currentAttributes.clone();
 
-            addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true );
+            addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true);
         }
-        if( lastRangeEnd != currentText.length() )
-            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false );
+        if (lastRangeEnd != currentText.length())
+            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
         lastAttributes = currentAttributes.clone();
 
-        if( !ranges.isEmpty() )
+        if (!ranges.isEmpty())
             event.styles = ranges.toArray(new StyleRange[ranges.size()]);
     }
 }

@@ -9,8 +9,8 @@ public class AnsiConsoleColorPalette {
     public static final String PALETTE_PUTTY = "palettePuTTY";
     public static final String PALETTE_XTERM = "paletteXTerm";
 
- // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
-    private final static RGB []  paletteVGA = {
+    // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
+    private final static RGB[] paletteVGA = {
         new RGB(  0,   0,   0), // black
         new RGB(170,   0,   0), // red
         new RGB(  0, 170,   0), // green
@@ -28,7 +28,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 85, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB []  paletteXP = {
+    private final static RGB[] paletteXP = {
         new RGB(  0,   0,   0), // black
         new RGB(128,   0,   0), // red
         new RGB(  0, 128,   0), // green
@@ -46,7 +46,7 @@ public class AnsiConsoleColorPalette {
         new RGB(  0, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB []  paletteMac = {
+    private final static RGB[] paletteMac = {
         new RGB(  0,   0,   0), // black
         new RGB(194,  54,  33), // red
         new RGB( 37, 188,  36), // green
@@ -64,7 +64,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 20, 240, 240), // bright cyan
         new RGB(233, 235, 235)  // white
     };
-    private final static RGB []  palettePuTTY = {
+    private final static RGB[] palettePuTTY = {
         new RGB(  0,   0,   0), // black
         new RGB(187,   0,   0), // red
         new RGB(  0, 187,   0), // green
@@ -82,7 +82,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 85, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB []  paletteXTerm = {
+    private final static RGB[] paletteXTerm = {
         new RGB(  0,   0,   0), // black
         new RGB(205,   0,   0), // red
         new RGB(  0, 205,   0), // green
@@ -100,7 +100,7 @@ public class AnsiConsoleColorPalette {
         new RGB(  0, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private static RGB [] palette = paletteXP;
+    private static RGB[]  palette            = paletteXP;
     private static String currentPaletteName = PALETTE_WINXP;
 
     static int safe256(int value, int modulo) {
@@ -112,7 +112,7 @@ public class AnsiConsoleColorPalette {
         if (null == index)
             return null;
 
-        if( index >= 0 && index < palette.length ) // basic, 16 color palette
+        if (index >= 0 && index < palette.length) // basic, 16 color palette
             return palette[index];
 
         if (index >= 16 && index < 232) { // 6x6x6 color matrix
@@ -139,15 +139,15 @@ public class AnsiConsoleColorPalette {
 
     public static void setPalette(String paletteName) {
         currentPaletteName = paletteName;
-        if( PALETTE_VGA.equalsIgnoreCase(paletteName) )
+        if (PALETTE_VGA.equalsIgnoreCase(paletteName))
             palette = paletteVGA;
-        else if ( PALETTE_WINXP.equalsIgnoreCase(paletteName) )
+        else if (PALETTE_WINXP.equalsIgnoreCase(paletteName))
             palette = paletteXP;
-        else if ( PALETTE_MAC.equalsIgnoreCase(paletteName) )
+        else if (PALETTE_MAC.equalsIgnoreCase(paletteName))
             palette = paletteMac;
-        else if ( PALETTE_PUTTY.equalsIgnoreCase(paletteName) )
+        else if (PALETTE_PUTTY.equalsIgnoreCase(paletteName))
             palette = palettePuTTY;
-        else if ( PALETTE_XTERM.equalsIgnoreCase(paletteName) )
+        else if (PALETTE_XTERM.equalsIgnoreCase(paletteName))
             palette = paletteXTerm;
         else {
             String os = System.getProperty("os.name");

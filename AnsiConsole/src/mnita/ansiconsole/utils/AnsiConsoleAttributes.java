@@ -12,11 +12,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsoleAttributes implements Cloneable {
-    public final static int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse 
+    public final static int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
 
     public Integer currentBgColor;
     public Integer currentFgColor;
-    public int underline;
+    public int     underline;
     public boolean bold;
     public boolean italic;
     public boolean invert;
@@ -55,16 +55,16 @@ public class AnsiConsoleAttributes implements Cloneable {
         return result;
     }
 
-    public static Color hiliteRgbColor( Color c ) {
-        if( c == null )
-            return  new Color(null, new RGB(0xff, 0xff, 0xff));
+    public static Color hiliteRgbColor(Color c) {
+        if (c == null)
+            return new Color(null, new RGB(0xff, 0xff, 0xff));
         int red = c.getRed() * 2;
         int green = c.getGreen() * 2;
         int blue = c.getBlue() * 2;
 
-        if( red > 0xff ) red = 0xff;
-        if( green > 0xff ) green = 0xff;
-        if( blue > 0xff ) blue = 0xff;
+        if (red > 0xff)   red = 0xff;
+        if (green > 0xff) green = 0xff;
+        if (blue > 0xff)  blue = 0xff;
 
         return new Color(null, new RGB(red, green, blue)); // here
     }
@@ -74,7 +74,7 @@ public class AnsiConsoleAttributes implements Cloneable {
         AnsiConsoleAttributes tempAttrib = attribute.clone();
         boolean hilite = false;
 
-        if( useWindowsMapping ) {
+        if (useWindowsMapping) {
             if (tempAttrib.bold) {
                 tempAttrib.bold = false; // not supported, rendered as intense, already done that
                 hilite = true;
@@ -116,7 +116,7 @@ public class AnsiConsoleAttributes implements Cloneable {
 
         // These two still mess with the foreground/background colors
         // We need to solve them before we use them for strike/underline/frame colors
-        if( tempAttrib.invert ) {
+        if (tempAttrib.invert) {
             Color tmp = range.background;
             range.background = range.foreground;
             range.foreground = tmp;
@@ -128,10 +128,10 @@ public class AnsiConsoleAttributes implements Cloneable {
         range.font = null;
         range.fontStyle = SWT.NORMAL;
         // Prepare the rest of the attributes
-        if( tempAttrib.bold )
+        if (tempAttrib.bold)
             range.fontStyle |= SWT.BOLD;
 
-        if( tempAttrib.italic )
+        if (tempAttrib.italic)
             range.fontStyle |= SWT.ITALIC;
 
         if (tempAttrib.underline != UNDERLINE_NONE) {

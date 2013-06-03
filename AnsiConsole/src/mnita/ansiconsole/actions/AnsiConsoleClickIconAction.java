@@ -14,15 +14,15 @@ public class AnsiConsoleClickIconAction implements IViewActionDelegate {
     @Override
     public void run(IAction action) {
         boolean isAnsiconEnabled = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
-        isAnsiconEnabled = ! isAnsiconEnabled;
+        isAnsiconEnabled = !isAnsiconEnabled;
         AnsiConsoleActivator.getDefault().getPreferenceStore().setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, isAnsiconEnabled);
 
         String currentImage = action.getImageDescriptor().toString();
         boolean isCurrentIconEnabled = true;
-        if( currentImage.indexOf("ansiconsole.gif") == -1 )
+        if (currentImage.indexOf("ansiconsole.gif") == -1)
             isCurrentIconEnabled = false;
 
-        if( isCurrentIconEnabled ^ isAnsiconEnabled ) { // current status does not match current icon, swap icons
+        if (isCurrentIconEnabled ^ isAnsiconEnabled) { // current status does not match current icon, swap icons
             ImageDescriptor imgDesc = action.getDisabledImageDescriptor();
             action.setDisabledImageDescriptor(action.getImageDescriptor());
             action.setImageDescriptor(imgDesc);

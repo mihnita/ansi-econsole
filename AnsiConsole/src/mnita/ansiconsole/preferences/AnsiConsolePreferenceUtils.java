@@ -8,18 +8,18 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsolePreferenceUtils {
-    private final static String DEBUG_CONSOLE_PLUGIN_ID = "org.eclipse.debug.ui";
+    private final static String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
     private final static String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "0,0,0";
     private final static String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
 
     static Color colorFromStringRgb(String strRgb) {
         Color result = null;
         String[] splitted = strRgb.split(",");
-        if(splitted != null && splitted.length == 3) {
+        if (splitted != null && splitted.length == 3) {
             int red = tryParseInteger(splitted[0]);
             int green = tryParseInteger(splitted[1]);
             int blue = tryParseInteger(splitted[2]);
-            result = new Color(null, new RGB(red,green,blue));
+            result = new Color(null, new RGB(red, green, blue));
         }
         return result;
     }
@@ -44,7 +44,7 @@ public class AnsiConsolePreferenceUtils {
     }
 
     public static int tryParseInteger(String text) {
-        if( "".equals(text) )
+        if ("".equals(text))
             return -1;
 
         try {

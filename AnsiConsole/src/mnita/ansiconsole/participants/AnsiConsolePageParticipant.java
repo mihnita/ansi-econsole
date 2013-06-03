@@ -29,8 +29,8 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
 
     @Override
     public void init(IPageBookViewPage page, IConsole console) {
-        if(page.getControl() instanceof StyledText) {
-            StyledText viewer = (StyledText)(page.getControl());
+        if (page.getControl() instanceof StyledText) {
+            StyledText viewer = (StyledText) page.getControl();
             AnsiConsoleStyleListener myListener = new AnsiConsoleStyleListener();
             viewer.addLineStyleListener(myListener);
             AnsiConsoleActivator.getDefault().addViewer(viewer, this);

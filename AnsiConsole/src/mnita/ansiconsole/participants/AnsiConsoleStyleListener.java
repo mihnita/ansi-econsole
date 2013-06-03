@@ -45,8 +45,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
                 case COMMAND_ATTR_ITALIC:            currentAttributes.italic = true; break;
                 case COMMAND_ATTR_ITALIC_OFF:        currentAttributes.italic = false; break;
 
-                case COMMAND_ATTR_UNDERLINE:         currentAttributes.underline = true; break;
-                case COMMAND_ATTR_UNDERLINE_OFF:     currentAttributes.underline = false; break;
+                case COMMAND_ATTR_UNDERLINE:         currentAttributes.underline = SWT.UNDERLINE_SINGLE; break;
+                case COMMAND_ATTR_UNDERLINE_DOUBLE:  currentAttributes.underline = SWT.UNDERLINE_DOUBLE; break;
+                case COMMAND_ATTR_UNDERLINE_OFF:     currentAttributes.underline = AnsiConsoleAttributes.UNDERLINE_NONE; break;
 
                 case COMMAND_ATTR_CROSSOUT_ON:       currentAttributes.strike = true; break;
                 case COMMAND_ATTR_CROSSOUT_OFF:      currentAttributes.strike = false; break;
@@ -56,6 +57,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
                 case COMMAND_ATTR_CONCEAL_ON:        currentAttributes.conceal = true; break;
                 case COMMAND_ATTR_CONCEAL_OFF:       currentAttributes.conceal = false; break;
+
+                case COMMAND_ATTR_FRAMED_ON:         currentAttributes.framed = true; break;
+                case COMMAND_ATTR_FRAMED_OFF:        currentAttributes.framed = false; break;
 
                 case COMMAND_COLOR_FOREGROUND_RESET: currentAttributes.currentFgColor = null; break;
                 case COMMAND_COLOR_BACKGROUND_RESET: currentAttributes.currentBgColor = null; break;
@@ -92,7 +96,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
     private void addRange(List<StyleRange> ranges, int start, int length, Color foreground, boolean isCode) {
         StyleRange range = new StyleRange(start, length, foreground, null);
-        lastAttributes.updateRangeStyle(range);
+        AnsiConsoleAttributes.updateRangeStyle(range, lastAttributes);
         if( isCode ) {
             boolean showEscapeCodes = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
             if( showEscapeCodes )

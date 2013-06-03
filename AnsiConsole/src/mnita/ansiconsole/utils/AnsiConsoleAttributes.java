@@ -12,14 +12,17 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsoleAttributes implements Cloneable {
+    public final static int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse 
+
     public Integer currentBgColor;
     public Integer currentFgColor;
-    public boolean underline;
+    public int underline;
     public boolean bold;
     public boolean italic;
     public boolean invert;
     public boolean conceal;
     public boolean strike;
+    public boolean framed;
 
     public AnsiConsoleAttributes() {
         reset();
@@ -28,12 +31,13 @@ public class AnsiConsoleAttributes implements Cloneable {
     public void reset() {
         currentBgColor = null;
         currentFgColor = null;
-        underline = false;
+        underline = UNDERLINE_NONE;
         bold = false;
         italic = false;
         invert = false;
         conceal = false;
         strike = false;
+        framed = false;
     }
 
     @Override
@@ -47,6 +51,7 @@ public class AnsiConsoleAttributes implements Cloneable {
         result.invert = invert;
         result.conceal = conceal;
         result.strike = strike;
+        result.framed = framed;
         return result;
     }
 
@@ -64,44 +69,9 @@ public class AnsiConsoleAttributes implements Cloneable {
         return new Color(null, new RGB(red, green, blue)); // here
     }
 
-//    public RGB getBgColor() {
-//        boolean useWindowsMapping = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
-//        if( currentBgColor == null ) { // default background color
-//            Color defaultConsoleBkColor = AnsiConsolePreferenceUtils.getDebugConsoleBkColor();
-//            if (useWindowsMapping && underline)
-//                defaultConsoleBkColor = hiliteColor(defaultConsoleBkColor);
-//            return defaultConsoleBkColor.getRGB();
-//        }
-//
-//        // We do the hilite using the color palette
-//        if( useWindowsMapping && underline && currentBgColor < COMMAND_COLOR_INTENSITY_DELTA)
-//            return AnsiConsoleColorPalette.getColor(currentBgColor + COMMAND_COLOR_INTENSITY_DELTA);
-//        else
-//            return AnsiConsoleColorPalette.getColor(currentBgColor);
-//    }
-//
-//    public RGB getFgColor() {
-//        if( conceal ) // With conceal the text color is the same as the background one
-//            return getBgColor();
-//
-//        boolean useWindowsMapping = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
-//        if( currentFgColor == null ) {
-//            Color defaultConsoleFgColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
-//            if(useWindowsMapping && bold)
-//                defaultConsoleFgColor = hiliteColor(defaultConsoleFgColor);
-//            return defaultConsoleFgColor.getRGB();
-//        }
-//
-//        // We do the hilite using the color palette
-//        if( useWindowsMapping && bold && currentFgColor < COMMAND_COLOR_INTENSITY_DELTA)
-//            return AnsiConsoleColorPalette.getColor(currentFgColor + COMMAND_COLOR_INTENSITY_DELTA);
-//        else
-//            return AnsiConsoleColorPalette.getColor(currentFgColor);
-//    }
-
-    public void updateRangeStyle(StyleRange range) {
+    public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
         boolean useWindowsMapping = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
-        AnsiConsoleAttributes tempAttrib = this.clone();
+        AnsiConsoleAttributes tempAttrib = attribute.clone();
         boolean hilite = false;
 
         if( useWindowsMapping ) {
@@ -113,43 +83,39 @@ public class AnsiConsoleAttributes implements Cloneable {
                 tempAttrib.italic = false;
                 tempAttrib.invert = true;
             }
-            tempAttrib.underline = false; // not supported on Windows
+            tempAttrib.underline = UNDERLINE_NONE; // not supported on Windows
             tempAttrib.strike = false; // not supported on Windows
+            tempAttrib.framed = false; // not supported on Windows
         }
 
         RGB color;
+        // Prepare the foreground color
         if (hilite && tempAttrib.currentFgColor != null && tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA) {
             color = AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA);
             hilite = false;
         }
         else
             color = AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor);
+
         if (color == null)
             range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
         else
             range.foreground = new Color(null, color);
+
         if (hilite) {
             range.foreground = hiliteRgbColor(range.foreground);
             hilite = false;
         }
 
+        // Prepare the background color
         color = AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor);
-        if (color == null) {
+        if (color == null)
             range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
-        }
         else
             range.background = new Color(null, color);
 
-        range.underline = tempAttrib.underline;
-        if( tempAttrib.bold )
-            range.fontStyle |= SWT.BOLD;
-        if( tempAttrib.italic )
-            range.fontStyle |= SWT.ITALIC;
-        if( tempAttrib.strike ) {
-            range.strikeout = true;
-            range.strikeoutColor = range.foreground;
-        }
-
+        // These two still mess with the foreground/background colors
+        // We need to solve them before we use them for strike/underline/frame colors
         if( tempAttrib.invert ) {
             Color tmp = range.background;
             range.background = range.foreground;
@@ -158,5 +124,32 @@ public class AnsiConsoleAttributes implements Cloneable {
 
         if (tempAttrib.conceal)
             range.foreground = range.background;
+
+        range.font = null;
+        range.fontStyle = SWT.NORMAL;
+        // Prepare the rest of the attributes
+        if( tempAttrib.bold )
+            range.fontStyle |= SWT.BOLD;
+
+        if( tempAttrib.italic )
+            range.fontStyle |= SWT.ITALIC;
+
+        if (tempAttrib.underline != UNDERLINE_NONE) {
+            range.underline = true;
+            range.underlineColor = range.foreground;
+            range.underlineStyle = tempAttrib.underline;
+        }
+        else
+            range.underline = false;
+
+        range.strikeout = tempAttrib.strike;
+        range.strikeoutColor = range.foreground;
+
+        if (tempAttrib.framed) {
+            range.borderStyle = SWT.BORDER_SOLID;
+            range.borderColor = range.foreground;
+        }
+        else
+            range.borderStyle = SWT.NONE;
     }
 }

@@ -109,8 +109,9 @@ public class AnsiConsoleAttributes implements Cloneable {
 
         // Prepare the background color
         color = AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor);
-        if (color == null)
-            range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
+        if (color == null) {
+            // range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
+        }
         else
             range.background = new Color(null, color);
 

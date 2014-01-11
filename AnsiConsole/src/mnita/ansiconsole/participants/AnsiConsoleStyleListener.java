@@ -152,11 +152,13 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
             addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true);
         }
-        if (lastRangeEnd != currentText.length())
-            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
-        lastAttributes = currentAttributes.clone();
 
-        if (!ranges.isEmpty())
+        if (!ranges.isEmpty()) {
+            if (lastRangeEnd != currentText.length()) {
+                addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
+            }
+            lastAttributes = currentAttributes.clone();
             event.styles = ranges.toArray(new StyleRange[ranges.size()]);
+        }
     }
 }

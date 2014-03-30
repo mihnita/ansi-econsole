@@ -68,9 +68,12 @@ public class AnsiConsoleAttributes implements Cloneable {
         return new Color(null, new RGB(red, green, blue)); // here
     }
 
+    // This function maps from the current attributes as "described" by escape sequences to real,
+    // Eclipse console specific attributes (resolving color palette, default colors, etc.)
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
         boolean useWindowsMapping = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
         AnsiConsoleAttributes tempAttrib = attribute.clone();
+
         boolean hilite = false;
 
         if (useWindowsMapping) {
@@ -87,43 +90,43 @@ public class AnsiConsoleAttributes implements Cloneable {
             tempAttrib.framed = false; // not supported on Windows
         }
 
-        RGB color;
         // Prepare the foreground color
-        if (hilite && tempAttrib.currentFgColor != null && tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA) {
-            color = AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA);
-            hilite = false;
-        }
-        else
-            color = AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor);
-
-        if (color == null)
-            range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
-        else
-            range.foreground = new Color(null, color);
-
         if (hilite) {
-            range.foreground = hiliteRgbColor(range.foreground);
-            hilite = false;
+            if (tempAttrib.currentFgColor == null) {
+                range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
+                range.foreground = hiliteRgbColor(range.foreground);
+            } else {
+                if (tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA)
+                    range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA));
+                else
+                    range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
+            }
+        } else {
+            if (tempAttrib.currentFgColor != null)
+                range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
         }
 
         // Prepare the background color
-        color = AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor);
-        if (color == null) {
-            // range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
-        }
-        else
-            range.background = new Color(null, color);
+        if (tempAttrib.currentBgColor != null)
+            range.background = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor));
 
         // These two still mess with the foreground/background colors
         // We need to solve them before we use them for strike/underline/frame colors
         if (tempAttrib.invert) {
+            if (range.foreground == null)
+                range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
+            if (range.background == null)
+                range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
             Color tmp = range.background;
             range.background = range.foreground;
             range.foreground = tmp;
         }
 
-        if (tempAttrib.conceal)
+        if (tempAttrib.conceal) {
+            if (range.background == null)
+                range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
             range.foreground = range.background;
+        }
 
         range.font = null;
         range.fontStyle = SWT.NORMAL;

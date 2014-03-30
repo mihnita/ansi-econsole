@@ -11,7 +11,6 @@ import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
-
 import static mnita.ansiconsole.utils.AnsiCommands.*;
 
 import org.eclipse.swt.SWT;
@@ -142,8 +141,13 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
             String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
             List<Integer> nCommands = new ArrayList<Integer>();
-            for (String cmd : theEscape.split(";"))
-                nCommands.add(AnsiConsolePreferenceUtils.tryParseInteger(cmd));
+            for (String cmd : theEscape.split(";")) {
+                int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
+                if (nCmd != -1)
+                    nCommands.add(nCmd);
+            }
+            if (nCommands.isEmpty())
+                nCommands.add(0);
             interpretCommand(nCommands);
 
             if (lastRangeEnd != start)

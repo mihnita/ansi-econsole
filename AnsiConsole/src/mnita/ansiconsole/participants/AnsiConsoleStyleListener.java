@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
@@ -97,7 +96,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
         StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, lastAttributes);
         if (isCode) {
-            boolean showEscapeCodes = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
+            boolean showEscapeCodes = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
             if (showEscapeCodes)
                 range.font = new Font(null, "Monospaced", 6, SWT.NORMAL);
             else
@@ -112,11 +111,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
         if (event == null || event.lineText == null || event.lineText.length() == 0)
             return;
 
-        boolean isAnsiconEnabled = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+        boolean isAnsiconEnabled = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
         if (!isAnsiconEnabled)
             return;
 
-        String currentPalette = AnsiConsoleActivator.getDefault().getPreferenceStore().getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
+        String currentPalette = AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
         AnsiConsoleColorPalette.setPalette(currentPalette);
         StyleRange defStyle;
 

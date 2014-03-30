@@ -24,6 +24,14 @@ public class AnsiConsolePreferenceUtils {
         return result;
     }
 
+    public static boolean getBoolean(String name) {
+        return AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(name);
+    }
+
+    public static String getString(String name) {
+        return AnsiConsoleActivator.getDefault().getPreferenceStore().getString(name);
+    }
+
     public static Color prefGetColor(String id) {
         String strColor = AnsiConsoleActivator.getDefault().getPreferenceStore().getString(id);
         return colorFromStringRgb(strColor);
@@ -52,5 +60,9 @@ public class AnsiConsolePreferenceUtils {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    public static void setValue(String name, boolean value) {
+        AnsiConsoleActivator.getDefault().getPreferenceStore().setValue(name, value);
     }
 }

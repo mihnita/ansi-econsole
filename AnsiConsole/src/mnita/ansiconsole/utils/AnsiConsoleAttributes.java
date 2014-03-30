@@ -2,7 +2,6 @@ package mnita.ansiconsole.utils;
 
 import static mnita.ansiconsole.utils.AnsiCommands.*;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
@@ -70,7 +69,7 @@ public class AnsiConsoleAttributes implements Cloneable {
     }
 
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
-        boolean useWindowsMapping = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
+        boolean useWindowsMapping = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
         AnsiConsoleAttributes tempAttrib = attribute.clone();
         boolean hilite = false;
 

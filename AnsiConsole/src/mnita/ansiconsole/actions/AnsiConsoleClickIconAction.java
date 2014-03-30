@@ -1,7 +1,7 @@
 package mnita.ansiconsole.actions;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
+import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -13,9 +13,9 @@ public class AnsiConsoleClickIconAction implements IViewActionDelegate {
 
     @Override
     public void run(IAction action) {
-        boolean isAnsiconEnabled = AnsiConsoleActivator.getDefault().getPreferenceStore().getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+        boolean isAnsiconEnabled = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
         isAnsiconEnabled = !isAnsiconEnabled;
-        AnsiConsoleActivator.getDefault().getPreferenceStore().setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, isAnsiconEnabled);
+        AnsiConsolePreferenceUtils.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, isAnsiconEnabled);
 
         String currentImage = action.getImageDescriptor().toString();
         boolean isCurrentIconEnabled = true;

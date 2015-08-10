@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.GlyphMetrics;
 public class AnsiConsoleStyleListener implements LineStyleListener {
     private AnsiConsoleAttributes lastAttributes = new AnsiConsoleAttributes();
     private AnsiConsoleAttributes currentAttributes = new AnsiConsoleAttributes();
-    private final static Pattern pattern = Pattern.compile("\\x1b\\[[^\\x40-\\x7e]*.");
+    private final static Pattern pattern = Pattern.compile("\u001b\\[[\\d;]*[A-HJKSTfimnsu]");
     private final static char ESCAPE_SGR = 'm';
 
     int lastRangeEnd = 0;
@@ -141,18 +141,17 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
             String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
             char code = currentText.charAt(matcher.end() - 1);
-            
             if (code == ESCAPE_SGR) {
-            	// Select Graphic Rendition (SGR) escape sequence
-		        List<Integer> nCommands = new ArrayList<Integer>();
-		        for (String cmd : theEscape.split(";")) {
-		            int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
-		            if (nCmd != -1)
-		                nCommands.add(nCmd);
-		        }
-		        if (nCommands.isEmpty())
-		            nCommands.add(0);
-		        interpretCommand(nCommands);
+                // Select Graphic Rendition (SGR) escape sequence
+                List<Integer> nCommands = new ArrayList<Integer>();
+                for (String cmd : theEscape.split(";")) {
+                    int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
+                    if (nCmd != -1)
+                        nCommands.add(nCmd);
+                }
+                if (nCommands.isEmpty())
+                    nCommands.add(0);
+                interpretCommand(nCommands);
             }
 
             if (lastRangeEnd != start)

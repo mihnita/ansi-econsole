@@ -10,6 +10,8 @@ Quick install:
 
 Detailed info and screen-shots at <a href="http://www.mihai-nita.net/java">http://www.mihai-nita.net/java</a>.
 
+This plugin is included in [Spring Tools Suite](https://spring.io/tools/sts) since 3.7.2
+
 
 <a href="http://with-eclipse.github.io/" target="_blank">
 <img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-0.jpg" /></a>

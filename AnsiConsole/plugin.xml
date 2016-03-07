@@ -32,4 +32,17 @@
 	</viewContribution>
 </extension>
 
+<extension point="org.eclipse.ui.viewActions">
+	<viewContribution id="mnita.ansiconsole.copyPlainTextConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
+		<action
+			class="mnita.ansiconsole.actions.AnsiConsoleCopyIconAction"
+			icon="icons/ansiconsolecopy.gif"
+			id="mnita.ansiconsole.AnsiConsoleCopyIconAction"
+			label="Copy plain text"
+			style="push"
+			toolbarPath="additions">
+		</action>
+	</viewContribution>
+</extension>
+
 </plugin>

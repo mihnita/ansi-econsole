@@ -2,7 +2,7 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.3.1.qualifier"
+      version="1.3.2.qualifier"
       provider-name="Mihai Nita">
 
    <description>
@@ -12,7 +12,7 @@ But is should also work from Perl, C++, or Groovy, or any other Eclipse hosted l
    </description>
 
    <copyright url="http://www.mihai-nita.net">
-      Copyright 2012-2014 Mihai Nita
+      Copyright 2012-2016 Mihai Nita
    </copyright>
 
    <license url="http://www.apache.org/licenses/LICENSE-2.0">
@@ -44,7 +44,7 @@ limitations under the License.
          id="net.mihai-nita.ansicon.plugin"
          download-size="17"
          install-size="16"
-         version="1.3.1.qualifier"
+         version="1.3.2.qualifier"
          unpack="false"/>
 
 </feature>

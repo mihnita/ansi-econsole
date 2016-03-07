@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mnita.ansiconsole.AnsiConsoleUtils;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
@@ -23,7 +24,7 @@ import org.eclipse.swt.graphics.GlyphMetrics;
 public class AnsiConsoleStyleListener implements LineStyleListener {
     private AnsiConsoleAttributes lastAttributes = new AnsiConsoleAttributes();
     private AnsiConsoleAttributes currentAttributes = new AnsiConsoleAttributes();
-    private final static Pattern pattern = Pattern.compile("\u001b\\[[\\d;]*[A-HJKSTfimnsu]");
+    private final static Pattern pattern = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
     private final static char ESCAPE_SGR = 'm';
 
     int lastRangeEnd = 0;

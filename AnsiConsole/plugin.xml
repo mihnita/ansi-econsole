@@ -38,7 +38,7 @@
 			class="mnita.ansiconsole.actions.AnsiConsoleCopyIconAction"
 			icon="icons/ansiconsolecopy.gif"
 			id="mnita.ansiconsole.AnsiConsoleCopyIconAction"
-			label="Copy plain text"
+			label="Copy text with escapes"
 			style="push"
 			toolbarPath="additions">
 		</action>

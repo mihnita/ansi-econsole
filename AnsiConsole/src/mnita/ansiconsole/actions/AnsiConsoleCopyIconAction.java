@@ -1,11 +1,5 @@
 package mnita.ansiconsole.actions;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.custom.StyledText;
@@ -15,48 +9,31 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.PageBookView;
 
-import mnita.ansiconsole.AnsiConsoleUtils;
+import mnita.ansiconsole.utils.AnsiClipboardUtils;
 
-public class AnsiConsoleCopyIconAction implements IViewActionDelegate, ClipboardOwner {
+public class AnsiConsoleCopyIconAction implements IViewActionDelegate {
     PageBookView consoleView = null;
 
     @Override
     public void run(IAction action) {
-        String text = "";
-
         IPage currentPage = (consoleView == null) ? null : consoleView.getCurrentPage();
         if (currentPage != null) {
             Control control = currentPage.getControl();
             if (control instanceof StyledText) {
-                StyledText styledText = (StyledText) control;
-                text = styledText.getSelectionText();
-                if (text.isEmpty()) {
-                    text = styledText.getText();
-                }
-                text = text.replaceAll(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX, "");        
+                AnsiClipboardUtils.textToClipboard((StyledText) control, false);
             }
         }
-
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection stringSelection = new StringSelection(text);
-        clipboard.setContents(stringSelection, new AnsiConsoleCopyIconAction());
     }
 
     @Override
     public void init(IViewPart view) {
-        System.out.println("init(IViewPart):" + view.getClass().getName());
         if (view instanceof PageBookView) {
-          consoleView = (PageBookView) view;
+            consoleView = (PageBookView) view;
         }
     }
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        // Nothing to do, but we are forced to implement it for ClipboardOwner
-    }
-
-    @Override
-    public void lostOwnership(Clipboard clipboard, Transferable transferable) {
-        // Nothing to do, but we are forced to implement it for ClipboardOwner
+        // Nothing to do, but we are forced to implement it for IViewActionDelegate
     }
 }

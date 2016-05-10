@@ -43,5 +43,6 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 
     @Override
     public void init(IWorkbench workbench) {
+      // Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
     }
 }

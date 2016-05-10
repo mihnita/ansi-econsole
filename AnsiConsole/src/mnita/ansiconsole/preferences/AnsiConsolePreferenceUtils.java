@@ -57,7 +57,7 @@ public class AnsiConsolePreferenceUtils {
 
         try {
             return Integer.parseInt(text);
-        } catch (NumberFormatException e) {
+        } catch (@SuppressWarnings("unused") NumberFormatException e) {
             return -1;
         }
     }

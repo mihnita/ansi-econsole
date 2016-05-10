@@ -31,10 +31,12 @@ public class AnsiConsoleClickIconAction implements IViewActionDelegate {
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        // Nothing to do, but we are forced to implement it for IViewActionDelegate
     }
 
     @Override
     public void init(IViewPart view) {
+        // Nothing to do, but we are forced to implement it for IViewActionDelegate
     }
 
 }

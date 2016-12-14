@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Mihai&apos;s Eclipse plugins" url="http://www.mihai-nita.net/eclipse">
+      Hosting my Eclipse plugins.
+   </description>
+   <feature url="features/net.mihai-nita.ansicon_1.3.3.201605090119.jar" id="net.mihai-nita.ansicon" version="1.3.3.201605090119">
+      <category name="ansicon"/>
+   </feature>
+   <feature url="features/net.mihai-nita.externalfilter_1.0.1.201508091828.jar" id="net.mihai-nita.externalfilter" version="1.0.1.201508091828">
+      <category name="externalfilter"/>
+   </feature>
+   <category-def name="ansicon" label="Ansi Console"/>
+   <category-def name="externalfilter" label="External Filter"/>
+</site>

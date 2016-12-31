@@ -108,6 +108,15 @@ public class AnsiConsoleColorPalette {
         return value >= 0 && value < PALETTE_SIZE;
     }
 
+    static int TRUE_RGB_FLAG = 0x10000000; // Representing true RGB colors as 0x10RRGGBB
+
+    public static int hackRgb(int r, int g, int b) {
+        if (!isValidIndex(r)) return -1;
+        if (!isValidIndex(g)) return -1;
+        if (!isValidIndex(b)) return -1;
+        return TRUE_RGB_FLAG | r << 16 | g << 8 | b;
+    }
+
     static int safe256(int value, int modulo) {
         int result = value * PALETTE_SIZE / modulo;
         return result < PALETTE_SIZE ? result : PALETTE_SIZE - 1;
@@ -116,6 +125,13 @@ public class AnsiConsoleColorPalette {
     public static RGB getColor(Integer index) {
         if (null == index)
             return null;
+
+        if (index >= TRUE_RGB_FLAG) {
+            int red = index >> 16 & 0xff;
+            int green = index >> 8 & 0xff;
+            int blue = index & 0xff;
+            return new RGB(red, green, blue);
+        }
 
         if (index >= 0 && index < palette.length) // basic, 16 color palette
             return palette[index];

@@ -21,7 +21,7 @@ public class AnsiCommands {
     public static final int COMMAND_ATTR_CONCEAL_OFF         =  28; // Reveal (conceal off)
     public static final int COMMAND_ATTR_CROSSOUT_OFF        =  29; // Not crossed out
 
-    // Extended colors. Next arguments are 5;<index_0_255>
+    // Extended colors. Next arguments are 5;<index_0_255> or 2;<red_0_255>;<green_0_255>;<blue_0_255>
     public static final int COMMAND_HICOLOR_FOREGROUND       =  38; // Set text color
     public static final int COMMAND_HICOLOR_BACKGROUND       =  48; // Set background color
 

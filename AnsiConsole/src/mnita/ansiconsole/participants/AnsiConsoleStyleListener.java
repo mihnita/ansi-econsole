@@ -66,14 +66,23 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
                 case COMMAND_HICOLOR_FOREGROUND:
                 case COMMAND_HICOLOR_BACKGROUND: // {esc}[48;5;{color}m
-                    int nMustBe5 = iter.hasNext() ? iter.next() : -1;
-                    if (nMustBe5 == 5) { // 256 colors
-                        int color = iter.hasNext() ? iter.next() : -1;
-                        if (AnsiConsoleColorPalette.isValidIndex(color))
-                            if (nCmd == COMMAND_HICOLOR_FOREGROUND)
-                                currentAttributes.currentFgColor = color;
-                            else
-                                currentAttributes.currentBgColor = color;
+                    int color = -1;
+                    int nMustBe2or5 = iter.hasNext() ? iter.next() : -1;
+                    if (nMustBe2or5 == 5) { // 256 colors
+                        color = iter.hasNext() ? iter.next() : -1;
+                        if (!AnsiConsoleColorPalette.isValidIndex(color))
+                            color = -1;
+                    } else if (nMustBe2or5 == 2) { // rgb colors
+                        int r = iter.hasNext() ? iter.next() : -1;
+                        int g = iter.hasNext() ? iter.next() : -1;
+                        int b = iter.hasNext() ? iter.next() : -1;
+                        color = AnsiConsoleColorPalette.hackRgb(r, g, b);
+                    }
+                    if (color != -1) {
+                        if (nCmd == COMMAND_HICOLOR_FOREGROUND)
+                            currentAttributes.currentFgColor = color;
+                        else
+                            currentAttributes.currentBgColor = color;
                     }
                     break;
 

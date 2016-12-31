@@ -21,8 +21,9 @@ public class AnsiCommands {
     public static final int COMMAND_ATTR_CONCEAL_OFF         =  28; // Reveal (conceal off)
     public static final int COMMAND_ATTR_CROSSOUT_OFF        =  29; // Not crossed out
 
-    public static final int COMMAND_256COLOR_FOREGROUND      =  38; // Set xterm-256 text color (next arguments are 5;<index_0_255>)
-    public static final int COMMAND_256COLOR_BACKGROUND      =  48; // Set xterm-256 background color (next arguments are 5;<index_0_255>)
+    // Extended colors. Next arguments are 5;<index_0_255>
+    public static final int COMMAND_HICOLOR_FOREGROUND       =  38; // Set text color
+    public static final int COMMAND_HICOLOR_BACKGROUND       =  48; // Set background color
 
     public static final int COMMAND_COLOR_FOREGROUND_RESET   =  39; // Default text color
     public static final int COMMAND_COLOR_BACKGROUND_RESET   =  49; // Default background color

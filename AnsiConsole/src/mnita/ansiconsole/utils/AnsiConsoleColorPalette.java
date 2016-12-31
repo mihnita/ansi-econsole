@@ -8,6 +8,7 @@ public class AnsiConsoleColorPalette {
     public static final String PALETTE_MAC   = "paletteMac";
     public static final String PALETTE_PUTTY = "palettePuTTY";
     public static final String PALETTE_XTERM = "paletteXTerm";
+    public static final int PALETTE_SIZE = 256;
 
     // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
     private final static RGB[] paletteVGA = {
@@ -103,9 +104,13 @@ public class AnsiConsoleColorPalette {
     private static RGB[]  palette            = paletteXP;
     private static String currentPaletteName = PALETTE_WINXP;
 
+    public static boolean isValidIndex(int value) {
+        return value >= 0 && value < PALETTE_SIZE;
+    }
+
     static int safe256(int value, int modulo) {
-        int result = value * 256 / modulo;
-        return result < 256 ? result : 255;
+        int result = value * PALETTE_SIZE / modulo;
+        return result < PALETTE_SIZE ? result : PALETTE_SIZE - 1;
     }
 
     public static RGB getColor(Integer index) {
@@ -125,7 +130,7 @@ public class AnsiConsoleColorPalette {
             return new RGB(safe256(red, 6), safe256(green, 6), safe256(blue, 6));
         }
 
-        if (index >= 232 && index < 256) { // grayscale
+        if (index >= 232 && index < PALETTE_SIZE) { // grayscale
             int gray = safe256(index - 232, 24);
             return new RGB(gray, gray, gray);
         }

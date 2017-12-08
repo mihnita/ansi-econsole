@@ -126,6 +126,13 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
         if (!isAnsiconEnabled)
             return;
 
+        String currentText = event.lineText;
+        Matcher matcher = pattern.matcher(currentText);
+        if (!matcher.find()) {
+            // Return immediately if the pattern is not found.
+            return;
+        }
+
         String currentPalette = AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
         AnsiConsoleColorPalette.setPalette(currentPalette);
         StyleRange defStyle;
@@ -143,9 +150,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
         lastRangeEnd = 0;
         List<StyleRange> ranges = new ArrayList<StyleRange>();
-        String currentText = event.lineText;
-        Matcher matcher = pattern.matcher(currentText);
-        while (matcher.find()) {
+
+        do {
             int start = matcher.start();
             int end = matcher.end();
 
@@ -169,7 +175,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
             lastAttributes = currentAttributes.clone();
 
             addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true);
-        }
+        } while (matcher.find());
+
         if (lastRangeEnd != currentText.length())
             addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
         lastAttributes = currentAttributes.clone();

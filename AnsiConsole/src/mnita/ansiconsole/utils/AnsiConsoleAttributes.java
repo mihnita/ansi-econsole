@@ -9,10 +9,10 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-public class AnsiConsoleAttributes implements Cloneable {
-    public final static int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
+public class AnsiConsoleAttributes {
+    public static final int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
 
-    private static boolean USE_WINDOWS_MAPPING = AnsiConsolePreferenceUtils.useWindowsMapping();
+    private static final boolean USE_WINDOWS_MAPPING = AnsiConsolePreferenceUtils.useWindowsMapping();
 
     public Integer currentBgColor;
     public Integer currentFgColor;
@@ -40,18 +40,19 @@ public class AnsiConsoleAttributes implements Cloneable {
         framed = false;
     }
 
-    @Override
-    public AnsiConsoleAttributes clone() {
+    public static AnsiConsoleAttributes from(AnsiConsoleAttributes other) {
         AnsiConsoleAttributes result = new AnsiConsoleAttributes();
-        result.currentBgColor = currentBgColor;
-        result.currentFgColor = currentFgColor;
-        result.underline = underline;
-        result.bold = bold;
-        result.italic = italic;
-        result.invert = invert;
-        result.conceal = conceal;
-        result.strike = strike;
-        result.framed = framed;
+        if (other != null) {
+	        result.currentBgColor = other.currentBgColor;
+	        result.currentFgColor = other.currentFgColor;
+	        result.underline = other.underline;
+	        result.bold = other.bold;
+	        result.italic = other.italic;
+	        result.invert = other.invert;
+	        result.conceal = other.conceal;
+	        result.strike = other.strike;
+	        result.framed = other.framed;
+        }
         return result;
     }
 
@@ -87,7 +88,7 @@ public class AnsiConsoleAttributes implements Cloneable {
     // This function maps from the current attributes as "described" by escape sequences to real,
     // Eclipse console specific attributes (resolving color palette, default colors, etc.)
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
-        AnsiConsoleAttributes tempAttrib = attribute.clone();
+        AnsiConsoleAttributes tempAttrib = AnsiConsoleAttributes.from(attribute);
 
         boolean hilite = false;
 

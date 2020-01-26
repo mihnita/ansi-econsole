@@ -80,7 +80,7 @@ public class AnsiPosition extends Position {
 	        if (nCommands.isEmpty())
 	            nCommands.add(0);
 	        interpretCommand(nCommands);
-	        return current.clone();
+	        return AnsiConsoleAttributes.from(current);
 	    }
 	    return null;
 	}

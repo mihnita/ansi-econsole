@@ -32,19 +32,18 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private final boolean SHOW_ESCAPE_CODES = AnsiConsolePreferenceUtils.showAnsiEscapes();
     private final Color DEF_FOREGROUND_COLOR = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
     private final Color HYPERLINK_COLOR = AnsiConsolePreferenceUtils.getHyperlinkColor();
+    private final Color DEF_ERROR_COLOR = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
 
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
-	{
-		AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
-	}
-
     private final IDocument document;
+
     private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes(); 
 
     public AnsiConsoleStyleListener(IDocument document) {
     	this.document = document;
     	this.document.addPositionCategory(AnsiPosition.POSITION_NAME);
     	this.document.addPositionUpdater(this);
+    	AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
 	}
 
 	private void addRange(List<StyleRange> ranges, int start, int length, AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
@@ -74,6 +73,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     	int eventOffset = event.lineOffset;
     	int eventLength = event.lineText.length();
+    	if (event.styles == null) { // It looks that in some cases this comes in as null 
+    		event.styles = new StyleRange[0];
+    	}
 
     	Position[] positions;
     	try {
@@ -86,6 +88,14 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     		return;
 
     	Color defForegroudColor = DEF_FOREGROUND_COLOR;
+    	if (AnsiConsolePreferenceUtils.tryPreservingStdErrColor()) {
+			for (StyleRange range : event.styles) {
+				if (DEF_ERROR_COLOR.equals(range.foreground)) {
+					defForegroudColor = DEF_ERROR_COLOR;
+					break;
+				}
+			}
+    	}
 
     	List<StyleRange> ranges = new ArrayList<StyleRange>();
     	AnsiConsoleAttributes prevAttr = lastVisibleAttribute;
@@ -107,6 +117,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     	addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, defForegroudColor, false);
 
     	if (!ranges.isEmpty()) {
+    		// Copy the links that might already exist
     		for (StyleRange range : event.styles) {
     			if (HYPERLINK_COLOR.equals(range.foreground))
     				ranges.add(range);

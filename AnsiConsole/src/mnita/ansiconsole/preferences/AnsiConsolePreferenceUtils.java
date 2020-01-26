@@ -19,9 +19,12 @@ public class AnsiConsolePreferenceUtils {
     private static final String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
+    private static final String DEBUG_CONSOLE_FALLBACK_ERRCOLOR = "255,0,0";
     private static final String DEBUG_CONSOLE_FALLBACK_LINK_COLOR = "111,197,238";
 
-    static Color colorFromStringRgb(String strRgb) {
+    private AnsiConsolePreferenceUtils() { /* Utility class, should not be instantiated */ }
+
+    private static Color colorFromStringRgb(String strRgb) {
         Color result = null;
         String[] splitted = strRgb.split(",");
         if (splitted != null && splitted.length == 3) {
@@ -39,7 +42,7 @@ public class AnsiConsolePreferenceUtils {
 
         try {
             return Integer.parseInt(text);
-        } catch (@SuppressWarnings("unused") NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
@@ -61,7 +64,7 @@ public class AnsiConsolePreferenceUtils {
         AnsiConsoleActivator.getDefault().getPreferenceStore().setValue(name, value);
     }
 
-    static Color debugConsoleBgColor = null;
+    private static Color debugConsoleBgColor = null;
     public static Color getDebugConsoleBgColor() {
     	if (debugConsoleBgColor == null) {
 	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
@@ -71,7 +74,7 @@ public class AnsiConsolePreferenceUtils {
         return debugConsoleBgColor;
     }
 
-    static Color debugConsoleFgColor = null;
+    private static Color debugConsoleFgColor = null;
     public static Color getDebugConsoleFgColor() {
     	if (debugConsoleFgColor == null) {
 	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
@@ -81,7 +84,17 @@ public class AnsiConsolePreferenceUtils {
         return debugConsoleFgColor;
     }
 
-    static Color hyperlinkColor = null;
+    private static Color debugConsoleErrorColor = null;
+    public static Color getDebugConsoleErrorColor() {
+    	if (debugConsoleErrorColor == null) {
+	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+	        		"org.eclipse.debug.ui.errorColor", DEBUG_CONSOLE_FALLBACK_ERRCOLOR, null);
+	        debugConsoleErrorColor = colorFromStringRgb(value);
+    	}
+        return debugConsoleErrorColor;
+    }
+
+    private static Color hyperlinkColor = null;
     public static Color getHyperlinkColor() {
     	if (hyperlinkColor == null) {
 	        String value = Platform.getPreferencesService().getString("org.eclipse.ui.workbench",
@@ -112,5 +125,9 @@ public class AnsiConsolePreferenceUtils {
 
     public static boolean showAnsiEscapes() {
     	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
+    }
+
+    public static boolean tryPreservingStdErrColor() {
+        return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR);
     }
 }

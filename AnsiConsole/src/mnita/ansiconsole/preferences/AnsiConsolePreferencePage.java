@@ -29,6 +29,9 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES,
                 "&Show the escape sequences", getFieldEditorParent()));
 
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
+                "&Try using the standard error color setting for stderr output", getFieldEditorParent()));
+
         addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE,
                 "&Color palette", 1, new String[][] {
                     { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },

@@ -7,5 +7,5 @@ public class AnsiConsolePreferenceConstants {
     public static final String PREF_COLOR_PALETTE        = "choiceColorPalette";
     public static final String PREF_KEEP_STDERR_COLOR    = "booleanKeepStderrColor";
 
-	private AnsiConsolePreferenceConstants() { /* Utility class, should not be instantiated */ }
+    private AnsiConsolePreferenceConstants() { /* Utility class, should not be instantiated */ }
 }

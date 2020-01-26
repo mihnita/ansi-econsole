@@ -41,7 +41,7 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
             StyledText viewer = (StyledText) page.getControl();
             IDocument document = getDocument(viewer);
             if (document == null)
-            	return;
+                return;
             AnsiConsoleStyleListener myListener = new AnsiConsoleStyleListener(document);
             viewer.addLineStyleListener(myListener);
             AnsiConsoleActivator.getDefault().addViewer(viewer, this);
@@ -54,12 +54,12 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
     // Find the document associated with the viewer
     private static IDocument getDocument(StyledText viewer) {
         for (Listener listener : viewer.getListeners(ST.LineGetStyle)) {
-        	if (listener instanceof TypedListener) {
-        		Object evenListener = ((TypedListener) listener).getEventListener();
-	        	if (evenListener instanceof TextConsoleViewer) {
-	        		return ((TextConsoleViewer) evenListener).getDocument();
-	        	}
-        	}
+            if (listener instanceof TypedListener) {
+                Object evenListener = ((TypedListener) listener).getEventListener();
+                if (evenListener instanceof TextConsoleViewer) {
+                    return ((TextConsoleViewer) evenListener).getDocument();
+                }
+            }
         }
         return null;
     }

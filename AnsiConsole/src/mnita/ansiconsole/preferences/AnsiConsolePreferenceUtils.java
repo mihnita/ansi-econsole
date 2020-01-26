@@ -8,14 +8,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsolePreferenceUtils {
-	/* File config here:
-	 *   <workspace>\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.debug.ui.prefs
-	 * Example:
-	 *   org.eclipse.debug.ui.consoleBackground=53,53,53
-	 *   org.eclipse.debug.ui.errorColor=225,30,70
-	 *   org.eclipse.debug.ui.inColor=192,192,192
-	 *   org.eclipse.debug.ui.outColor=192,192,192
-	 */
+    /* File config here:
+     *   <workspace>\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.debug.ui.prefs
+     * Example:
+     *   org.eclipse.debug.ui.consoleBackground=53,53,53
+     *   org.eclipse.debug.ui.errorColor=225,30,70
+     *   org.eclipse.debug.ui.inColor=192,192,192
+     *   org.eclipse.debug.ui.outColor=192,192,192
+     */
     private static final String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
@@ -66,41 +66,41 @@ public class AnsiConsolePreferenceUtils {
 
     private static Color debugConsoleBgColor = null;
     public static Color getDebugConsoleBgColor() {
-    	if (debugConsoleBgColor == null) {
-	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
-	        		"org.eclipse.debug.ui.consoleBackground", DEBUG_CONSOLE_FALLBACK_BKCOLOR, null);
-	        debugConsoleBgColor = colorFromStringRgb(value);
-    	}
+        if (debugConsoleBgColor == null) {
+            String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+                    "org.eclipse.debug.ui.consoleBackground", DEBUG_CONSOLE_FALLBACK_BKCOLOR, null);
+            debugConsoleBgColor = colorFromStringRgb(value);
+        }
         return debugConsoleBgColor;
     }
 
     private static Color debugConsoleFgColor = null;
     public static Color getDebugConsoleFgColor() {
-    	if (debugConsoleFgColor == null) {
-	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
-	        		"org.eclipse.debug.ui.outColor", DEBUG_CONSOLE_FALLBACK_FGCOLOR, null);
-	        debugConsoleFgColor = colorFromStringRgb(value);
-    	}
+        if (debugConsoleFgColor == null) {
+            String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+                    "org.eclipse.debug.ui.outColor", DEBUG_CONSOLE_FALLBACK_FGCOLOR, null);
+            debugConsoleFgColor = colorFromStringRgb(value);
+        }
         return debugConsoleFgColor;
     }
 
     private static Color debugConsoleErrorColor = null;
     public static Color getDebugConsoleErrorColor() {
-    	if (debugConsoleErrorColor == null) {
-	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
-	        		"org.eclipse.debug.ui.errorColor", DEBUG_CONSOLE_FALLBACK_ERRCOLOR, null);
-	        debugConsoleErrorColor = colorFromStringRgb(value);
-    	}
+        if (debugConsoleErrorColor == null) {
+            String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+                    "org.eclipse.debug.ui.errorColor", DEBUG_CONSOLE_FALLBACK_ERRCOLOR, null);
+            debugConsoleErrorColor = colorFromStringRgb(value);
+        }
         return debugConsoleErrorColor;
     }
 
     private static Color hyperlinkColor = null;
     public static Color getHyperlinkColor() {
-    	if (hyperlinkColor == null) {
-	        String value = Platform.getPreferencesService().getString("org.eclipse.ui.workbench",
-	        		"HYPERLINK_COLOR", DEBUG_CONSOLE_FALLBACK_LINK_COLOR, null);
-	        hyperlinkColor = colorFromStringRgb(value);
-    	}
+        if (hyperlinkColor == null) {
+            String value = Platform.getPreferencesService().getString("org.eclipse.ui.workbench",
+                    "HYPERLINK_COLOR", DEBUG_CONSOLE_FALLBACK_LINK_COLOR, null);
+            hyperlinkColor = colorFromStringRgb(value);
+        }
         return hyperlinkColor;
     }
 
@@ -108,23 +108,23 @@ public class AnsiConsolePreferenceUtils {
     
     /* True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
     public static boolean useWindowsMapping() {
-    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
+        return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
     }
 
     public static boolean isAnsiConsoleEnabled() {
-    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+        return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
     }
 
     public static void setAnsiConsoleEnabled(boolean enabled) {
-    	AnsiConsolePreferenceUtils.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
+        AnsiConsolePreferenceUtils.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
     }
     
     public static String getPreferredPalette() {
-    	return AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
+        return AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
     }
 
     public static boolean showAnsiEscapes() {
-    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
+        return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
     }
 
     public static boolean tryPreservingStdErrColor() {

@@ -43,32 +43,32 @@ public class AnsiConsoleAttributes {
     public static AnsiConsoleAttributes from(AnsiConsoleAttributes other) {
         AnsiConsoleAttributes result = new AnsiConsoleAttributes();
         if (other != null) {
-	        result.currentBgColor = other.currentBgColor;
-	        result.currentFgColor = other.currentFgColor;
-	        result.underline = other.underline;
-	        result.bold = other.bold;
-	        result.italic = other.italic;
-	        result.invert = other.invert;
-	        result.conceal = other.conceal;
-	        result.strike = other.strike;
-	        result.framed = other.framed;
+            result.currentBgColor = other.currentBgColor;
+            result.currentFgColor = other.currentFgColor;
+            result.underline = other.underline;
+            result.bold = other.bold;
+            result.italic = other.italic;
+            result.invert = other.invert;
+            result.conceal = other.conceal;
+            result.strike = other.strike;
+            result.framed = other.framed;
         }
         return result;
     }
 
     @Override
     public String toString() {
-    	StringBuilder result = new StringBuilder();
-    	if (currentBgColor != null) result.append("Bg" + currentBgColor);
-    	if (currentFgColor != null) result.append("Fg" + currentFgColor);
-    	if (underline != UNDERLINE_NONE) result.append("_");
+        StringBuilder result = new StringBuilder();
+        if (currentBgColor != null) result.append("Bg" + currentBgColor);
+        if (currentFgColor != null) result.append("Fg" + currentFgColor);
+        if (underline != UNDERLINE_NONE) result.append("_");
         if(bold) result.append("\ud835\uddef"); // 𝗯
         if(italic) result.append("\ud835\udc56"); // 𝑖
         if(invert) result.append("\u00bf"); // ¿
         if(conceal) result.append("\u2702"); // ✂
         if(strike) result.append("\u2014"); // —
         if(framed) result.append("\u2610"); // ☐
-    	return result.toString();
+        return result.toString();
     }
 
     public static Color hiliteRgbColor(Color c) {

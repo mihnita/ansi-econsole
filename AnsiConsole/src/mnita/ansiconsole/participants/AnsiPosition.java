@@ -43,47 +43,47 @@ import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiPosition extends Position {
-	public static final String POSITION_NAME = "ansi_color";
-	private static final char ESCAPE_SGR = 'm';
+    public static final String POSITION_NAME = "ansi_color";
+    private static final char ESCAPE_SGR = 'm';
 
-	private static final AnsiConsoleAttributes current = new AnsiConsoleAttributes();
+    private static final AnsiConsoleAttributes current = new AnsiConsoleAttributes();
 
-	public final AnsiConsoleAttributes attributes;
-	public final String text;
+    public final AnsiConsoleAttributes attributes;
+    public final String text;
 
-	public AnsiPosition(int offset, String text) {
-		super(offset, text == null ? 0 : text.length());
-		this.text = text == null ? "" : text;
-		this.attributes = updateAttributes();
-	}
+    public AnsiPosition(int offset, String text) {
+        super(offset, text == null ? 0 : text.length());
+        this.text = text == null ? "" : text;
+        this.attributes = updateAttributes();
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("AnsiPosition:{ offset:%d length:%d text:\"%s\" attr:\"%s\" }", offset, length, text, attributes);
-	}
+    @Override
+    public String toString() {
+        return String.format("AnsiPosition:{ offset:%d length:%d text:\"%s\" attr:\"%s\" }", offset, length, text, attributes);
+    }
 
-	public AnsiConsoleAttributes updateAttributes() {
-	    char code = text.charAt(text.length() - 1);
-	    if (code == ESCAPE_SGR) {
-			String theEscape = text.substring(2, text.length() - 1);
-	        // Select Graphic Rendition (SGR) escape sequence
-	        List<Integer> nCommands = new ArrayList<Integer>();
-	        for (String cmd : theEscape.split(";")) {
-	            int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
-	            if (nCmd != -1)
-	                nCommands.add(nCmd);
-	        }
-	        if (nCommands.isEmpty())
-	            nCommands.add(0);
-	        interpretCommand(nCommands);
-	        return AnsiConsoleAttributes.from(current);
-	    }
-	    return null;
-	}
+    public AnsiConsoleAttributes updateAttributes() {
+        char code = text.charAt(text.length() - 1);
+        if (code == ESCAPE_SGR) {
+            String theEscape = text.substring(2, text.length() - 1);
+            // Select Graphic Rendition (SGR) escape sequence
+            List<Integer> nCommands = new ArrayList<Integer>();
+            for (String cmd : theEscape.split(";")) {
+                int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
+                if (nCmd != -1)
+                    nCommands.add(nCmd);
+            }
+            if (nCommands.isEmpty())
+                nCommands.add(0);
+            interpretCommand(nCommands);
+            return AnsiConsoleAttributes.from(current);
+        }
+        return null;
+    }
 
     private static void interpretCommand(List<Integer> nCommands) {
 

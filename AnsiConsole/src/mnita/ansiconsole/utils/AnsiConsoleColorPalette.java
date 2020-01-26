@@ -127,12 +127,12 @@ public class AnsiConsoleColorPalette {
 
     private final static HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
     static {
-    	KNOWN_PALETTES.put(PALETTE_MAC, paletteMac);
-    	KNOWN_PALETTES.put(PALETTE_VGA, paletteVGA);
-    	KNOWN_PALETTES.put(PALETTE_WINXP, paletteXP);
-    	KNOWN_PALETTES.put(PALETTE_WIN10, paletteWin10);
-    	KNOWN_PALETTES.put(PALETTE_XTERM, paletteXTerm);
-    	KNOWN_PALETTES.put(PALETTE_PUTTY, palettePuTTY);
+        KNOWN_PALETTES.put(PALETTE_MAC, paletteMac);
+        KNOWN_PALETTES.put(PALETTE_VGA, paletteVGA);
+        KNOWN_PALETTES.put(PALETTE_WINXP, paletteXP);
+        KNOWN_PALETTES.put(PALETTE_WIN10, paletteWin10);
+        KNOWN_PALETTES.put(PALETTE_XTERM, paletteXTerm);
+        KNOWN_PALETTES.put(PALETTE_PUTTY, palettePuTTY);
     }
 
     private static RGB[]  palette            = paletteXP;
@@ -198,11 +198,11 @@ public class AnsiConsoleColorPalette {
             String osVer = System.getProperty("os.version");
             if (os == null) {
                 setPalette(PALETTE_WINXP);
-        	} else if (os.startsWith("Windows")) {
-        		if (osVer == null || !osVer.startsWith("10."))
-        			setPalette(PALETTE_WINXP);
-        		else
-        			setPalette(PALETTE_WIN10);
+            } else if (os.startsWith("Windows")) {
+                if (osVer == null || !osVer.startsWith("10."))
+                    setPalette(PALETTE_WINXP);
+                else
+                    setPalette(PALETTE_WIN10);
             } else if (os.startsWith("Mac")) {
                 setPalette(PALETTE_MAC);
             } else {

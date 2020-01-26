@@ -2,7 +2,7 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.3.5.qualifier"
+      version="1.4.0.qualifier"
       provider-name="Mihai Nita">
 
    <description>
@@ -38,13 +38,14 @@ limitations under the License.
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.jface.text"/>
    </requires>
 
    <plugin
          id="net.mihai-nita.ansicon.plugin"
-         download-size="17"
-         install-size="16"
-         version="1.3.5.qualifier"
+         download-size="29"
+         install-size="29"
+         version="1.4.0.qualifier"
          unpack="false"/>
 
 </feature>

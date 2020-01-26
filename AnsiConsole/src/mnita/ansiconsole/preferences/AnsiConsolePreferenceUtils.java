@@ -4,14 +4,21 @@ import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.utils.ColorCache;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsolePreferenceUtils {
-    private final static String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
-    private final static String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "0,0,0";
-    private final static String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
+	/* File config here:
+	 *   <workspace>\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.debug.ui.prefs
+	 * Example:
+	 *   org.eclipse.debug.ui.consoleBackground=53,53,53
+	 *   org.eclipse.debug.ui.errorColor=225,30,70
+	 *   org.eclipse.debug.ui.inColor=192,192,192
+	 *   org.eclipse.debug.ui.outColor=192,192,192
+	 */
+    private static final String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
+    private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
+    private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
 
     static Color colorFromStringRgb(String strRgb) {
         Color result = null;
@@ -23,6 +30,17 @@ public class AnsiConsolePreferenceUtils {
             result = ColorCache.get(new RGB(red, green, blue));
         }
         return result;
+    }
+
+    public static int tryParseInteger(String text) {
+        if ("".equals(text))
+            return -1;
+
+        try {
+            return Integer.parseInt(text);
+        } catch (@SuppressWarnings("unused") NumberFormatException e) {
+            return -1;
+        }
     }
 
     public static boolean getBoolean(String name) {
@@ -38,32 +56,50 @@ public class AnsiConsolePreferenceUtils {
         return colorFromStringRgb(strColor);
     }
 
-    public static Color getDebugConsoleBgColor() {
-        IPreferencesService ps = Platform.getPreferencesService();
-        String value = ps.getString(DEBUG_CONSOLE_PLUGIN_ID, "org.eclipse.debug.ui.consoleBackground",
-                DEBUG_CONSOLE_FALLBACK_BKCOLOR, null);
-        return colorFromStringRgb(value);
-    }
-
-    public static Color getDebugConsoleFgColor() {
-        IPreferencesService ps = Platform.getPreferencesService();
-        String value = ps.getString(DEBUG_CONSOLE_PLUGIN_ID, "org.eclipse.debug.ui.outColor",
-                DEBUG_CONSOLE_FALLBACK_FGCOLOR, null);
-        return colorFromStringRgb(value);
-    }
-
-    public static int tryParseInteger(String text) {
-        if ("".equals(text))
-            return -1;
-
-        try {
-            return Integer.parseInt(text);
-        } catch (@SuppressWarnings("unused") NumberFormatException e) {
-            return -1;
-        }
-    }
-
     public static void setValue(String name, boolean value) {
         AnsiConsoleActivator.getDefault().getPreferenceStore().setValue(name, value);
+    }
+
+    static Color debugConsoleBgColor = null;
+    public static Color getDebugConsoleBgColor() {
+    	if (debugConsoleBgColor == null) {
+	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+	        		"org.eclipse.debug.ui.consoleBackground", DEBUG_CONSOLE_FALLBACK_BKCOLOR, null);
+	        debugConsoleBgColor = colorFromStringRgb(value);
+    	}
+        return debugConsoleBgColor;
+    }
+
+    static Color debugConsoleFgColor = null;
+    public static Color getDebugConsoleFgColor() {
+    	if (debugConsoleFgColor == null) {
+	        String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
+	        		"org.eclipse.debug.ui.outColor", DEBUG_CONSOLE_FALLBACK_FGCOLOR, null);
+	        debugConsoleFgColor = colorFromStringRgb(value);
+    	}
+        return debugConsoleFgColor;
+    }
+
+    // Convenience methods, simple "aliases" for get / set of common values
+    
+    /* True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
+    public static boolean useWindowsMapping() {
+    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
+    }
+
+    public static boolean isAnsiConsoleEnabled() {
+    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+    }
+
+    public static void setAnsiConsoleEnabled(boolean enabled) {
+    	AnsiConsolePreferenceUtils.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
+    }
+    
+    public static String getPreferredPalette() {
+    	return AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
+    }
+
+    public static boolean showAnsiEscapes() {
+    	return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
     }
 }

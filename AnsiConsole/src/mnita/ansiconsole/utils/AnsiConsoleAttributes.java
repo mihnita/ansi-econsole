@@ -13,6 +13,8 @@ import org.eclipse.swt.graphics.RGB;
 public class AnsiConsoleAttributes implements Cloneable {
     public final static int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
 
+    private static boolean USE_WINDOWS_MAPPING = AnsiConsolePreferenceUtils.useWindowsMapping();
+
     public Integer currentBgColor;
     public Integer currentFgColor;
     public int     underline;
@@ -71,12 +73,11 @@ public class AnsiConsoleAttributes implements Cloneable {
     // This function maps from the current attributes as "described" by escape sequences to real,
     // Eclipse console specific attributes (resolving color palette, default colors, etc.)
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
-        boolean useWindowsMapping = AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
         AnsiConsoleAttributes tempAttrib = attribute.clone();
 
         boolean hilite = false;
 
-        if (useWindowsMapping) {
+        if (USE_WINDOWS_MAPPING) {
             if (tempAttrib.bold) {
                 tempAttrib.bold = false; // not supported, rendered as intense, already done that
                 hilite = true;

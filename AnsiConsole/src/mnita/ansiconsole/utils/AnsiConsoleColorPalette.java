@@ -5,126 +5,122 @@ import java.util.HashMap;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsoleColorPalette {
-    public static final String PALETTE_VGA   = "paletteVGA";
+    public static final String PALETTE_VGA = "paletteVGA";
     public static final String PALETTE_WINXP = "paletteXP";
     public static final String PALETTE_WIN10 = "paletteWin10";
-    public static final String PALETTE_MAC   = "paletteMac";
+    public static final String PALETTE_MAC = "paletteMac";
     public static final String PALETTE_PUTTY = "palettePuTTY";
     public static final String PALETTE_XTERM = "paletteXTerm";
 
     private static final int PALETTE_SIZE = 256;
     private static final int TRUE_RGB_FLAG = 0x10000000; // Representing true RGB colors as 0x10RRGGBB
 
-    private AnsiConsoleColorPalette() { /* Utility class, should not be instantiated */ }
+    private AnsiConsoleColorPalette() {
+        // Utility class, should not be instantiated
+    }
 
     // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
-    private static final RGB[] paletteVGA = {
-        new RGB(  0,   0,   0), // black
-        new RGB(170,   0,   0), // red
-        new RGB(  0, 170,   0), // green
-        new RGB(170,  85,   0), // brown/yellow
-        new RGB(  0,   0, 170), // blue
-        new RGB(170,   0, 170), // magenta
-        new RGB(  0, 170, 170), // cyan
-        new RGB(170, 170, 170), // gray
-        new RGB( 85,  85,  85), // dark gray
-        new RGB(255,  85,  85), // bright red
-        new RGB( 85, 255,  85), // bright green
-        new RGB(255, 255,  85), // yellow
-        new RGB( 85,  85, 255), // bright blue
-        new RGB(255,  85, 255), // bright magenta
-        new RGB( 85, 255, 255), // bright cyan
-        new RGB(255, 255, 255)  // white
+    private static final RGB[] paletteVGA = { new RGB(0, 0, 0), // black
+            new RGB(170, 0, 0), // red
+            new RGB(0, 170, 0), // green
+            new RGB(170, 85, 0), // brown/yellow
+            new RGB(0, 0, 170), // blue
+            new RGB(170, 0, 170), // magenta
+            new RGB(0, 170, 170), // cyan
+            new RGB(170, 170, 170), // gray
+            new RGB(85, 85, 85), // dark gray
+            new RGB(255, 85, 85), // bright red
+            new RGB(85, 255, 85), // bright green
+            new RGB(255, 255, 85), // yellow
+            new RGB(85, 85, 255), // bright blue
+            new RGB(255, 85, 255), // bright magenta
+            new RGB(85, 255, 255), // bright cyan
+            new RGB(255, 255, 255) // white
     };
-    private static final RGB[] paletteXP = {
-        new RGB(  0,   0,   0), // black
-        new RGB(128,   0,   0), // red
-        new RGB(  0, 128,   0), // green
-        new RGB(128, 128,   0), // brown/yellow
-        new RGB(  0,   0, 128), // blue
-        new RGB(128,   0, 128), // magenta
-        new RGB(  0, 128, 128), // cyan
-        new RGB(192, 192, 192), // gray
-        new RGB(128, 128, 128), // dark gray
-        new RGB(255,   0,   0), // bright red
-        new RGB(  0, 255,   0), // bright green
-        new RGB(255, 255,   0), // yellow
-        new RGB(  0,   0, 255), // bright blue
-        new RGB(255,   0, 255), // bright magenta
-        new RGB(  0, 255, 255), // bright cyan
-        new RGB(255, 255, 255)  // white
+    private static final RGB[] paletteXP = { new RGB(0, 0, 0), // black
+            new RGB(128, 0, 0), // red
+            new RGB(0, 128, 0), // green
+            new RGB(128, 128, 0), // brown/yellow
+            new RGB(0, 0, 128), // blue
+            new RGB(128, 0, 128), // magenta
+            new RGB(0, 128, 128), // cyan
+            new RGB(192, 192, 192), // gray
+            new RGB(128, 128, 128), // dark gray
+            new RGB(255, 0, 0), // bright red
+            new RGB(0, 255, 0), // bright green
+            new RGB(255, 255, 0), // yellow
+            new RGB(0, 0, 255), // bright blue
+            new RGB(255, 0, 255), // bright magenta
+            new RGB(0, 255, 255), // bright cyan
+            new RGB(255, 255, 255) // white
     };
-    private static final RGB[] paletteWin10 = {
-        new RGB( 12,  12,  12), // black
-        new RGB(197,  15,  31), // red
-        new RGB( 19, 161,  14), // green
-        new RGB(193, 156,   0), // brown/yellow
-        new RGB(  0,  55, 218), // blue
-        new RGB(136,  23, 152), // magenta
-        new RGB( 58, 150, 221), // cyan
-        new RGB(204, 204, 204), // gray
-        new RGB(118, 118, 118), // dark gray
-        new RGB(231,  72,  86), // bright red
-        new RGB( 22, 198,  12), // bright green
-        new RGB(249, 241, 165), // yellow
-        new RGB( 59, 120, 255), // bright blue
-        new RGB(180,   0, 158), // bright magenta
-        new RGB( 97, 214, 214), // bright cyan
-        new RGB(242, 242, 242)  // white
+    private static final RGB[] paletteWin10 = { new RGB(12, 12, 12), // black
+            new RGB(197, 15, 31), // red
+            new RGB(19, 161, 14), // green
+            new RGB(193, 156, 0), // brown/yellow
+            new RGB(0, 55, 218), // blue
+            new RGB(136, 23, 152), // magenta
+            new RGB(58, 150, 221), // cyan
+            new RGB(204, 204, 204), // gray
+            new RGB(118, 118, 118), // dark gray
+            new RGB(231, 72, 86), // bright red
+            new RGB(22, 198, 12), // bright green
+            new RGB(249, 241, 165), // yellow
+            new RGB(59, 120, 255), // bright blue
+            new RGB(180, 0, 158), // bright magenta
+            new RGB(97, 214, 214), // bright cyan
+            new RGB(242, 242, 242) // white
     };
-    private static final RGB[] paletteMac = {
-        new RGB(  0,   0,   0), // black
-        new RGB(194,  54,  33), // red
-        new RGB( 37, 188,  36), // green
-        new RGB(173, 173,  39), // brown/yellow
-        new RGB( 73,  46, 225), // blue
-        new RGB(211,  56, 211), // magenta
-        new RGB( 51, 187, 200), // cyan
-        new RGB(203, 204, 205), // gray
-        new RGB(129, 131, 131), // dark gray
-        new RGB(252,  57,  31), // bright red
-        new RGB( 49, 231,  34), // bright green
-        new RGB(234, 236,  35), // yellow
-        new RGB( 88,  51, 255), // bright blue
-        new RGB(249,  53, 248), // bright magenta
-        new RGB( 20, 240, 240), // bright cyan
-        new RGB(233, 235, 235)  // white
+    private static final RGB[] paletteMac = { new RGB(0, 0, 0), // black
+            new RGB(194, 54, 33), // red
+            new RGB(37, 188, 36), // green
+            new RGB(173, 173, 39), // brown/yellow
+            new RGB(73, 46, 225), // blue
+            new RGB(211, 56, 211), // magenta
+            new RGB(51, 187, 200), // cyan
+            new RGB(203, 204, 205), // gray
+            new RGB(129, 131, 131), // dark gray
+            new RGB(252, 57, 31), // bright red
+            new RGB(49, 231, 34), // bright green
+            new RGB(234, 236, 35), // yellow
+            new RGB(88, 51, 255), // bright blue
+            new RGB(249, 53, 248), // bright magenta
+            new RGB(20, 240, 240), // bright cyan
+            new RGB(233, 235, 235) // white
     };
-    private static final RGB[] palettePuTTY = {
-        new RGB(  0,   0,   0), // black
-        new RGB(187,   0,   0), // red
-        new RGB(  0, 187,   0), // green
-        new RGB(187, 187,   0), // brown/yellow
-        new RGB(  0,   0, 187), // blue
-        new RGB(187,   0, 187), // magenta
-        new RGB(  0, 187, 187), // cyan
-        new RGB(187, 187, 187), // gray
-        new RGB( 85,  85,  85), // dark gray
-        new RGB(255,  85,  85), // bright red
-        new RGB( 85, 255,  85), // bright green
-        new RGB(255, 255,  85), // yellow
-        new RGB( 85,  85, 255), // bright blue
-        new RGB(255,  85, 255), // bright magenta
-        new RGB( 85, 255, 255), // bright cyan
-        new RGB(255, 255, 255)  // white
+    private static final RGB[] palettePuTTY = { new RGB(0, 0, 0), // black
+            new RGB(187, 0, 0), // red
+            new RGB(0, 187, 0), // green
+            new RGB(187, 187, 0), // brown/yellow
+            new RGB(0, 0, 187), // blue
+            new RGB(187, 0, 187), // magenta
+            new RGB(0, 187, 187), // cyan
+            new RGB(187, 187, 187), // gray
+            new RGB(85, 85, 85), // dark gray
+            new RGB(255, 85, 85), // bright red
+            new RGB(85, 255, 85), // bright green
+            new RGB(255, 255, 85), // yellow
+            new RGB(85, 85, 255), // bright blue
+            new RGB(255, 85, 255), // bright magenta
+            new RGB(85, 255, 255), // bright cyan
+            new RGB(255, 255, 255) // white
     };
-    private static final RGB[] paletteXTerm = {
-        new RGB(  0,   0,   0), // black
-        new RGB(205,   0,   0), // red
-        new RGB(  0, 205,   0), // green
-        new RGB(205, 205,   0), // brown/yellow
-        new RGB(  0,   0, 238), // blue
-        new RGB(205,   0, 205), // magenta
-        new RGB(  0, 205, 205), // cyan
-        new RGB(229, 229, 229), // gray
-        new RGB(127, 127, 127), // dark gray
-        new RGB(255,   0,   0), // bright red
-        new RGB(  0, 255,   0), // bright green
-        new RGB(255, 255,   0), // yellow
-        new RGB( 92,  92, 255), // bright blue
-        new RGB(255,   0, 255), // bright magenta
-        new RGB(  0, 255, 255), // bright cyan
-        new RGB(255, 255, 255)  // white
+    private static final RGB[] paletteXTerm = { new RGB(0, 0, 0), // black
+            new RGB(205, 0, 0), // red
+            new RGB(0, 205, 0), // green
+            new RGB(205, 205, 0), // brown/yellow
+            new RGB(0, 0, 238), // blue
+            new RGB(205, 0, 205), // magenta
+            new RGB(0, 205, 205), // cyan
+            new RGB(229, 229, 229), // gray
+            new RGB(127, 127, 127), // dark gray
+            new RGB(255, 0, 0), // bright red
+            new RGB(0, 255, 0), // bright green
+            new RGB(255, 255, 0), // yellow
+            new RGB(92, 92, 255), // bright blue
+            new RGB(255, 0, 255), // bright magenta
+            new RGB(0, 255, 255), // bright cyan
+            new RGB(255, 255, 255) // white
     };
 
     private static final HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
@@ -137,7 +133,7 @@ public class AnsiConsoleColorPalette {
         KNOWN_PALETTES.put(PALETTE_PUTTY, palettePuTTY);
     }
 
-    private static RGB[]  palette            = paletteXP;
+    private static RGB[] palette = paletteXP;
     private static String currentPaletteName = PALETTE_WINXP;
 
     public static boolean isValidIndex(int value) {

@@ -1,13 +1,13 @@
 package mnita.ansiconsole.preferences;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
-import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
-
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import mnita.ansiconsole.AnsiConsoleActivator;
+import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsolePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
@@ -32,21 +32,18 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
                 "&Try using the standard error color setting for stderr output", getFieldEditorParent()));
 
-        addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE,
-                "&Color palette", 1, new String[][] {
-                    { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
-                    { "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
-                    { "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
-                    { "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
-                    { "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
-                    { "xterm", AnsiConsoleColorPalette.PALETTE_XTERM }
-                },
-                getFieldEditorParent())
-        );
+        addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette", 1,
+                new String[][] { { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
+                        { "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
+                        { "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
+                        { "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
+                        { "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
+                        { "xterm", AnsiConsoleColorPalette.PALETTE_XTERM } },
+                getFieldEditorParent()));
     }
 
     @Override
     public void init(IWorkbench workbench) {
-      // Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
+        // Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
     }
 }

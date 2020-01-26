@@ -8,7 +8,9 @@ import org.eclipse.swt.graphics.RGB;
 public class ColorCache {
     private static final HashMap<RGB, Color> CACHE = new HashMap<RGB, Color>();
 
-    private ColorCache() { /* Utility class, should not be instantiated */ }
+    private ColorCache() {
+        // Utility class, should not be instantiated
+    }
 
     public static Color get(RGB rgb) {
         Color result = CACHE.get(rgb);

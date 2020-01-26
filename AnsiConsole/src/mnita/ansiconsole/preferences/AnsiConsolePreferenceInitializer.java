@@ -1,10 +1,10 @@
 package mnita.ansiconsole.preferences;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
-import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+
+import mnita.ansiconsole.AnsiConsoleActivator;
+import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsolePreferenceInitializer extends AbstractPreferenceInitializer {
 

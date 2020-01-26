@@ -1,11 +1,11 @@
 package mnita.ansiconsole.preferences;
 
-import mnita.ansiconsole.AnsiConsoleActivator;
-import mnita.ansiconsole.utils.ColorCache;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+
+import mnita.ansiconsole.AnsiConsoleActivator;
+import mnita.ansiconsole.utils.ColorCache;
 
 public class AnsiConsolePreferenceUtils {
     /* File config here:
@@ -16,13 +16,15 @@ public class AnsiConsolePreferenceUtils {
      *   org.eclipse.debug.ui.inColor=192,192,192
      *   org.eclipse.debug.ui.outColor=192,192,192
      */
-    private static final String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
+    private static final String DEBUG_CONSOLE_PLUGIN_ID = "org.eclipse.debug.ui";
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
     private static final String DEBUG_CONSOLE_FALLBACK_ERRCOLOR = "255,0,0";
     private static final String DEBUG_CONSOLE_FALLBACK_LINK_COLOR = "111,197,238";
 
-    private AnsiConsolePreferenceUtils() { /* Utility class, should not be instantiated */ }
+    private AnsiConsolePreferenceUtils() {
+        // Utility class, should not be instantiated
+    }
 
     private static Color colorFromStringRgb(String strRgb) {
         Color result = null;
@@ -65,6 +67,7 @@ public class AnsiConsolePreferenceUtils {
     }
 
     private static Color debugConsoleBgColor = null;
+
     public static Color getDebugConsoleBgColor() {
         if (debugConsoleBgColor == null) {
             String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
@@ -75,6 +78,7 @@ public class AnsiConsolePreferenceUtils {
     }
 
     private static Color debugConsoleFgColor = null;
+
     public static Color getDebugConsoleFgColor() {
         if (debugConsoleFgColor == null) {
             String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
@@ -85,6 +89,7 @@ public class AnsiConsolePreferenceUtils {
     }
 
     private static Color debugConsoleErrorColor = null;
+
     public static Color getDebugConsoleErrorColor() {
         if (debugConsoleErrorColor == null) {
             String value = Platform.getPreferencesService().getString(DEBUG_CONSOLE_PLUGIN_ID,
@@ -95,6 +100,7 @@ public class AnsiConsolePreferenceUtils {
     }
 
     private static Color hyperlinkColor = null;
+
     public static Color getHyperlinkColor() {
         if (hyperlinkColor == null) {
             String value = Platform.getPreferencesService().getString("org.eclipse.ui.workbench",
@@ -105,8 +111,8 @@ public class AnsiConsolePreferenceUtils {
     }
 
     // Convenience methods, simple "aliases" for get / set of common values
-    
-    /* True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
+
+    /** True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
     public static boolean useWindowsMapping() {
         return AnsiConsolePreferenceUtils.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
     }
@@ -118,7 +124,7 @@ public class AnsiConsolePreferenceUtils {
     public static void setAnsiConsoleEnabled(boolean enabled) {
         AnsiConsolePreferenceUtils.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
     }
-    
+
     public static String getPreferredPalette() {
         return AnsiConsolePreferenceUtils.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
     }

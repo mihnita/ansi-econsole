@@ -38,13 +38,13 @@ import java.util.List;
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.SWT;
 
+import mnita.ansiconsole.AnsiConsoleUtils;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiPosition extends Position {
     public static final String POSITION_NAME = "ansi_color";
-    private static final char ESCAPE_SGR = 'm';
 
     private static final AnsiConsoleAttributes current = new AnsiConsoleAttributes();
 
@@ -68,7 +68,7 @@ public class AnsiPosition extends Position {
 
     public AnsiConsoleAttributes updateAttributes() {
         char code = text.charAt(text.length() - 1);
-        if (code == ESCAPE_SGR) {
+        if (code == AnsiConsoleUtils.ESCAPE_SGR) {
             String theEscape = text.substring(2, text.length() - 1);
             // Select Graphic Rendition (SGR) escape sequence
             List<Integer> nCommands = new ArrayList<Integer>();

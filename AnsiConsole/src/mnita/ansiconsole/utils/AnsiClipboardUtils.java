@@ -11,7 +11,7 @@ import org.eclipse.swt.custom.StyledText;
 import mnita.ansiconsole.AnsiConsoleUtils;
 
 public class AnsiClipboardUtils implements ClipboardOwner {
-  
+
     public static void textToClipboard(StyledText styledText, boolean removeEscapeSeq) {
         String text = styledText.getSelectionText();
         if (text.isEmpty()) {

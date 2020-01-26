@@ -37,7 +37,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
     private final IDocument document;
 
-    private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes(); 
+    private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes();
 
     public AnsiConsoleStyleListener(IDocument document) {
         this.document = document;
@@ -46,7 +46,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
     }
 
-    private void addRange(List<StyleRange> ranges, int start, int length, AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
+    private void addRange(List<StyleRange> ranges, int start, int length,
+            AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
+
         StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, attributes);
         if (isCode) {
@@ -63,7 +65,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     public void lineGetStyle(LineStyleEvent event) {
         if (event == null || event.lineText == null || event.lineText.length() == 0)
             return;
-        
+
         if (document == null)
             return;
 
@@ -73,7 +75,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
         int eventOffset = event.lineOffset;
         int eventLength = event.lineText.length();
-        if (event.styles == null) { // It looks that in some cases this comes in as null 
+        if (event.styles == null) { // It looks that in some cases this comes in as null
             event.styles = new StyleRange[0];
         }
 
@@ -135,13 +137,13 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
             AnsiPosition apos = new AnsiPosition(start + offset, group);
             result.add(apos);
         }
-        return result; 
+        return result;
     }
 
     @Override
     public void update(DocumentEvent event) {
         IDocument eventDocument = event.getDocument();
-        
+
         int offset = event.getOffset();
         int length = event.getLength();
         String text = event.getText();

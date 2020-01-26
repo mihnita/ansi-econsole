@@ -2,12 +2,12 @@ package mnita.ansiconsole.utils;
 
 import static mnita.ansiconsole.utils.AnsiCommands.COMMAND_COLOR_INTENSITY_DELTA;
 
-import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+
+import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
 public class AnsiConsoleAttributes {
     public static final int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
@@ -16,7 +16,7 @@ public class AnsiConsoleAttributes {
 
     public Integer currentBgColor;
     public Integer currentFgColor;
-    public int     underline;
+    public int underline;
     public boolean bold;
     public boolean italic;
     public boolean invert;

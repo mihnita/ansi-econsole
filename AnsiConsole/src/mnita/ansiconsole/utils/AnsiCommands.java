@@ -42,4 +42,6 @@ public class AnsiCommands {
     public static final int COMMAND_HICOLOR_BACKGROUND_LAST  = 107; // Last background text color
 
     public static final int COMMAND_COLOR_INTENSITY_DELTA    =   8; // Last background text color
+
+    private AnsiCommands() { /* Utility class, should not be instantiated */ }
 }

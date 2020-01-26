@@ -15,8 +15,10 @@ public class AnsiConsoleColorPalette {
     private static final int PALETTE_SIZE = 256;
     private static final int TRUE_RGB_FLAG = 0x10000000; // Representing true RGB colors as 0x10RRGGBB
 
+    private AnsiConsoleColorPalette() { /* Utility class, should not be instantiated */ }
+
     // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
-    private final static RGB[] paletteVGA = {
+    private static final RGB[] paletteVGA = {
         new RGB(  0,   0,   0), // black
         new RGB(170,   0,   0), // red
         new RGB(  0, 170,   0), // green
@@ -34,7 +36,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 85, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB[] paletteXP = {
+    private static final RGB[] paletteXP = {
         new RGB(  0,   0,   0), // black
         new RGB(128,   0,   0), // red
         new RGB(  0, 128,   0), // green
@@ -52,7 +54,7 @@ public class AnsiConsoleColorPalette {
         new RGB(  0, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB[] paletteWin10 = {
+    private static final RGB[] paletteWin10 = {
         new RGB( 12,  12,  12), // black
         new RGB(197,  15,  31), // red
         new RGB( 19, 161,  14), // green
@@ -70,7 +72,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 97, 214, 214), // bright cyan
         new RGB(242, 242, 242)  // white
     };
-    private final static RGB[] paletteMac = {
+    private static final RGB[] paletteMac = {
         new RGB(  0,   0,   0), // black
         new RGB(194,  54,  33), // red
         new RGB( 37, 188,  36), // green
@@ -88,7 +90,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 20, 240, 240), // bright cyan
         new RGB(233, 235, 235)  // white
     };
-    private final static RGB[] palettePuTTY = {
+    private static final RGB[] palettePuTTY = {
         new RGB(  0,   0,   0), // black
         new RGB(187,   0,   0), // red
         new RGB(  0, 187,   0), // green
@@ -106,7 +108,7 @@ public class AnsiConsoleColorPalette {
         new RGB( 85, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
-    private final static RGB[] paletteXTerm = {
+    private static final RGB[] paletteXTerm = {
         new RGB(  0,   0,   0), // black
         new RGB(205,   0,   0), // red
         new RGB(  0, 205,   0), // green
@@ -125,7 +127,7 @@ public class AnsiConsoleColorPalette {
         new RGB(255, 255, 255)  // white
     };
 
-    private final static HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
+    private static final HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
     static {
         KNOWN_PALETTES.put(PALETTE_MAC, paletteMac);
         KNOWN_PALETTES.put(PALETTE_VGA, paletteVGA);

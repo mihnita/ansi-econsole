@@ -3,9 +3,11 @@ package mnita.ansiconsole;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -16,9 +18,6 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "net.mihai-nita.AnsiConsole"; //$NON-NLS-1$
 
     private static AnsiConsoleActivator plugin;
-
-    public AnsiConsoleActivator() {
-    }
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -37,7 +36,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
     }
 
     public static ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+        return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path).get();
     }
 
     private Map<StyledText, IConsolePageParticipant> viewers = new HashMap<StyledText, IConsolePageParticipant>();
@@ -49,9 +48,9 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
     public void removeViewerWithPageParticipant(IConsolePageParticipant participant) {
         Set<StyledText> toRemove = new HashSet<StyledText>();
 
-        for (StyledText viewer : viewers.keySet()) {
-            if (viewers.get(viewer) == participant)
-                toRemove.add(viewer);
+        for (Entry<StyledText, IConsolePageParticipant> entry : viewers.entrySet()) {
+            if (entry.getValue() == participant)
+                toRemove.add(entry.getKey());
         }
 
         for (StyledText viewer : toRemove)

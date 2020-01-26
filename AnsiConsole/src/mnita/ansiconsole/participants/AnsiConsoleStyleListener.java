@@ -140,26 +140,26 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void update(DocumentEvent event) {
-        IDocument document = event.getDocument();
+        IDocument eventDocument = event.getDocument();
         
         int offset = event.getOffset();
         int length = event.getLength();
         String text = event.getText();
         try {
             if (offset == 0 && length != 0) { // removes the beginning, scan to find and save the last style
-                for (Position pos : document.getPositions(AnsiPosition.POSITION_NAME)) {
+                for (Position pos : eventDocument.getPositions(AnsiPosition.POSITION_NAME)) {
                     if (pos.offset >= length)
                         break;
                     lastVisibleAttribute = ((AnsiPosition) pos).attributes;
                 }
             }
             defaultPositionUpdater.update(event);
-            if (length == 0 && offset + text.length() == document.getLength()) { // added text, at the end
-                int lineCount = document.getNumberOfLines(offset, length);
+            if (length == 0 && offset + text.length() == eventDocument.getLength()) { // added text, at the end
+                int lineCount = eventDocument.getNumberOfLines(offset, length);
                 for (int i = 0; i < lineCount; i++) {
                     List<AnsiPosition> newPos = findPositions(offset, text);
                     for (AnsiPosition apos : newPos) {
-                        document.addPosition(AnsiPosition.POSITION_NAME, apos);
+                        eventDocument.addPosition(AnsiPosition.POSITION_NAME, apos);
                     }
                 }
             }

@@ -62,12 +62,12 @@ public class AnsiConsoleAttributes {
         if (currentBgColor != null) result.append("Bg" + currentBgColor);
         if (currentFgColor != null) result.append("Fg" + currentFgColor);
         if (underline != UNDERLINE_NONE) result.append("_");
-        if(bold) result.append("\ud835\uddef"); // 𝗯
-        if(italic) result.append("\ud835\udc56"); // 𝑖
-        if(invert) result.append("\u00bf"); // ¿
-        if(conceal) result.append("\u2702"); // ✂
-        if(strike) result.append("\u2014"); // —
-        if(framed) result.append("\u2610"); // ☐
+        if (bold) result.append("\ud835\uddef"); // 𝗯
+        if (italic) result.append("\ud835\udc56"); // 𝑖
+        if (invert) result.append("\u00bf"); // ¿
+        if (conceal) result.append("\u2702"); // ✂
+        if (strike) result.append("\u2014"); // —
+        if (framed) result.append("\u2610"); // ☐
         return result.toString();
     }
 
@@ -157,9 +157,9 @@ public class AnsiConsoleAttributes {
             range.underline = true;
             range.underlineColor = range.foreground;
             range.underlineStyle = tempAttrib.underline;
-        }
-        else
+        } else {
             range.underline = false;
+        }
 
         range.strikeout = tempAttrib.strike;
         range.strikeoutColor = range.foreground;
@@ -167,8 +167,8 @@ public class AnsiConsoleAttributes {
         if (tempAttrib.framed) {
             range.borderStyle = SWT.BORDER_SOLID;
             range.borderColor = range.foreground;
-        }
-        else
+        } else {
             range.borderStyle = SWT.NONE;
+        }
     }
 }

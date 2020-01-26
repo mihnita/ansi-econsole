@@ -1,6 +1,6 @@
 package mnita.ansiconsole.utils;
 
-// From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
+// From Wikipedia, https://en.wikipedia.org/wiki/ANSI_escape_code
 public class AnsiCommands {
     public static final int COMMAND_ATTR_RESET = 0; // Reset / Normal (all attributes off)
     public static final int COMMAND_ATTR_INTENSITY_BRIGHT = 1; // Bright (increased intensity) or Bold

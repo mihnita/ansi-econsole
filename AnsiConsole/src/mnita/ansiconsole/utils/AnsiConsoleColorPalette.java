@@ -19,7 +19,7 @@ public class AnsiConsoleColorPalette {
         // Utility class, should not be instantiated
     }
 
-    // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
+    // From Wikipedia, https://en.wikipedia.org/wiki/ANSI_escape_code
     private static final RGB[] paletteVGA = { new RGB(0, 0, 0), // black
             new RGB(170, 0, 0), // red
             new RGB(0, 170, 0), // green

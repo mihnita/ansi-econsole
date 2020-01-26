@@ -7,20 +7,20 @@
 
    <description>
       Ansi Console uses ANSI escape sequences to color the console output. 
-This can be pretty handy when using something like jansi (http://jansi.fusesource.org)
+This can be pretty handy when using something like jansi (https://fusesource.github.io/jansi/)
 But is should also work from Perl, C++, or Groovy, or any other Eclipse hosted language.
    </description>
 
-   <copyright url="http://www.mihai-nita.net">
-      Copyright 2012-2016 Mihai Nita
+   <copyright url="https://www.mihai-nita.net">
+      Copyright 2012-2020 Mihai Nita
    </copyright>
 
-   <license url="http://www.apache.org/licenses/LICENSE-2.0">
+   <license url="https://www.apache.org/licenses/LICENSE-2.0">
       Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
 
 You may obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
+  https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -30,8 +30,8 @@ limitations under the License.
    </license>
 
    <url>
-      <update label="Ansi Console for Eclipse" url="http://www.mihai-nita.net/eclipse"/>
-      <discovery label="Info on this Eclipse plug-in" url="http://www.mihai-nita.net/eclipse"/>
+      <update label="Ansi Console for Eclipse" url="https://www.mihai-nita.net/eclipse"/>
+      <discovery label="Info on this Eclipse plug-in" url="https://www.mihai-nita.net/eclipse"/>
    </url>
 
    <requires>

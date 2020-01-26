@@ -11,6 +11,8 @@ import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
+import mnita.ansiconsole.utils.ColorCache;
+
 import static mnita.ansiconsole.utils.AnsiCommands.*;
 
 import org.eclipse.swt.SWT;
@@ -136,8 +138,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
                 defStyle.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
         } else {
             defStyle = new StyleRange(1, lastRangeEnd,
-                    new Color(null, AnsiConsoleColorPalette.getColor(0)),
-                    new Color(null, AnsiConsoleColorPalette.getColor(15)),
+                    ColorCache.get(AnsiConsoleColorPalette.getColor(0)),
+                    ColorCache.get(AnsiConsoleColorPalette.getColor(15)),
                     SWT.NORMAL);
         }
 

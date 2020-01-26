@@ -56,7 +56,7 @@ public class AnsiConsoleAttributes implements Cloneable {
 
     public static Color hiliteRgbColor(Color c) {
         if (c == null)
-            return new Color(null, new RGB(0xff, 0xff, 0xff));
+            return ColorCache.get(new RGB(0xff, 0xff, 0xff));
         int red = c.getRed() * 2;
         int green = c.getGreen() * 2;
         int blue = c.getBlue() * 2;
@@ -65,7 +65,7 @@ public class AnsiConsoleAttributes implements Cloneable {
         if (green > 0xff) green = 0xff;
         if (blue > 0xff)  blue = 0xff;
 
-        return new Color(null, new RGB(red, green, blue)); // here
+        return ColorCache.get(new RGB(red, green, blue)); // here
     }
 
     // This function maps from the current attributes as "described" by escape sequences to real,
@@ -97,18 +97,18 @@ public class AnsiConsoleAttributes implements Cloneable {
                 range.foreground = hiliteRgbColor(range.foreground);
             } else {
                 if (tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA)
-                    range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA));
+                    range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA));
                 else
-                    range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
+                    range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
             }
         } else {
             if (tempAttrib.currentFgColor != null)
-                range.foreground = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
+                range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
         }
 
         // Prepare the background color
         if (tempAttrib.currentBgColor != null)
-            range.background = new Color(null, AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor));
+            range.background = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor));
 
         // These two still mess with the foreground/background colors
         // We need to solve them before we use them for strike/underline/frame colors

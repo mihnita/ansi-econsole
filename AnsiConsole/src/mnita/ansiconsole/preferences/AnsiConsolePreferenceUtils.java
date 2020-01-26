@@ -1,6 +1,7 @@
 package mnita.ansiconsole.preferences;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
+import mnita.ansiconsole.utils.ColorCache;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -19,7 +20,7 @@ public class AnsiConsolePreferenceUtils {
             int red = tryParseInteger(splitted[0]);
             int green = tryParseInteger(splitted[1]);
             int blue = tryParseInteger(splitted[2]);
-            result = new Color(null, new RGB(red, green, blue));
+            result = ColorCache.get(new RGB(red, green, blue));
         }
         return result;
     }

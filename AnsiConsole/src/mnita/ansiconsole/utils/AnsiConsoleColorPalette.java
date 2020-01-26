@@ -1,14 +1,19 @@
 package mnita.ansiconsole.utils;
 
+import java.util.HashMap;
+
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsoleColorPalette {
     public static final String PALETTE_VGA   = "paletteVGA";
     public static final String PALETTE_WINXP = "paletteXP";
+    public static final String PALETTE_WIN10 = "paletteWin10";
     public static final String PALETTE_MAC   = "paletteMac";
     public static final String PALETTE_PUTTY = "palettePuTTY";
     public static final String PALETTE_XTERM = "paletteXTerm";
-    public static final int PALETTE_SIZE = 256;
+
+    private static final int PALETTE_SIZE = 256;
+    private static final int TRUE_RGB_FLAG = 0x10000000; // Representing true RGB colors as 0x10RRGGBB
 
     // From Wikipedia, http://en.wikipedia.org/wiki/ANSI_escape_code
     private final static RGB[] paletteVGA = {
@@ -46,6 +51,24 @@ public class AnsiConsoleColorPalette {
         new RGB(255,   0, 255), // bright magenta
         new RGB(  0, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
+    };
+    private final static RGB[] paletteWin10 = {
+        new RGB( 12,  12,  12), // black
+        new RGB(197,  15,  31), // red
+        new RGB( 19, 161,  14), // green
+        new RGB(193, 156,   0), // brown/yellow
+        new RGB(  0,  55, 218), // blue
+        new RGB(136,  23, 152), // magenta
+        new RGB( 58, 150, 221), // cyan
+        new RGB(204, 204, 204), // gray
+        new RGB(118, 118, 118), // dark gray
+        new RGB(231,  72,  86), // bright red
+        new RGB( 22, 198,  12), // bright green
+        new RGB(249, 241, 165), // yellow
+        new RGB( 59, 120, 255), // bright blue
+        new RGB(180,   0, 158), // bright magenta
+        new RGB( 97, 214, 214), // bright cyan
+        new RGB(242, 242, 242)  // white
     };
     private final static RGB[] paletteMac = {
         new RGB(  0,   0,   0), // black
@@ -101,14 +124,23 @@ public class AnsiConsoleColorPalette {
         new RGB(  0, 255, 255), // bright cyan
         new RGB(255, 255, 255)  // white
     };
+
+    private final static HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
+    static {
+    	KNOWN_PALETTES.put(PALETTE_MAC, paletteMac);
+    	KNOWN_PALETTES.put(PALETTE_VGA, paletteVGA);
+    	KNOWN_PALETTES.put(PALETTE_WINXP, paletteXP);
+    	KNOWN_PALETTES.put(PALETTE_WIN10, paletteWin10);
+    	KNOWN_PALETTES.put(PALETTE_XTERM, paletteXTerm);
+    	KNOWN_PALETTES.put(PALETTE_PUTTY, palettePuTTY);
+    }
+
     private static RGB[]  palette            = paletteXP;
     private static String currentPaletteName = PALETTE_WINXP;
 
     public static boolean isValidIndex(int value) {
         return value >= 0 && value < PALETTE_SIZE;
     }
-
-    static int TRUE_RGB_FLAG = 0x10000000; // Representing true RGB colors as 0x10RRGGBB
 
     public static int hackRgb(int r, int g, int b) {
         if (!isValidIndex(r)) return -1;
@@ -117,7 +149,7 @@ public class AnsiConsoleColorPalette {
         return TRUE_RGB_FLAG | r << 16 | g << 8 | b;
     }
 
-    static int safe256(int value, int modulo) {
+    private static int safe256(int value, int modulo) {
         int result = value * PALETTE_SIZE / modulo;
         return result < PALETTE_SIZE ? result : PALETTE_SIZE - 1;
     }
@@ -160,24 +192,22 @@ public class AnsiConsoleColorPalette {
 
     public static void setPalette(String paletteName) {
         currentPaletteName = paletteName;
-        if (PALETTE_VGA.equalsIgnoreCase(paletteName))
-            palette = paletteVGA;
-        else if (PALETTE_WINXP.equalsIgnoreCase(paletteName))
-            palette = paletteXP;
-        else if (PALETTE_MAC.equalsIgnoreCase(paletteName))
-            palette = paletteMac;
-        else if (PALETTE_PUTTY.equalsIgnoreCase(paletteName))
-            palette = palettePuTTY;
-        else if (PALETTE_XTERM.equalsIgnoreCase(paletteName))
-            palette = paletteXTerm;
-        else {
+        palette = KNOWN_PALETTES.get(paletteName);
+        if (palette == null) { // Fallback to a palette that matches the OS
             String os = System.getProperty("os.name");
-            if (os == null || os.startsWith("Windows"))
+            String osVer = System.getProperty("os.version");
+            if (os == null) {
                 setPalette(PALETTE_WINXP);
-            else if (os.startsWith("Mac"))
+        	} else if (os.startsWith("Windows")) {
+        		if (osVer == null || !osVer.startsWith("10."))
+        			setPalette(PALETTE_WINXP);
+        		else
+        			setPalette(PALETTE_WIN10);
+            } else if (os.startsWith("Mac")) {
                 setPalette(PALETTE_MAC);
-            else
+            } else {
                 setPalette(PALETTE_XTERM);
+            }
         }
     }
 

@@ -33,6 +33,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 "&Color palette", 1, new String[][] {
                     { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
                     { "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
+                    { "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
                     { "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
                     { "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
                     { "xterm", AnsiConsoleColorPalette.PALETTE_XTERM }

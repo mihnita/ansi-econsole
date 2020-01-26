@@ -27,7 +27,6 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
     private AnsiConsoleAttributes lastAttributes = new AnsiConsoleAttributes();
     private AnsiConsoleAttributes currentAttributes = new AnsiConsoleAttributes();
     private final static Pattern pattern = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
-    private final static char ESCAPE_SGR = 'm';
 
     int lastRangeEnd = 0;
 
@@ -153,7 +152,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 
             String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
             char code = currentText.charAt(matcher.end() - 1);
-            if (code == ESCAPE_SGR) {
+            if (code == AnsiConsoleUtils.ESCAPE_SGR) {
                 // Select Graphic Rendition (SGR) escape sequence
                 List<Integer> nCommands = new ArrayList<Integer>();
                 for (String cmd : theEscape.split(";")) {

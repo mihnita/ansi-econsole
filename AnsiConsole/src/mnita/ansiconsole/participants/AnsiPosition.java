@@ -57,21 +57,17 @@ public class AnsiPosition extends Position {
         this.attributes = updateAttributes();
     }
 
-    public String getText() {
-        return text;
-    }
-
     @Override
     public String toString() {
         return String.format("AnsiPosition:{ offset:%d length:%d text:\"%s\" attr:\"%s\" }", offset, length, text, attributes);
     }
 
-    public AnsiConsoleAttributes updateAttributes() {
+    private AnsiConsoleAttributes updateAttributes() {
         char code = text.charAt(text.length() - 1);
         if (code == AnsiConsoleUtils.ESCAPE_SGR) {
             String theEscape = text.substring(2, text.length() - 1);
             // Select Graphic Rendition (SGR) escape sequence
-            List<Integer> nCommands = new ArrayList<Integer>();
+            List<Integer> nCommands = new ArrayList<>();
             for (String cmd : theEscape.split(";")) {
                 int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
                 if (nCmd != -1)
@@ -94,7 +90,7 @@ public class AnsiPosition extends Position {
                 case COMMAND_ATTR_RESET:             current.reset(); break;
 
                 case COMMAND_ATTR_INTENSITY_BRIGHT:  current.bold = true; break;
-                case COMMAND_ATTR_INTENSITY_FAINT:   current.bold = false; break;
+                case COMMAND_ATTR_INTENSITY_FAINT: // Intentional fallthrough
                 case COMMAND_ATTR_INTENSITY_NORMAL:  current.bold = false; break;
 
                 case COMMAND_ATTR_ITALIC:            current.italic = true; break;

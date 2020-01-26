@@ -12,7 +12,7 @@ import org.eclipse.ui.part.PageBookView;
 import mnita.ansiconsole.utils.AnsiClipboardUtils;
 
 public class AnsiConsoleCopyIconAction implements IViewActionDelegate {
-    PageBookView consoleView = null;
+    private PageBookView consoleView = null;
 
     @Override
     public void run(IAction action) {

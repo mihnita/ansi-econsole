@@ -39,14 +39,14 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path).get();
     }
 
-    private Map<StyledText, IConsolePageParticipant> viewers = new HashMap<StyledText, IConsolePageParticipant>();
+    private final Map<StyledText, IConsolePageParticipant> viewers = new HashMap<>();
 
     public void addViewer(StyledText viewer, IConsolePageParticipant participant) {
         viewers.put(viewer, participant);
     }
 
     public void removeViewerWithPageParticipant(IConsolePageParticipant participant) {
-        Set<StyledText> toRemove = new HashSet<StyledText>();
+        Set<StyledText> toRemove = new HashSet<>();
 
         for (Entry<StyledText, IConsolePageParticipant> entry : viewers.entrySet()) {
             if (entry.getValue() == participant)

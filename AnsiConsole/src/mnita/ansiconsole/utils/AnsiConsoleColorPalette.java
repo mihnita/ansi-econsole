@@ -123,7 +123,7 @@ public class AnsiConsoleColorPalette {
             new RGB(255, 255, 255) // white
     };
 
-    private static final HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<String, RGB[]>();
+    private static final HashMap<String, RGB[]> KNOWN_PALETTES = new HashMap<>();
     static {
         KNOWN_PALETTES.put(PALETTE_MAC, paletteMac);
         KNOWN_PALETTES.put(PALETTE_VGA, paletteVGA);

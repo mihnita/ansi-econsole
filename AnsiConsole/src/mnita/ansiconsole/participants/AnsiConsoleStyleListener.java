@@ -29,10 +29,10 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private static final Pattern PATTERN = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
     private static final Font MONO_FONT = new Font(null, "Monospaced", 6, SWT.NORMAL);
 
-    private final boolean SHOW_ESCAPE_CODES = AnsiConsolePreferenceUtils.showAnsiEscapes();
-    private final Color DEF_FOREGROUND_COLOR = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
-    private final Color HYPERLINK_COLOR = AnsiConsolePreferenceUtils.getHyperlinkColor();
-    private final Color DEF_ERROR_COLOR = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
+    private final boolean showEscapeCodes = AnsiConsolePreferenceUtils.showAnsiEscapes();
+    private final Color defForegroundColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
+    private final Color hyperlinkColor = AnsiConsolePreferenceUtils.getHyperlinkColor();
+    private final Color defaultErrorColor = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
 
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
     private final IDocument document;
@@ -52,7 +52,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, attributes);
         if (isCode) {
-            if (SHOW_ESCAPE_CODES) {
+            if (showEscapeCodes) {
                 range.font = MONO_FONT; // Show the codes in small, monospace font
             } else {
                 range.metrics = new GlyphMetrics(0, 0, 0); // Hide the codes
@@ -89,53 +89,52 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (positions.length == 0)
             return;
 
-        Color defForegroudColor = DEF_FOREGROUND_COLOR;
+        Color foregroundColor = defForegroundColor;
         if (AnsiConsolePreferenceUtils.tryPreservingStdErrColor()) {
             for (StyleRange range : event.styles) {
-                if (DEF_ERROR_COLOR.equals(range.foreground)) {
-                    defForegroudColor = DEF_ERROR_COLOR;
+                if (defaultErrorColor.equals(range.foreground)) {
+                	foregroundColor = defaultErrorColor;
                     break;
                 }
             }
         }
 
-        List<StyleRange> ranges = new ArrayList<StyleRange>();
+        List<StyleRange> ranges = new ArrayList<>();
         AnsiConsoleAttributes prevAttr = lastVisibleAttribute;
         int prevPos = eventOffset;
 
-        for (int i = 0; i < positions.length; i++) {
-            AnsiPosition apos = (AnsiPosition) positions[i];
+        for (Position position : positions) {
+            AnsiPosition apos = (AnsiPosition) position;
             if (apos.getOffset() > eventOffset + eventLength) // we passed the end of line, stop searching
                 break;
             if (apos.overlapsWith(eventOffset, eventLength)) {
                 if (apos.offset != prevPos) {
-                    addRange(ranges, prevPos, apos.offset - prevPos, prevAttr, defForegroudColor, false);
+                    addRange(ranges, prevPos, apos.offset - prevPos, prevAttr, foregroundColor, false);
                 }
-                addRange(ranges, apos.offset, apos.length, apos.attributes, defForegroudColor, true);
+                addRange(ranges, apos.offset, apos.length, apos.attributes, foregroundColor, true);
                 prevPos = apos.offset + apos.length;
             }
             prevAttr = apos.attributes;
         }
-        addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, defForegroudColor, false);
+        addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
 
         if (!ranges.isEmpty()) {
             // Copy the links that might already exist
             for (StyleRange range : event.styles) {
-                if (HYPERLINK_COLOR.equals(range.foreground))
+                if (hyperlinkColor.equals(range.foreground))
                     ranges.add(range);
             }
             event.styles = ranges.toArray(new StyleRange[0]);
         }
     }
 
-    static List<AnsiPosition> findPositions(int offset, String currentText) {
-        List<AnsiPosition> result = new ArrayList<AnsiPosition>();
+    private static List<AnsiPosition> findPositions(int offset, String currentText) {
+        List<AnsiPosition> result = new ArrayList<>();
         Matcher matcher = PATTERN.matcher(currentText);
         while (matcher.find()) {
             int start = matcher.start();
             String group = matcher.group();
-            AnsiPosition apos = new AnsiPosition(start + offset, group);
-            result.add(apos);
+            result.add(new AnsiPosition(start + offset, group));
         }
         return result;
     }
@@ -165,9 +164,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                     }
                 }
             }
-        } catch (BadPositionCategoryException e) {
-            e.printStackTrace();
-        } catch (BadLocationException e) {
+        } catch (BadPositionCategoryException | BadLocationException e) {
             e.printStackTrace();
         }
     }

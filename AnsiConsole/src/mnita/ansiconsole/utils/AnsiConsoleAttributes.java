@@ -71,12 +71,12 @@ public class AnsiConsoleAttributes {
         return result.toString();
     }
 
-    public static Color hiliteRgbColor(Color c) {
-        if (c == null)
+    private static Color hiliteRgbColor(Color color) {
+        if (color == null)
             return ColorCache.get(new RGB(0xff, 0xff, 0xff));
-        int red = c.getRed() * 2;
-        int green = c.getGreen() * 2;
-        int blue = c.getBlue() * 2;
+        int red = color.getRed() * 2;
+        int green = color.getGreen() * 2;
+        int blue = color.getBlue() * 2;
 
         if (red > 0xff)   red = 0xff;
         if (green > 0xff) green = 0xff;

@@ -19,6 +19,7 @@ public class AnsiConsolePreferenceUtils {
     private static final String DEBUG_CONSOLE_PLUGIN_ID        = "org.eclipse.debug.ui";
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
+    private static final String DEBUG_CONSOLE_FALLBACK_LINK_COLOR = "111,197,238";
 
     static Color colorFromStringRgb(String strRgb) {
         Color result = null;
@@ -78,6 +79,16 @@ public class AnsiConsolePreferenceUtils {
 	        debugConsoleFgColor = colorFromStringRgb(value);
     	}
         return debugConsoleFgColor;
+    }
+
+    static Color hyperlinkColor = null;
+    public static Color getHyperlinkColor() {
+    	if (hyperlinkColor == null) {
+	        String value = Platform.getPreferencesService().getString("org.eclipse.ui.workbench",
+	        		"HYPERLINK_COLOR", DEBUG_CONSOLE_FALLBACK_LINK_COLOR, null);
+	        hyperlinkColor = colorFromStringRgb(value);
+    	}
+        return hyperlinkColor;
     }
 
     // Convenience methods, simple "aliases" for get / set of common values

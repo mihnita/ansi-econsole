@@ -1,20 +1,17 @@
 package mnita.ansiconsole.participants;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mnita.ansiconsole.AnsiConsoleUtils;
-import mnita.ansiconsole.preferences.AnsiConsolePreferenceConstants;
-import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
-import mnita.ansiconsole.utils.AnsiConsoleAttributes;
-import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
-import mnita.ansiconsole.utils.ColorCache;
-
-import static mnita.ansiconsole.utils.AnsiCommands.*;
-
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.BadPositionCategoryException;
+import org.eclipse.jface.text.DefaultPositionUpdater;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IPositionUpdater;
+import org.eclipse.jface.text.Position;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
@@ -23,159 +20,142 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GlyphMetrics;
 
-public class AnsiConsoleStyleListener implements LineStyleListener {
-    private AnsiConsoleAttributes lastAttributes = new AnsiConsoleAttributes();
-    private AnsiConsoleAttributes currentAttributes = new AnsiConsoleAttributes();
-    private final static Pattern pattern = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
+import mnita.ansiconsole.AnsiConsoleUtils;
+import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
+import mnita.ansiconsole.utils.AnsiConsoleAttributes;
+import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
-    int lastRangeEnd = 0;
+public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpdater {
+	private static final Pattern PATTERN = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
+    private static final Font MONO_FONT = new Font(null, "Monospaced", 6, SWT.NORMAL);
 
-    private boolean interpretCommand(List<Integer> nCommands) {
-        boolean result = false;
+    private final boolean SHOW_ESCAPE_CODES = AnsiConsolePreferenceUtils.showAnsiEscapes();
+    private final Color DEF_FOREGROUND_COLOR = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
+    private final Color HYPERLINK_COLOR = AnsiConsolePreferenceUtils.getHyperlinkColor();
 
-        Iterator<Integer> iter = nCommands.iterator();
-        while (iter.hasNext()) {
-            int nCmd = iter.next();
-            switch (nCmd) {
-                case COMMAND_ATTR_RESET:             currentAttributes.reset(); break;
+    private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
+	{
+		AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
+	}
 
-                case COMMAND_ATTR_INTENSITY_BRIGHT:  currentAttributes.bold = true; break;
-                case COMMAND_ATTR_INTENSITY_FAINT:   currentAttributes.bold = false; break;
-                case COMMAND_ATTR_INTENSITY_NORMAL:  currentAttributes.bold = false; break;
+    private final IDocument document;
+    private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes(); 
 
-                case COMMAND_ATTR_ITALIC:            currentAttributes.italic = true; break;
-                case COMMAND_ATTR_ITALIC_OFF:        currentAttributes.italic = false; break;
+    public AnsiConsoleStyleListener(IDocument document) {
+    	this.document = document;
+    	this.document.addPositionCategory(AnsiPosition.POSITION_NAME);
+    	this.document.addPositionUpdater(this);
+	}
 
-                case COMMAND_ATTR_UNDERLINE:         currentAttributes.underline = SWT.UNDERLINE_SINGLE; break;
-                case COMMAND_ATTR_UNDERLINE_DOUBLE:  currentAttributes.underline = SWT.UNDERLINE_DOUBLE; break;
-                case COMMAND_ATTR_UNDERLINE_OFF:     currentAttributes.underline = AnsiConsoleAttributes.UNDERLINE_NONE; break;
-
-                case COMMAND_ATTR_CROSSOUT_ON:       currentAttributes.strike = true; break;
-                case COMMAND_ATTR_CROSSOUT_OFF:      currentAttributes.strike = false; break;
-
-                case COMMAND_ATTR_NEGATIVE_ON:       currentAttributes.invert = true; break;
-                case COMMAND_ATTR_NEGATIVE_OFF:      currentAttributes.invert = false; break;
-
-                case COMMAND_ATTR_CONCEAL_ON:        currentAttributes.conceal = true; break;
-                case COMMAND_ATTR_CONCEAL_OFF:       currentAttributes.conceal = false; break;
-
-                case COMMAND_ATTR_FRAMED_ON:         currentAttributes.framed = true; break;
-                case COMMAND_ATTR_FRAMED_OFF:        currentAttributes.framed = false; break;
-
-                case COMMAND_COLOR_FOREGROUND_RESET: currentAttributes.currentFgColor = null; break;
-                case COMMAND_COLOR_BACKGROUND_RESET: currentAttributes.currentBgColor = null; break;
-
-                case COMMAND_HICOLOR_FOREGROUND:
-                case COMMAND_HICOLOR_BACKGROUND: // {esc}[48;5;{color}m
-                    int color = -1;
-                    int nMustBe2or5 = iter.hasNext() ? iter.next() : -1;
-                    if (nMustBe2or5 == 5) { // 256 colors
-                        color = iter.hasNext() ? iter.next() : -1;
-                        if (!AnsiConsoleColorPalette.isValidIndex(color))
-                            color = -1;
-                    } else if (nMustBe2or5 == 2) { // rgb colors
-                        int r = iter.hasNext() ? iter.next() : -1;
-                        int g = iter.hasNext() ? iter.next() : -1;
-                        int b = iter.hasNext() ? iter.next() : -1;
-                        color = AnsiConsoleColorPalette.hackRgb(r, g, b);
-                    }
-                    if (color != -1) {
-                        if (nCmd == COMMAND_HICOLOR_FOREGROUND)
-                            currentAttributes.currentFgColor = color;
-                        else
-                            currentAttributes.currentBgColor = color;
-                    }
-                    break;
-
-                case -1: break; // do nothing
-
-                default:
-                    if (nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST) // text color
-                        currentAttributes.currentFgColor = nCmd - COMMAND_COLOR_FOREGROUND_FIRST;
-                    else if (nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST) // background color
-                        currentAttributes.currentBgColor = nCmd - COMMAND_COLOR_BACKGROUND_FIRST;
-                    else if (nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST) // text color
-                        currentAttributes.currentFgColor = nCmd - COMMAND_HICOLOR_FOREGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
-                    else if (nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST) // background color
-                        currentAttributes.currentBgColor = nCmd - COMMAND_HICOLOR_BACKGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
+	private void addRange(List<StyleRange> ranges, int start, int length, AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
+        StyleRange range = new StyleRange(start, length, foreground, null);
+        AnsiConsoleAttributes.updateRangeStyle(range, attributes);
+        if (isCode) {
+            if (SHOW_ESCAPE_CODES) {
+                range.font = MONO_FONT; // Show the codes in small, monospace font
+            } else {
+                range.metrics = new GlyphMetrics(0, 0, 0); // Hide the codes
             }
         }
-
-        return result;
-    }
-
-    private void addRange(List<StyleRange> ranges, int start, int length, Color foreground, boolean isCode) {
-        StyleRange range = new StyleRange(start, length, foreground, null);
-        AnsiConsoleAttributes.updateRangeStyle(range, lastAttributes);
-        if (isCode) {
-            boolean showEscapeCodes = AnsiConsolePreferenceUtils.showAnsiEscapes();
-            if (showEscapeCodes)
-                range.font = new Font(null, "Monospaced", 6, SWT.NORMAL);
-            else
-                range.metrics = new GlyphMetrics(0, 0, 0);
-        }
         ranges.add(range);
-        lastRangeEnd = lastRangeEnd + range.length;
     }
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
-        if (event == null || event.lineText == null || event.lineText.length() == 0)
-            return;
+    	if (event == null || event.lineText == null || event.lineText.length() == 0)
+    		return;
+    	
+    	if (document == null)
+    		return;
 
-        boolean isAnsiconEnabled = AnsiConsolePreferenceUtils.isAnsiConsoleEnabled();
-        if (!isAnsiconEnabled)
-            return;
+    	boolean isAnsiconEnabled = AnsiConsolePreferenceUtils.isAnsiConsoleEnabled();
+    	if (!isAnsiconEnabled)
+    		return;
 
-        String currentPalette = AnsiConsolePreferenceUtils.getPreferredPalette();
-        AnsiConsoleColorPalette.setPalette(currentPalette);
-        StyleRange defStyle;
+    	int eventOffset = event.lineOffset;
+    	int eventLength = event.lineText.length();
 
-        if (event.styles != null && event.styles.length > 0) {
-            defStyle = (StyleRange) event.styles[0].clone();
-            if (defStyle.background == null)
-                defStyle.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
-        } else {
-            defStyle = new StyleRange(1, lastRangeEnd,
-                    ColorCache.get(AnsiConsoleColorPalette.getColor(0)),
-                    ColorCache.get(AnsiConsoleColorPalette.getColor(15)),
-                    SWT.NORMAL);
-        }
+    	Position[] positions;
+    	try {
+    		positions = document.getPositions(AnsiPosition.POSITION_NAME);
+    	} catch (BadPositionCategoryException e) {
+    		return;
+		}
 
-        lastRangeEnd = 0;
-        List<StyleRange> ranges = new ArrayList<StyleRange>();
-        String currentText = event.lineText;
-        Matcher matcher = pattern.matcher(currentText);
+    	if (positions.length == 0)
+    		return;
+
+    	Color defForegroudColor = DEF_FOREGROUND_COLOR;
+
+    	List<StyleRange> ranges = new ArrayList<StyleRange>();
+    	AnsiConsoleAttributes prevAttr = lastVisibleAttribute;
+    	int prevPos = eventOffset;
+
+    	for (int i = 0; i < positions.length; i++) {
+    		AnsiPosition apos = (AnsiPosition) positions[i];
+    		if (apos.getOffset() > eventOffset + eventLength) // we passed the end of line, stop searching
+    			break;
+    		if (apos.overlapsWith(eventOffset, eventLength)) {
+    			if (apos.offset != prevPos) {
+    				addRange(ranges, prevPos, apos.offset - prevPos, prevAttr, defForegroudColor, false);
+    			}
+    			addRange(ranges, apos.offset, apos.length, apos.attributes, defForegroudColor, true);
+    			prevPos = apos.offset + apos.length;
+    		}
+    		prevAttr = apos.attributes;
+    	}
+    	addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, defForegroudColor, false);
+
+    	if (!ranges.isEmpty()) {
+    		for (StyleRange range : event.styles) {
+    			if (HYPERLINK_COLOR.equals(range.foreground))
+    				ranges.add(range);
+    		}
+    		event.styles = ranges.toArray(new StyleRange[0]);
+    	}
+    }
+
+	static List<AnsiPosition> findPositions(int offset, String currentText) {
+        List<AnsiPosition> result = new ArrayList<AnsiPosition>();
+        Matcher matcher = PATTERN.matcher(currentText);
         while (matcher.find()) {
             int start = matcher.start();
-            int end = matcher.end();
-
-            String theEscape = currentText.substring(matcher.start() + 2, matcher.end() - 1);
-            char code = currentText.charAt(matcher.end() - 1);
-            if (code == AnsiConsoleUtils.ESCAPE_SGR) {
-                // Select Graphic Rendition (SGR) escape sequence
-                List<Integer> nCommands = new ArrayList<Integer>();
-                for (String cmd : theEscape.split(";")) {
-                    int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
-                    if (nCmd != -1)
-                        nCommands.add(nCmd);
-                }
-                if (nCommands.isEmpty())
-                    nCommands.add(0);
-                interpretCommand(nCommands);
-            }
-
-            if (lastRangeEnd != start)
-                addRange(ranges, event.lineOffset + lastRangeEnd, start - lastRangeEnd, defStyle.foreground, false);
-            lastAttributes = currentAttributes.clone();
-
-            addRange(ranges, event.lineOffset + start, end - start, defStyle.foreground, true);
+            String group = matcher.group();
+            AnsiPosition apos = new AnsiPosition(start + offset, group);
+            result.add(apos);
         }
-        if (lastRangeEnd != currentText.length())
-            addRange(ranges, event.lineOffset + lastRangeEnd, currentText.length() - lastRangeEnd, defStyle.foreground, false);
-        lastAttributes = currentAttributes.clone();
+        return result; 
+	}
 
-        if (!ranges.isEmpty())
-            event.styles = ranges.toArray(new StyleRange[ranges.size()]);
-    }
+	@Override
+	public void update(DocumentEvent event) {
+		IDocument document = event.getDocument();
+		
+		int offset = event.getOffset();
+		int length = event.getLength();
+		String text = event.getText();
+		try {
+			if (offset == 0 && length != 0) { // removes the beginning, scan to find and save the last style
+				for (Position pos : document.getPositions(AnsiPosition.POSITION_NAME)) {
+					if (pos.offset >= length)
+						break;
+					lastVisibleAttribute = ((AnsiPosition) pos).attributes;
+				}
+			}
+			defaultPositionUpdater.update(event);
+			if (length == 0 && offset + text.length() == document.getLength()) { // added text, at the end
+				int lineCount = document.getNumberOfLines(offset, length);
+				for (int i = 0; i < lineCount; i++) {
+					List<AnsiPosition> newPos = findPositions(offset, text);
+					for (AnsiPosition apos : newPos) {
+						document.addPosition(AnsiPosition.POSITION_NAME, apos);
+					}
+				}
+			}
+		} catch (BadPositionCategoryException e) {
+			e.printStackTrace();
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+	}
 }

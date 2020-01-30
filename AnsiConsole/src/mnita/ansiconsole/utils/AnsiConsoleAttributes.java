@@ -12,8 +12,7 @@ import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 public class AnsiConsoleAttributes {
     public static final int UNDERLINE_NONE = -1; // nothing in SWT, a bit of an abuse
 
-    private static final boolean USE_WINDOWS_MAPPING = AnsiConsolePreferenceUtils.useWindowsMapping();
-
+    // If you change any of these also update reset()
     public Integer currentBgColor;
     public Integer currentFgColor;
     public int underline;
@@ -92,7 +91,7 @@ public class AnsiConsoleAttributes {
 
         boolean hilite = false;
 
-        if (USE_WINDOWS_MAPPING) {
+        if (AnsiConsolePreferenceUtils.useWindowsMapping()) {
             if (tempAttrib.bold) {
                 tempAttrib.bold = false; // not supported, rendered as intense, already done that
                 hilite = true;

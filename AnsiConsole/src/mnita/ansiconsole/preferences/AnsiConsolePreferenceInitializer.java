@@ -14,7 +14,7 @@ public class AnsiConsolePreferenceInitializer extends AbstractPreferenceInitiali
         store.setDefault(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, true);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES, false);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING, false);
-        store.setDefault(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR, false);
+        store.setDefault(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR, true);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, AnsiConsoleColorPalette.getPalette());
     }
 }

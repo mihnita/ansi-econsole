@@ -29,13 +29,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private static final Pattern PATTERN = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
     private static final Font MONO_FONT = new Font(null, "Monospaced", 6, SWT.NORMAL);
 
-    private final boolean showEscapeCodes = AnsiConsolePreferenceUtils.showAnsiEscapes();
-    private final Color defForegroundColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
-    private final Color hyperlinkColor = AnsiConsolePreferenceUtils.getHyperlinkColor();
-    private final Color defaultErrorColor = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
-
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
     private final IDocument document;
+    private boolean documentEverScanned = false;
 
     private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes();
 
@@ -46,14 +42,14 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
     }
 
-    private void addRange(List<StyleRange> ranges, int start, int length,
+    private static void addRange(List<StyleRange> ranges, int start, int length,
             AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
 
         StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, attributes);
         if (isCode) {
-            if (showEscapeCodes) {
-                range.font = MONO_FONT; // Show the codes in small, monospace font
+            if (AnsiConsolePreferenceUtils.showAnsiEscapes()) {
+                range.font = MONO_FONT; // Show the codes in small, monospaced font
             } else {
                 range.metrics = new GlyphMetrics(0, 0, 0); // Hide the codes
             }
@@ -69,14 +65,17 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (document == null)
             return;
 
-        boolean isAnsiconEnabled = AnsiConsolePreferenceUtils.isAnsiConsoleEnabled();
-        if (!isAnsiconEnabled)
+        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
             return;
 
         int eventOffset = event.lineOffset;
         int eventLength = event.lineText.length();
         if (event.styles == null) { // It looks that in some cases this comes in as null
             event.styles = new StyleRange[0];
+        }
+
+        if (!documentEverScanned) {
+            calculateDocumentAnsiPositions(document, 0, 0, event.lineText);
         }
 
         Position[] positions;
@@ -89,11 +88,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (positions.length == 0)
             return;
 
-        Color foregroundColor = defForegroundColor;
+        Color foregroundColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
         if (AnsiConsolePreferenceUtils.tryPreservingStdErrColor()) {
             for (StyleRange range : event.styles) {
-                if (defaultErrorColor.equals(range.foreground)) {
-                	foregroundColor = defaultErrorColor;
+                if (AnsiConsolePreferenceUtils.getDebugConsoleErrorColor().equals(range.foreground)) {
+                    foregroundColor = range.foreground;
                     break;
                 }
             }
@@ -120,9 +119,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
         if (!ranges.isEmpty()) {
             // Copy the links that might already exist
-            for (StyleRange range : event.styles) {
-                if (hyperlinkColor.equals(range.foreground))
-                    ranges.add(range);
+            if (event.styles != null) { // In some case (not 100% when) the styles are null
+                for (StyleRange range : event.styles) {
+                    if (AnsiConsolePreferenceUtils.getHyperlinkColor().equals(range.foreground))
+                        ranges.add(range);
+                }
             }
             event.styles = ranges.toArray(new StyleRange[0]);
         }
@@ -139,6 +140,32 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         return result;
     }
 
+    // We scan newly appended text.
+    // Although in a general document one can also replace text, or insert text in the middle (or beginning)
+    // that would complicate things a lot.
+    // But this is a console output, so I don't expect such a thing to happen.
+    private void calculateDocumentAnsiPositions(IDocument eventDocument, int offset, int length, String text) {
+        if (length != 0) { // This is the length of the text replaced. If not zero then this is not append, is replace.
+            return;
+        }
+        // First time or the appended text is at the end (so it is not inserted text).
+        if (documentEverScanned && offset + text.length() != eventDocument.getLength()) {
+            return;
+        }
+        documentEverScanned = true;
+        try {
+            int lineCount = eventDocument.getNumberOfLines(offset, length);
+            for (int i = 0; i < lineCount; i++) {
+                List<AnsiPosition> newPos = findPositions(offset, text);
+                for (AnsiPosition apos : newPos) {
+                    eventDocument.addPosition(AnsiPosition.POSITION_NAME, apos);
+                }
+            }
+        } catch (BadPositionCategoryException | BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void update(DocumentEvent event) {
         IDocument eventDocument = event.getDocument();
@@ -147,7 +174,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         int length = event.getLength();
         String text = event.getText();
         try {
-            if (offset == 0 && length != 0) { // removes the beginning, scan to find and save the last style
+            if (offset == 0 && length != 0) { // This removes the beginning. We scan to find and save the last style.
                 for (Position pos : eventDocument.getPositions(AnsiPosition.POSITION_NAME)) {
                     if (pos.offset >= length)
                         break;
@@ -155,16 +182,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                 }
             }
             defaultPositionUpdater.update(event);
-            if (length == 0 && offset + text.length() == eventDocument.getLength()) { // added text, at the end
-                int lineCount = eventDocument.getNumberOfLines(offset, length);
-                for (int i = 0; i < lineCount; i++) {
-                    List<AnsiPosition> newPos = findPositions(offset, text);
-                    for (AnsiPosition apos : newPos) {
-                        eventDocument.addPosition(AnsiPosition.POSITION_NAME, apos);
-                    }
-                }
-            }
-        } catch (BadPositionCategoryException | BadLocationException e) {
+            // This will only do something on new text (appended)
+            calculateDocumentAnsiPositions(eventDocument, offset, length, text);
+        } catch (BadPositionCategoryException e) {
             e.printStackTrace();
         }
     }

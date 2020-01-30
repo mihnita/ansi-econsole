@@ -75,7 +75,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         }
 
         if (!documentEverScanned) {
-            calculateDocumentAnsiPositions(document, 0, 0, event.lineText);
+            calculateDocumentAnsiPositions(document, 0, 0, null);
         }
 
         Position[] positions;
@@ -140,11 +140,26 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         return result;
     }
 
-    // We scan newly appended text.
-    // Although in a general document one can also replace text, or insert text in the middle (or beginning)
-    // that would complicate things a lot.
-    // But this is a console output, so I don't expect such a thing to happen.
+    /**
+     * We scan newly appended text, or the full document the first time.
+     *
+     * Although in a general an IDocument can also replace text, or insert text in the middle (or beginning)
+     * that would complicate things a lot.
+     * But this is a console output, so I don't expect such a thing to happen.
+     * We only expect to append (at the end), or remove from the beginning (when the doc size > console buffer size)
+     *   offset: 0, length: 0, "something" => Appended at beginning of doc (the doc was empty)
+     *   offset:42, length: 0, "something" => Appended at end of doc. 42 was doc size before append.
+     *   offset:0, length: 100, ""         => Removed the first 100 characters (replace with "" == remove)
+     *
+     * @param eventDocument The document
+     * @param offset        Where was the text added. 0 => might mean remove, or the first content added
+     * @param length        The length of the text replaced. 0 if append, != if removed (from the beginning)
+     * @param text
+     */
     private void calculateDocumentAnsiPositions(IDocument eventDocument, int offset, int length, String text) {
+        if (text == null)
+            text = eventDocument.get();
+
         if (length != 0) { // This is the length of the text replaced. If not zero then this is not append, is replace.
             return;
         }

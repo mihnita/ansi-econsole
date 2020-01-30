@@ -105,36 +105,36 @@ public class AnsiConTest {
         System.out.print("<<<");
         System.out.print(CSI + "5i"); // AUX Port On
         System.out.print(CSI + "4i"); // AUX Port Off
-        System.out.print(CSI + "6n"); // DSR – Device Status Report
-        System.out.print(CSI + "s"); // SCP – Save Cursor Position
-        System.out.print(CSI + "u"); // RCP – Restore Cursor Position
-        // System.out.print(CSI + "?25l"); // DECTCEM 	Hides the cursor.
-        // System.out.print(CSI + "?25h"); // DECTCEM 	Shows the cursor.
+        System.out.print(CSI + "6n"); // DSR - Device Status Report
+        System.out.print(CSI + "s"); // SCP - Save Cursor Position
+        System.out.print(CSI + "u"); // RCP - Restore Cursor Position
+        // System.out.print(CSI + "?25l"); // DECTCEM Hides the cursor.
+        // System.out.print(CSI + "?25h"); // DECTCEM Shows the cursor.
         System.out.println(">>>");
 
         final String [] values = { "", "0", "1", "4", "42" };
         System.out.print("<<<");
         for (String value : values) {
-            System.out.printf(CSI + "%sA", value); // CUU – Cursor Up
-            System.out.printf(CSI + "%sB", value); // CUD – Cursor Down
-            System.out.printf(CSI + "%sC", value); // CUF – Cursor Forward
-            System.out.printf(CSI + "%sD", value); // CUB – Cursor Back
-            System.out.printf(CSI + "%sE", value); // CNL – Cursor Next Line
-            System.out.printf(CSI + "%sF", value); // CPL – Cursor Previous Line
-            System.out.printf(CSI + "%sG", value); // CHA – Cursor Horizontal Absolute
-            System.out.printf(CSI + "%sJ", value); // ED – Erase Display
-            System.out.printf(CSI + "%sK", value); // EL – Erase in Line
-            System.out.printf(CSI + "%sS", value); // SU – Scroll Up
-            System.out.printf(CSI + "%sT", value); // SD – Scroll Down
-            // System.out.printf(CSI + "%sm", value); // SGR – Select Graphic Rendition
+            System.out.printf(CSI + "%sA", value); // CUU - Cursor Up
+            System.out.printf(CSI + "%sB", value); // CUD - Cursor Down
+            System.out.printf(CSI + "%sC", value); // CUF - Cursor Forward
+            System.out.printf(CSI + "%sD", value); // CUB - Cursor Back
+            System.out.printf(CSI + "%sE", value); // CNL - Cursor Next Line
+            System.out.printf(CSI + "%sF", value); // CPL - Cursor Previous Line
+            System.out.printf(CSI + "%sG", value); // CHA - Cursor Horizontal Absolute
+            System.out.printf(CSI + "%sJ", value); // ED - Erase Display
+            System.out.printf(CSI + "%sK", value); // EL - Erase in Line
+            System.out.printf(CSI + "%sS", value); // SU - Scroll Up
+            System.out.printf(CSI + "%sT", value); // SD - Scroll Down
+            // System.out.printf(CSI + "%sm", value); // SGR - Select Graphic Rendition
         }
         System.out.println(">>>");
 
         System.out.print("<<<");
         for (String val1 : values) {
             for (String val2 : values) {
-                System.out.printf(CSI + "%s;%sH", val1, val2); // CUP – Cursor Position
-                System.out.printf(CSI + "%s;%sf", val1, val2); // HVP – Horizontal and Vertical Position
+                System.out.printf(CSI + "%s;%sH", val1, val2); // CUP - Cursor Position
+                System.out.printf(CSI + "%s;%sf", val1, val2); // HVP - Horizontal and Vertical Position
             }
         }
         System.out.println(">>>");

@@ -21,8 +21,8 @@ public class AnsiConsolePreferenceUtils {
      *   org.eclipse.debug.ui.inColor=192,192,192
      *   org.eclipse.debug.ui.outColor=192,192,192
      */
-	private static final String ECLIPSE_UI_WORKBENCH = "org.eclipse.ui.workbench";
-	private static final String DEBUG_CONSOLE_PLUGIN_ID = "org.eclipse.debug.ui";
+    private static final String ECLIPSE_UI_WORKBENCH = "org.eclipse.ui.workbench";
+    private static final String DEBUG_CONSOLE_PLUGIN_ID = "org.eclipse.debug.ui";
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
     private static final String DEBUG_CONSOLE_FALLBACK_ERRCOLOR = "255,0,0";
@@ -43,7 +43,7 @@ public class AnsiConsolePreferenceUtils {
     static {
         refresh();
 
-        // Add some listeners to react to setting changes in my plugin and a few other areas 
+        // Add some listeners to react to setting changes in my plugin and a few other areas
 
         // When some setting changes in my own plugin
         AnsiConsoleActivator.getDefault().getPreferenceStore()
@@ -51,7 +51,7 @@ public class AnsiConsolePreferenceUtils {
 
         // When some setting changes in the debug settings (for example colors)
         IPreferenceStore preferenceStoreDebug = new ScopedPreferenceStore(InstanceScope.INSTANCE, DEBUG_CONSOLE_PLUGIN_ID);
-        // This is to capture the changes of the hyperlink color 
+        // This is to capture the changes of the hyperlink color
         IPreferenceStore preferenceStoreWorkbench = new ScopedPreferenceStore(InstanceScope.INSTANCE, ECLIPSE_UI_WORKBENCH);
 
         preferenceStoreWorkbench.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );

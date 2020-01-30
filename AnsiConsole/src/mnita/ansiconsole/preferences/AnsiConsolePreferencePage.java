@@ -33,12 +33,16 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 "&Try using the standard error color setting for stderr output", getFieldEditorParent()));
 
         addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette", 1,
-                new String[][] { { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
+                new String[][] {
+                        { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
                         { "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
                         { "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
                         { "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
                         { "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
-                        { "xterm", AnsiConsoleColorPalette.PALETTE_XTERM } },
+                        { "xterm", AnsiConsoleColorPalette.PALETTE_XTERM },
+                        { "mIRC", AnsiConsoleColorPalette.PALETTE_MIRC },
+                        { "Ubuntu", AnsiConsoleColorPalette.PALETTE_UBUNTU }
+                },
                 getFieldEditorParent()));
     }
 

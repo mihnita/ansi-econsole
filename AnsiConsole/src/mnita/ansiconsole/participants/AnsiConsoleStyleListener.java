@@ -1,6 +1,7 @@
 package mnita.ansiconsole.participants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private static final Font MONO_FONT = new Font(null, "Monospaced", 6, SWT.NORMAL);
 
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
+    private final HashMap<Integer, List<StyleRange>> offsetToStyleRangeCache = new HashMap<>();
     private final IDocument document;
     private boolean documentEverScanned = false;
 
@@ -45,7 +47,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private static void addRange(List<StyleRange> ranges, int start, int length,
             AnsiConsoleAttributes attributes, Color foreground, boolean isCode) {
 
-        StyleRange range = new StyleRange(start, length, foreground, null);
+        final StyleRange range = new StyleRange(start, length, foreground, null);
         AnsiConsoleAttributes.updateRangeStyle(range, attributes);
         if (isCode) {
             if (AnsiConsolePreferenceUtils.showAnsiEscapes()) {
@@ -68,8 +70,13 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
             return;
 
-        int eventOffset = event.lineOffset;
-        int eventLength = event.lineText.length();
+        final int eventOffset = event.lineOffset;
+        final int eventLength = event.lineText.length();
+        final List<StyleRange> cachedRanges = offsetToStyleRangeCache.get(eventOffset);
+        if (cachedRanges != null) {
+            event.styles = cachedRanges.toArray(new StyleRange[0]);
+            return;
+        }
         if (event.styles == null) { // It looks that in some cases this comes in as null
             event.styles = new StyleRange[0];
         }
@@ -88,17 +95,18 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (positions.length == 0)
             return;
 
+        final Color errorColor = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
         Color foregroundColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
         if (AnsiConsolePreferenceUtils.tryPreservingStdErrColor()) {
             for (StyleRange range : event.styles) {
-                if (AnsiConsolePreferenceUtils.getDebugConsoleErrorColor().equals(range.foreground)) {
-                    foregroundColor = range.foreground;
+                if (errorColor.equals(range.foreground)) {
+                    foregroundColor = errorColor;
                     break;
                 }
             }
         }
 
-        List<StyleRange> ranges = new ArrayList<>();
+        final List<StyleRange> ranges = new ArrayList<>();
         AnsiConsoleAttributes prevAttr = lastVisibleAttribute;
         int prevPos = eventOffset;
 
@@ -119,19 +127,18 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
         if (!ranges.isEmpty()) {
             // Copy the links that might already exist
-            if (event.styles != null) { // In some case (not 100% when) the styles are null
-                for (StyleRange range : event.styles) {
-                    if (AnsiConsolePreferenceUtils.getHyperlinkColor().equals(range.foreground))
-                        ranges.add(range);
-                }
+            for (StyleRange range : event.styles) {
+                if (AnsiConsolePreferenceUtils.getHyperlinkColor().equals(range.foreground))
+                    ranges.add(range);
             }
+            offsetToStyleRangeCache.put(eventOffset, ranges);
             event.styles = ranges.toArray(new StyleRange[0]);
         }
     }
 
     private static List<AnsiPosition> findPositions(int offset, String currentText) {
-        List<AnsiPosition> result = new ArrayList<>();
-        Matcher matcher = PATTERN.matcher(currentText);
+        final List<AnsiPosition> result = new ArrayList<>();
+        final Matcher matcher = PATTERN.matcher(currentText);
         while (matcher.find()) {
             int start = matcher.start();
             String group = matcher.group();
@@ -154,7 +161,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
      * @param eventDocument The document
      * @param offset        Where was the text added. 0 => might mean remove, or the first content added
      * @param length        The length of the text replaced. 0 if append, != if removed (from the beginning)
-     * @param text
+     * @param text          For insert / append, this is the new text. For delete, empty string.
      */
     private void calculateDocumentAnsiPositions(IDocument eventDocument, int offset, int length, String text) {
         if (text == null)
@@ -169,7 +176,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         }
         documentEverScanned = true;
         try {
-            int lineCount = eventDocument.getNumberOfLines(offset, length);
+            final int lineCount = eventDocument.getNumberOfLines(offset, length);
             for (int i = 0; i < lineCount; i++) {
                 List<AnsiPosition> newPos = findPositions(offset, text);
                 for (AnsiPosition apos : newPos) {
@@ -183,11 +190,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void update(DocumentEvent event) {
-        IDocument eventDocument = event.getDocument();
+        final IDocument eventDocument = event.getDocument();
 
-        int offset = event.getOffset();
-        int length = event.getLength();
-        String text = event.getText();
+        final int offset = event.getOffset();
+        final int length = event.getLength();
+        final String text = event.getText();
         try {
             if (offset == 0 && length != 0) { // This removes the beginning. We scan to find and save the last style.
                 for (Position pos : eventDocument.getPositions(AnsiPosition.POSITION_NAME)) {
@@ -199,6 +206,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
             defaultPositionUpdater.update(event);
             // This will only do something on new text (appended)
             calculateDocumentAnsiPositions(eventDocument, offset, length, text);
+            // Would probably be possible to re-calculate things. But let's measure first (premature optimization and all that :-)
+            offsetToStyleRangeCache.clear();
         } catch (BadPositionCategoryException e) {
             e.printStackTrace();
         }

@@ -5,10 +5,21 @@
       version="1.4.0.qualifier"
       provider-name="Mihai Nita">
 
-   <description>
-      Ansi Console uses ANSI escape sequences to color the console output. 
-This can be pretty handy when using something like jansi (https://fusesource.github.io/jansi/)
-But is should also work from Perl, C++, or Groovy, or any other Eclipse hosted language.
+   <description url="https://github.com/mihnita/ansi-econsole">
+      This Eclipse plugin interprets the ANSI escape sequences to color the console output.
+It works for output text with escape sequences directly from Java, Groovy, C/C++, Perl, Python,
+or any other Eclipse hosted language that outputs text to the standard output or standard error.
+
+Supports 16 colors / 256 colors / true-colors for foreground and background, color palettes.
+Attributes like bold, italic, underline, invert, conceal, strike, framed.
+
+Unfortunately nothing that changes the content of the output (erase actions), or cursor positioning,
+because of the way the Eclipse console works.
+
+See https://en.wikipedia.org/wiki/ANSI_escape_code and https://www.mihai-nita.net/eclipse
+
+And it is open source: https://github.com/mihnita/ansi-econsole
+That&apos;s where you can file a bug, ask for a feature, contribute a fix, or just say hi.
    </description>
 
    <copyright url="https://www.mihai-nita.net">
@@ -32,6 +43,8 @@ limitations under the License.
    <url>
       <update label="Ansi Console for Eclipse" url="https://www.mihai-nita.net/eclipse"/>
       <discovery label="Info on this Eclipse plug-in" url="https://www.mihai-nita.net/eclipse"/>
+      <discovery label="ANSI Escape Codes" url="https://en.wikipedia.org/wiki/ANSI_escape_code"/>
+      <discovery label="GitHub: sources, bug tracking" url="https://github.com/mihnita/ansi-econsole"/>
    </url>
 
    <requires>

@@ -190,6 +190,10 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void update(DocumentEvent event) {
+        // Make sure we don't do anything if disabled
+        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
+            return;
+
         final IDocument eventDocument = event.getDocument();
 
         final int offset = event.getOffset();

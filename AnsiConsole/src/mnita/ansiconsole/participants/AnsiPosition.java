@@ -62,20 +62,38 @@ public class AnsiPosition extends Position {
         return String.format("AnsiPosition:{ offset:%d length:%d text:\"%s\" attr:\"%s\" }", offset, length, text, attributes);
     }
 
+    // Takes a string that looks like this: int [ ';' int] and returns a list of the integers
+    private static List<Integer> parseSemicolonSeparatedIntList(String text) {
+        final List<Integer> result = new ArrayList<>(10);
+        int crtValue = 0;
+        boolean parsed = false;
+        char ch;
+        for (int i = 0; i < text.length(); i++) {
+            ch = text.charAt(i);
+            if (ch >= '0' && ch <= '9') {
+                crtValue *= 10;
+                crtValue += ch - '0';
+                parsed = true;
+            } else {
+                if (parsed)
+                    result.add(crtValue);
+                parsed = false;
+                crtValue = 0;
+            }
+        }
+        if (parsed)
+            result.add(crtValue);
+        if (result.isEmpty())
+            result.add(0);
+        return result;
+    }
+
     private AnsiConsoleAttributes updateAttributes() {
         char code = text.charAt(text.length() - 1);
         if (code == AnsiConsoleUtils.ESCAPE_SGR) {
             String theEscape = text.substring(2, text.length() - 1);
             // Select Graphic Rendition (SGR) escape sequence
-            List<Integer> nCommands = new ArrayList<>();
-            for (String cmd : theEscape.split(";")) {
-                int nCmd = AnsiConsolePreferenceUtils.tryParseInteger(cmd);
-                if (nCmd != -1)
-                    nCommands.add(nCmd);
-            }
-            if (nCommands.isEmpty())
-                nCommands.add(0);
-            interpretCommand(nCommands);
+            interpretCommand(parseSemicolonSeparatedIntList(theEscape));
             return AnsiConsoleAttributes.from(current);
         }
         return null;

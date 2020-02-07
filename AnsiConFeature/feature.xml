@@ -2,7 +2,7 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.4.0.qualifier"
+      version="1.4.1.qualifier"
       provider-name="Mihai Nita">
 
    <description url="https://github.com/mihnita/ansi-econsole">
@@ -56,9 +56,9 @@ limitations under the License.
 
    <plugin
          id="net.mihai-nita.ansicon.plugin"
-         download-size="29"
-         install-size="29"
-         version="1.4.0.qualifier"
+         download-size="30"
+         install-size="30"
+         version="1.4.1.qualifier"
          unpack="false"/>
 
 </feature>

@@ -1,6 +1,7 @@
 package mnita.ansiconsole.participants;
 
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Listener;
@@ -8,7 +9,6 @@ import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsolePageParticipant;
-import org.eclipse.ui.console.TextConsoleViewer;
 import org.eclipse.ui.part.IPageBookViewPage;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
@@ -56,8 +56,8 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
         for (Listener listener : viewer.getListeners(ST.LineGetStyle)) {
             if (listener instanceof TypedListener) {
                 Object evenListener = ((TypedListener) listener).getEventListener();
-                if (evenListener instanceof TextConsoleViewer) {
-                    return ((TextConsoleViewer) evenListener).getDocument();
+                if (evenListener instanceof ITextViewer) {
+                    return ((ITextViewer) evenListener).getDocument();
                 }
             }
         }

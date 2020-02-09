@@ -87,6 +87,9 @@ public class AnsiConsoleAttributes {
     // This function maps from the current attributes as "described" by escape sequences to real,
     // Eclipse console specific attributes (resolving color palette, default colors, etc.)
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
+        if (attribute == null)
+            return;
+
         AnsiConsoleAttributes tempAttrib = AnsiConsoleAttributes.from(attribute);
 
         boolean hilite = false;

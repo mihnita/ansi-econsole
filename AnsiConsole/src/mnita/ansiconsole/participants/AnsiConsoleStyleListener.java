@@ -121,7 +121,11 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                 addRange(ranges, apos.offset, apos.length, apos.attributes, foregroundColor, true);
                 prevPos = apos.offset + apos.length;
             }
-            prevAttr = apos.attributes;
+            if (apos.attributes != null) {
+                // Attributes can be null for non \e[..m escapes, for example \e[K
+                // Those kind of escape sequences don't affect the attributes.
+                prevAttr = apos.attributes;
+            }
         }
         addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
 
@@ -204,7 +208,10 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                 for (Position pos : eventDocument.getPositions(AnsiPosition.POSITION_NAME)) {
                     if (pos.offset >= length)
                         break;
-                    lastVisibleAttribute = ((AnsiPosition) pos).attributes;
+                    AnsiConsoleAttributes attributes = ((AnsiPosition) pos).attributes;
+                    if (attributes != null) {
+                        lastVisibleAttribute = attributes;
+                    }
                 }
             }
             defaultPositionUpdater.update(event);

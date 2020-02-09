@@ -2,7 +2,7 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.4.1.qualifier"
+      version="1.4.2.qualifier"
       provider-name="Mihai Nita">
 
    <description url="https://github.com/mihnita/ansi-econsole">
@@ -42,7 +42,7 @@ limitations under the License.
 
    <url>
       <update label="Ansi Console for Eclipse" url="https://www.mihai-nita.net/eclipse"/>
-      <discovery label="Info on this Eclipse plug-in" url="https://www.mihai-nita.net/eclipse"/>
+      <discovery label="Info about this Eclipse plug-in" url="https://www.mihai-nita.net/eclipse"/>
       <discovery label="ANSI Escape Codes" url="https://en.wikipedia.org/wiki/ANSI_escape_code"/>
       <discovery label="GitHub: sources, bug tracking" url="https://github.com/mihnita/ansi-econsole"/>
    </url>
@@ -56,9 +56,9 @@ limitations under the License.
 
    <plugin
          id="net.mihai-nita.ansicon.plugin"
-         download-size="30"
-         install-size="30"
-         version="1.4.1.qualifier"
+         download-size="40"
+         install-size="40"
+         version="1.4.2.qualifier"
          unpack="false"/>
 
 </feature>

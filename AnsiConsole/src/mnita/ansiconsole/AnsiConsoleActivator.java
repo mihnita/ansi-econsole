@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ResourceLocator;
+//import org.eclipse.jface.resource.ImageDescriptor;
+//import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -15,7 +15,8 @@ import org.osgi.framework.BundleContext;
 
 public class AnsiConsoleActivator extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "net.mihai-nita.AnsiConsole"; //$NON-NLS-1$
+//    Should match Bundle-SymbolicName in MANIFEST.MF
+//    public static final String PLUGIN_ID = "net.mihai-nita.ansicon.plugin"; //$NON-NLS-1$
 
     private static AnsiConsoleActivator plugin;
 
@@ -35,9 +36,9 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         return plugin;
     }
 
-    public static ImageDescriptor getImageDescriptor(String path) {
-        return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path).get();
-    }
+//    public static ImageDescriptor getImageDescriptor(String path) {
+//        return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path).get();
+//    }
 
     private final Map<StyledText, IConsolePageParticipant> viewers = new HashMap<>();
 

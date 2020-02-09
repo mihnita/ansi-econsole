@@ -39,7 +39,6 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.swt.SWT;
 
 import mnita.ansiconsole.AnsiConsoleUtils;
-import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 

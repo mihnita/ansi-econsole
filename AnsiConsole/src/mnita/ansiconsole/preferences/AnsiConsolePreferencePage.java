@@ -23,6 +23,9 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
                 "Enabled", getFieldEditorParent()));
 
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
+                "Enable performance check", getFieldEditorParent()));
+
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
                 "Use &Windows color mapping (bold => intense, italic => reverse)", getFieldEditorParent()));
 

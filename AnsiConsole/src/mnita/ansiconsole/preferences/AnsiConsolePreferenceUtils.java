@@ -20,13 +20,30 @@ public class AnsiConsolePreferenceUtils {
      *   org.eclipse.debug.ui.errorColor=225,30,70
      *   org.eclipse.debug.ui.inColor=192,192,192
      *   org.eclipse.debug.ui.outColor=192,192,192
+     * Limiting console output:
+     *   1M:
+     *     Console.highWaterMark=1008000
+     *     Console.lowWaterMark=1000000
+     *   80K (default):
+     *     Console.highWaterMark=88000
+     *     Console.lowWaterMark not defined
+     *   No limit (lowWaterMark / highWaterMark ignored):
+     *     Console.limitConsoleOutput=false
+     *
+     * This was added in Eclipse 2020-12. Disaster performance, more than 20 times slower
+     *   <workspace>\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.ui.console.prefs
+     *     org.eclipse.ui.console.P_CONSOLE_WORD_WRAP=true
      */
     private static final String ECLIPSE_UI_WORKBENCH = "org.eclipse.ui.workbench";
-    private static final String DEBUG_CONSOLE_PLUGIN_ID = "org.eclipse.debug.ui";
+    private static final String ECLIPSE_UI_CONSOLE = "org.eclipse.ui.console";
+    private static final String ECLIPSE_DEBUG_UI = "org.eclipse.debug.ui";
+
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
     private static final String DEBUG_CONSOLE_FALLBACK_ERRCOLOR = "255,0,0";
     private static final String DEBUG_CONSOLE_FALLBACK_LINK_COLOR = "111,197,238";
+
+    private static final IPreferenceStore PREF_STORE = AnsiConsoleActivator.getDefault().getPreferenceStore();
 
     // Caching, for better performance.
     // Start with "reasonable" values, but refresh() will update them from the saved preferences
@@ -46,11 +63,10 @@ public class AnsiConsolePreferenceUtils {
         // Add some listeners to react to setting changes in my plugin and a few other areas
 
         // When some setting changes in my own plugin
-        AnsiConsoleActivator.getDefault().getPreferenceStore()
-                .addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );
+        PREF_STORE.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );
 
         // When some setting changes in the debug settings (for example colors)
-        IPreferenceStore preferenceStoreDebug = new ScopedPreferenceStore(InstanceScope.INSTANCE, DEBUG_CONSOLE_PLUGIN_ID);
+        IPreferenceStore preferenceStoreDebug = new ScopedPreferenceStore(InstanceScope.INSTANCE, ECLIPSE_DEBUG_UI);
         // This is to capture the changes of the hyperlink color
         IPreferenceStore preferenceStoreWorkbench = new ScopedPreferenceStore(InstanceScope.INSTANCE, ECLIPSE_UI_WORKBENCH);
 
@@ -111,13 +127,10 @@ public class AnsiConsolePreferenceUtils {
 
     public static void setAnsiConsoleEnabled(boolean enabled) {
         isAnsiConsoleEnabled = enabled;
-        AnsiConsoleActivator
-                .getDefault()
-                .getPreferenceStore()
-                .setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
+        PREF_STORE.setValue(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED, enabled);
     }
 
-    /** True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
+    /** @return True if we should interpret bold as intense, italic as reverse, the way the (old?) Windows console does */
     public static boolean useWindowsMapping() {
         return useWindowsMapping;
     }
@@ -134,19 +147,41 @@ public class AnsiConsolePreferenceUtils {
         return tryPreservingStdErrColor;
     }
 
+    public static int getWattermarkLevel() {
+        final IPreferencesService prefServices = Platform.getPreferencesService();
+        if (prefServices.getBoolean(ECLIPSE_DEBUG_UI, "Console.limitConsoleOutput", true, null)) {
+            return prefServices.getInt(ECLIPSE_DEBUG_UI, "Console.lowWaterMark", 80000, null);
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    public static boolean isWordWrapEnabled() {
+        final IPreferencesService prefServices = Platform.getPreferencesService();
+        return prefServices.getBoolean(ECLIPSE_UI_CONSOLE,
+                "org.eclipse.ui.console.P_CONSOLE_WORD_WRAP", false, null);
+    }
+
+    public static boolean isPerformanceWarningEnabled() {
+        return PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING);
+    }
+
+    public static void setEnablePerformanceWarning(boolean newValue) {
+        PREF_STORE.setValue(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING, newValue);
+    }
+
     public static void refresh() {
-        final IPreferenceStore prefStore = AnsiConsoleActivator.getDefault().getPreferenceStore();
         final IPreferencesService prefServices = Platform.getPreferencesService();
 
-        String value = prefServices.getString(DEBUG_CONSOLE_PLUGIN_ID,
+        // Various console settings (the default Eclipse, not mine)
+        String value = prefServices.getString(ECLIPSE_DEBUG_UI,
                 "org.eclipse.debug.ui.consoleBackground", DEBUG_CONSOLE_FALLBACK_BKCOLOR, null);
         debugConsoleBgColor = colorFromStringRgb(value);
 
-        value = prefServices.getString(DEBUG_CONSOLE_PLUGIN_ID,
+        value = prefServices.getString(ECLIPSE_DEBUG_UI,
                 "org.eclipse.debug.ui.outColor", DEBUG_CONSOLE_FALLBACK_FGCOLOR, null);
         debugConsoleFgColor = colorFromStringRgb(value);
 
-        value = prefServices.getString(DEBUG_CONSOLE_PLUGIN_ID,
+        value = prefServices.getString(ECLIPSE_DEBUG_UI,
                 "org.eclipse.debug.ui.errorColor", DEBUG_CONSOLE_FALLBACK_ERRCOLOR, null);
         debugConsoleErrorColor = colorFromStringRgb(value);
 
@@ -154,10 +189,11 @@ public class AnsiConsolePreferenceUtils {
                 "HYPERLINK_COLOR", DEBUG_CONSOLE_FALLBACK_LINK_COLOR, null);
         hyperlinkColor = colorFromStringRgb(value);
 
-        useWindowsMapping = prefStore.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
-        getPreferredPalette = prefStore.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
-        showAnsiEscapes = prefStore.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
-        tryPreservingStdErrColor = prefStore.getBoolean(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR);
-        isAnsiConsoleEnabled = prefStore.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+        // My own settings
+        useWindowsMapping = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);
+        getPreferredPalette = PREF_STORE.getString(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE);
+        showAnsiEscapes = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
+        tryPreservingStdErrColor = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR);
+        isAnsiConsoleEnabled = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
     }
 }

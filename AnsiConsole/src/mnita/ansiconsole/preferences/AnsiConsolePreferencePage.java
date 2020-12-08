@@ -3,6 +3,7 @@ package mnita.ansiconsole.preferences;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -19,21 +20,22 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 
     @Override
     public void createFieldEditors() {
+        final Composite parent = getFieldEditorParent();
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
-                "Enabled", getFieldEditorParent()));
+                "Enabled", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
-                "Enable performance check", getFieldEditorParent()));
+                "Enable performance check", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
-                "Use &Windows color mapping (bold => intense, italic => reverse)", getFieldEditorParent()));
+                "Use &Windows color mapping (bold => intense, italic => reverse)", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES,
-                "&Show the escape sequences", getFieldEditorParent()));
+                "&Show the escape sequences", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
-                "&Try using the standard error color setting for stderr output", getFieldEditorParent()));
+                "&Try using the standard error color setting for stderr output", parent));
 
         addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette", 1,
                 new String[][] {
@@ -46,7 +48,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                         { "mIRC", AnsiConsoleColorPalette.PALETTE_MIRC },
                         { "Ubuntu", AnsiConsoleColorPalette.PALETTE_UBUNTU }
                 },
-                getFieldEditorParent()));
+                parent));
     }
 
     @Override

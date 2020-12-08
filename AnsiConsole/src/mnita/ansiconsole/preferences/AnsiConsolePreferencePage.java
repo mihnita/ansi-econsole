@@ -1,8 +1,8 @@
 package mnita.ansiconsole.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -37,7 +37,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
                 "&Try using the standard error color setting for stderr output", parent));
 
-        addField(new RadioGroupFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette", 1,
+        addField(new ComboFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette:",
                 new String[][] {
                         { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
                         { "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },

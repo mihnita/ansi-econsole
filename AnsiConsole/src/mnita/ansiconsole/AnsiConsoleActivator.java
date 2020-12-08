@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsolePageParticipant;
@@ -90,19 +90,20 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
 
         if (text.length() > 0) {
             showWarning = false;
-            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            Display.getDefault().asyncExec(new Runnable( ) {
+                public void run() {
+                    showDialog("Ansi Console", "CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + text);
+                }
+            });
+        }
+    }
 
-            String[] buttons = { "Remind me later", "Never remind me again" };
-            int answer = MessageDialog.open(MessageDialog.WARNING, window.getShell(),
-                    "Ansi Console", "CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + text,
-                    SWT.NONE, buttons);
-            switch (answer) {
-                case 1: // Never again
-                    AnsiConsolePreferenceUtils.setEnablePerformanceWarning(false);
-                    break;
-                default: // Next time
-                    break;
-            }
+    private void showDialog(String title, String message) {
+        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        final String[] buttons = { "Remind me later", "Never remind me again" };
+        final MessageDialog dlg = new MessageDialog(window.getShell(), title, null, message, MessageDialog.WARNING, 0, buttons);
+        if (dlg.open() == 1) {
+            AnsiConsolePreferenceUtils.setEnablePerformanceWarning(false);
         }
     }
 

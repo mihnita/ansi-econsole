@@ -21,6 +21,9 @@
    <feature url="features/net.mihai-nita.ansicon_1.4.2.202002090224.jar" id="net.mihai-nita.ansicon" version="1.4.2.202002090224">
       <category name="ansicon"/>
    </feature>
+   <feature url="features/net.mihai-nita.ansicon_1.4.3.202012111715.jar" id="net.mihai-nita.ansicon" version="1.4.3.202012111715">
+      <category name="ansicon"/>
+   </feature>
    <category-def name="ansicon" label="Ansi Console"/>
    <category-def name="externalfilter" label="External Filter"/>
 </site>

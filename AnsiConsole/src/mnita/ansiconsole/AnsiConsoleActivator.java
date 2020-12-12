@@ -64,8 +64,8 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) return;
 
         StringBuffer where = new StringBuffer(isMacOs()
-                ? "Main menu 🡒 Eclipse 🡒 Preferences... 🡒 Run Debug 🡒 Console\n"
-                : "Main menu 🡒 Window 🡒 Preferences 🡒 Run/Debug 🡒 Console\n");
+                ? "Main menu \u2192 Eclipse \u2192 Preferences... \u2192 Run Debug \u2192 Console\n"
+                : "Main menu \u2192 Window \u2192 Preferences \u2192 Run/Debug \u2192 Console\n");
         StringBuffer text = new StringBuffer();
         int wattermarkLevel = AnsiConsolePreferenceUtils.getWattermarkLevel();
         if (wattermarkLevel < 150_000) {

@@ -8,7 +8,7 @@ Quick install:
 `https://www.mihai-nita.net/eclipse`
 * You can then select the site in the “Work with” list and continue the installation like with any other plugin.
 
-Detailed info and screen-shots at <a href="http://www.mihai-nita.net/java">http://www.mihai-nita.net/java</a>.
+Detailed info and screen-shots at https://github.com/mihnita/ansi-econsole/wiki.
 
 This plugin is included in [Spring Tools Suite](https://spring.io/tools/sts) since 3.7.2
 

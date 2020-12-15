@@ -1,0 +1,214 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<groupId>com.mihnita</groupId>
+	<artifactId>ansiconsole</artifactId>
+	<version>1.4.3-SNAPSHOT</version>
+
+	<modules>
+		<module>AnsiConsole</module>
+		<module>AnsiConFeature</module>
+		<!-- <module>com.github.ansiconsole.test</module> -->
+		<module>AnsiConSite</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- These are default values, can be changed in command line, for example
+				mvn -Dmaven.compiler.source=9 -Dmaven.compiler.target=11 ... -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<tycho-version>0.23.0</tycho-version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>eclipse-platform</id>
+			<layout>p2</layout>
+			<url>${eclipse.repo.url}</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<argLine>-Xmx512M</argLine>
+					<includes>
+						<include>**/test/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>false</includeAllDependencies>
+					<createArtifactRepository>true</createArtifactRepository>
+					<compress>true</compress>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-publisher-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<publishArtifacts>true</publishArtifacts>
+				</configuration>
+			</plugin>
+
+			<!-- enable source bundle generation -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.0-beta-9</version>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>platform-neon</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>platform-version</name>
+					<value>neon</value>
+				</property>
+			</activation>
+			<properties>
+				<eclipse.repo.url>http://download.eclipse.org/releases/neon</eclipse.repo.url>
+			</properties>
+		</profile>
+		<profile>
+			<id>platform-mars</id>
+			<activation>
+				<property>
+					<name>platform-version</name>
+					<value>mars</value>
+				</property>
+			</activation>
+			<properties>
+				<eclipse.repo.url>http://download.eclipse.org/releases/mars</eclipse.repo.url>
+			</properties>
+		</profile>
+		<profile>
+			<id>platform-luna</id>
+			<activation>
+				<property>
+					<name>platform-version</name>
+					<value>luna</value>
+				</property>
+			</activation>
+			<properties>
+				<eclipse.repo.url>http://download.eclipse.org/releases/luna</eclipse.repo.url>
+			</properties>
+		</profile>
+		<profile>
+			<id>platform-kepler</id>
+			<activation>
+				<property>
+					<name>platform-version</name>
+					<value>kepler</value>
+				</property>
+			</activation>
+			<properties>
+				<eclipse.repo.url>http://download.eclipse.org/releases/kepler</eclipse.repo.url>
+			</properties>
+		</profile>
+	</profiles>
+<!-- Releases: https://www.eclipse.org/downloads/packages/release
+2020-12 (4.18)
+2020-09 (4.17)
+2020-06 (4.16)
+2020-03 (4.15)
+2019-12 (4.14)
+2019-09 (4.13)
+2019-06 (4.12)
+2019-03 (4.11)
+2018-12 (4.10)
+2018-09 (4.9)
+Photon (4.8)
+Oxygen (4.7)
+Neon (4.6) => 1.4.3 works
+Mars => Fails (Dialog), starting with 1.4.3
+Luna
+Kepler
+Juno
+Indigo
+Helios
+Ganymede
+Galileo
+Europa
+-->
+</project>

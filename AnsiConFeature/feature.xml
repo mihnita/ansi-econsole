@@ -3,8 +3,7 @@
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
       version="1.4.3.qualifier"
-      provider-name="Mihai Nita"
-      plugin="net.mihai-nita.ansicon.plugin">
+      provider-name="Mihai Nita">
 
    <description url="https://github.com/mihnita/ansi-econsole">
       This Eclipse plugin interprets the ANSI escape sequences to color the console output.
@@ -57,8 +56,10 @@ limitations under the License.
 
    <plugin
          id="net.mihai-nita.ansicon.plugin"
-         download-size="40"
-         install-size="40"
+         version="0.0.0"
+         unpack="false"/>
+   <plugin
+         id="net.mihai-nita.ansicon.plugin.source"
          version="0.0.0"
          unpack="false"/>
 

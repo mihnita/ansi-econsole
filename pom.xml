@@ -126,6 +126,7 @@
 				</executions>
 			</plugin>
 
+			<!-- To preserve older versions and other plugins -->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-p2-extras-plugin</artifactId>

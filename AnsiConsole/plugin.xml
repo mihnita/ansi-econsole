@@ -19,6 +19,19 @@
 </extension>
 
 <extension point="org.eclipse.ui.viewActions">
+	<viewContribution id="mnita.ansiconsole.showPreferencesConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
+		<action
+			class="mnita.ansiconsole.actions.AnsiConsoleShowPrefsIconAction"
+			icon="icons/ansiconsoleprefs.png"
+			id="mnita.ansiconsole.AnsiConsoleShowPrefsIconAction"
+			label="Show Ansi Console preferences"
+			style="push"
+			toolbarPath="additions">
+		</action>
+	</viewContribution>
+</extension>
+
+<extension point="org.eclipse.ui.viewActions">
 	<viewContribution id="mnita.ansiconsole.viewConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
 		<action
 			class="mnita.ansiconsole.actions.AnsiConsoleClickIconAction"

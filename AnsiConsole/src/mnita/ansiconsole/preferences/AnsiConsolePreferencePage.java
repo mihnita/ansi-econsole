@@ -28,8 +28,8 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
     public void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
 
-        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
-                "Enabled", parent));
+//        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
+//                "Enabled", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
                 "Enable performance check", parent));
@@ -75,12 +75,9 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         GridData gridData = new GridData();
         gridData.horizontalSpan = 2;
         if (fillGap) {
-        	gridData.grabExcessVerticalSpace = true;
-        	if (endAlign)
-        		gridData.verticalAlignment = SWT.END;
-        	else
-        		gridData.verticalAlignment = SWT.TOP;
-    	}
+            gridData.grabExcessVerticalSpace = true;
+            gridData.verticalAlignment = endAlign ? SWT.END : SWT.TOP;
+        }
         link.setLayoutData(gridData);
         link.addListener(SWT.Selection, event -> {
             try {

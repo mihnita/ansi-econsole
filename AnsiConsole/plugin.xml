@@ -22,8 +22,8 @@
 	<viewContribution id="mnita.ansiconsole.viewConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
 		<action
 			class="mnita.ansiconsole.actions.AnsiConsoleClickIconAction"
-			icon="icons/ansiconsole.gif"
-			disabledIcon="icons/ansiconsole_dis.gif"
+			icon="icons/ansiconsole.png"
+			disabledIcon="icons/ansiconsole_dis.png"
 			id="mnita.ansiconsole.AnsiConsoleClickIconAction"
 			label="Enable/disable Ansi Console"
 			style="push"
@@ -36,7 +36,7 @@
 	<viewContribution id="mnita.ansiconsole.copyPlainTextConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
 		<action
 			class="mnita.ansiconsole.actions.AnsiConsoleCopyIconAction"
-			icon="icons/ansiconsolecopy.gif"
+			icon="icons/ansiconsolecopy.png"
 			id="mnita.ansiconsole.AnsiConsoleCopyIconAction"
 			label="Copy text with escapes"
 			style="push"

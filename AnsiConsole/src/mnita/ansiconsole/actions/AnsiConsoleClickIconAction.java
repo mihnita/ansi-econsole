@@ -18,7 +18,7 @@ public class AnsiConsoleClickIconAction implements IViewActionDelegate {
 
         String currentImage = action.getImageDescriptor().toString();
         boolean isCurrentIconEnabled = true;
-        if (currentImage.indexOf("ansiconsole.gif") == -1)
+        if (currentImage.indexOf("ansiconsole.png") == -1)
             isCurrentIconEnabled = false;
 
         if (isCurrentIconEnabled ^ isAnsiconEnabled) { // current status does not match current icon, swap icons

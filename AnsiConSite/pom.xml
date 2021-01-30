@@ -8,6 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>net.mihai-nita.ansicon.updatesite</artifactId>
+	<name>Mihai's Eclipse plugins</name>
 	<packaging>eclipse-repository</packaging>
 
 </project>

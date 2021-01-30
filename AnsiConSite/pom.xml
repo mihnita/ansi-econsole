@@ -28,7 +28,7 @@
 						<configuration>
 							<source>
 								<repository>
-									<url>file://${project.basedir}/../AnsiConSitePublished</url>
+									<url>${project.baseUri}/../AnsiConSitePublished</url>
 								</repository>
 							</source>
 						</configuration>

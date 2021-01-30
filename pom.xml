@@ -126,30 +126,6 @@
 				</executions>
 			</plugin>
 
-			<!-- To preserve older versions and other plugins -->
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-p2-extras-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>mirror-update-sites</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>mirror</goal>
-						</goals>
-						<configuration>
-							<source>
-								<repository>
-									<url>https://www.mihai-nita.net/eclipse</url>
-									<!-- <url>file://${project.basedir}/ansicon_public</url> -->
-								</repository>
-							</source>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>

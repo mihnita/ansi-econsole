@@ -11,4 +11,31 @@
 	<name>Mihai's Eclipse plugins</name>
 	<packaging>eclipse-repository</packaging>
 
+	<build>
+		<plugins>
+			<!-- To preserve older versions and other plugins -->
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-p2-extras-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>mirror-update-sites</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>mirror</goal>
+						</goals>
+						<configuration>
+							<source>
+								<repository>
+									<url>file://${project.basedir}/../AnsiConSitePublished</url>
+								</repository>
+							</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

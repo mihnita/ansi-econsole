@@ -56,10 +56,14 @@ limitations under the License.
 
    <plugin
          id="net.mihai-nita.ansicon.plugin"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          unpack="false"/>
    <plugin
          id="net.mihai-nita.ansicon.plugin.source"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          unpack="false"/>
 

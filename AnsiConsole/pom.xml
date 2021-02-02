@@ -10,4 +10,13 @@
   <artifactId>net.mihai-nita.ansicon.plugin</artifactId>
   <packaging>eclipse-plugin</packaging>
 
+  <build>
+    <plugins>
+      <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-source-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

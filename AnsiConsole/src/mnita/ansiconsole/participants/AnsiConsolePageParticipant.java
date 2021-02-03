@@ -1,5 +1,6 @@
 package mnita.ansiconsole.participants;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.custom.ST;
@@ -7,12 +8,14 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.part.IPageBookViewPage;
+import org.eclipse.ui.services.IServiceLocator;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
-import mnita.ansiconsole.actions.AnsiConsoleCopyHandler;
+import mnita.ansiconsole.handlers.AnsiConsoleCopyHandler;
 
 public class AnsiConsolePageParticipant implements IConsolePageParticipant {
     @Override
@@ -46,8 +49,13 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
             viewer.addLineStyleListener(myListener);
             AnsiConsoleActivator.getDefault().addViewer(viewer, this);
 
-            AnsiConsoleCopyHandler copy = new AnsiConsoleCopyHandler(viewer);
-            page.getSite().getActionBars().setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
+            // Install copy handler, replacing the old one
+            IServiceLocator sloc = page.getSite().getActionBars().getServiceLocator();
+            ICommandService commandService = sloc.getService(ICommandService.class);
+            Command command = commandService.getCommand(ActionFactory.COPY.getId());
+            if (command != null) {
+                command.setHandler(new AnsiConsoleCopyHandler(viewer));
+            }
         }
     }
 

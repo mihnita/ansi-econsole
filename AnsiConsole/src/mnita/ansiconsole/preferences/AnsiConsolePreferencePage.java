@@ -2,21 +2,27 @@ package mnita.ansiconsole.preferences;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
+import mnita.ansiconsole.commands.EnableDisableHandler;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsolePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+    private static final ILog LOGGER = Platform.getLog(AnsiConsolePreferencePage.class);
 
     public AnsiConsolePreferencePage() {
         super(GRID);
@@ -28,8 +34,8 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
     public void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
 
-//        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
-//                "Enabled", parent));
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
+                "Enabled", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
                 "Enable performance check", parent));
@@ -84,5 +90,17 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
             } catch (Exception e) {}
         });
+    }
+
+    @Override
+    public boolean performOk() {
+        boolean result = super.performOk();
+        IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+        try {
+            handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
+        } catch (Exception ex) {
+            LOGGER.error("Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
+        }
+        return result;
     }
 }

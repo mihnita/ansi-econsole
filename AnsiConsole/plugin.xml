@@ -18,44 +18,60 @@
 	</consolePageParticipant>
 </extension>
 
-<extension point="org.eclipse.ui.viewActions">
-	<viewContribution id="mnita.ansiconsole.showPreferencesConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
-		<action
-			class="mnita.ansiconsole.actions.AnsiConsoleShowPrefsIconAction"
-			icon="icons/ansiconsoleprefs.png"
-			id="mnita.ansiconsole.AnsiConsoleShowPrefsIconAction"
-			label="Show Ansi Console preferences"
-			style="push"
-			toolbarPath="additions">
-		</action>
-	</viewContribution>
+<extension
+		point="org.eclipse.ui.commands">
+	<category
+			 id="AnsiConsole.command.categoryid"
+			 name="Ansi Console Commands">
+	</category>
+	<command
+			categoryId="AnsiConsole.command.categoryid"
+			defaultHandler="mnita.ansiconsole.commands.CopyWithEscapesHandler"
+			description="Copy the console content to clipboard, including the escape sequences"
+			id="AnsiConsole.command.copy_with_escapes"
+			name="Copy text with escapes">
+	</command>
+	<command
+			categoryId="AnsiConsole.command.categoryid"
+			defaultHandler="mnita.ansiconsole.commands.EnableDisableHandler"
+			description="Enable / disable Ansi Console"
+			id="AnsiConsole.command.enable_disable"
+			name="Enable / Disable Ansi Console">
+		<state
+				class="org.eclipse.ui.handlers.RegistryToggleState:true"
+				id="org.eclipse.ui.commands.toggleState">
+		</state>
+	</command>
+	<command
+			categoryId="AnsiConsole.command.categoryid"
+			defaultHandler="mnita.ansiconsole.commands.ShowQuickPrefsHandler"
+			description="Show the preferences for Ansi Console and the generic console"
+			id="AnsiConsole.command.show_quick_settings"
+			name="Show Ansi Console preferences">
+	</command>
 </extension>
 
-<extension point="org.eclipse.ui.viewActions">
-	<viewContribution id="mnita.ansiconsole.viewConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
-		<action
-			class="mnita.ansiconsole.actions.AnsiConsoleClickIconAction"
-			icon="icons/ansiconsole.png"
-			disabledIcon="icons/ansiconsole_dis.png"
-			id="mnita.ansiconsole.AnsiConsoleClickIconAction"
-			label="Enable/disable Ansi Console"
-			style="push"
-			toolbarPath="additions">
-		</action>
-	</viewContribution>
-</extension>
-
-<extension point="org.eclipse.ui.viewActions">
-	<viewContribution id="mnita.ansiconsole.copyPlainTextConsoleClickableIcon" targetID="org.eclipse.ui.console.ConsoleView">
-		<action
-			class="mnita.ansiconsole.actions.AnsiConsoleCopyIconAction"
-			icon="icons/ansiconsolecopy.png"
-			id="mnita.ansiconsole.AnsiConsoleCopyIconAction"
-			label="Copy text with escapes"
-			style="push"
-			toolbarPath="additions">
-		</action>
-	</viewContribution>
+<extension
+		point="org.eclipse.ui.menus">
+	<menuContribution
+			allPopups="false"
+			locationURI="toolbar:org.eclipse.ui.console.ConsoleView">
+		<command
+				commandId="AnsiConsole.command.copy_with_escapes"
+				icon="icons/ansiconsolecopy.png"
+				style="push">
+		</command>
+		<command
+				commandId="AnsiConsole.command.enable_disable"
+				icon="icons/ansiconsole.png"
+				style="toggle">
+		</command>
+		<command
+				commandId="AnsiConsole.command.show_quick_settings"
+				icon="icons/ansiconsoleprefs.png"
+				style="push">
+		</command>
+	</menuContribution>
 </extension>
 
 </plugin>

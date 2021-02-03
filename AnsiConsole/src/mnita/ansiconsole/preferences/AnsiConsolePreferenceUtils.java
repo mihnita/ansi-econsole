@@ -63,15 +63,15 @@ public class AnsiConsolePreferenceUtils {
         // Add some listeners to react to setting changes in my plugin and a few other areas
 
         // When some setting changes in my own plugin
-        PREF_STORE.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );
+        PREF_STORE.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh());
 
         // When some setting changes in the debug settings (for example colors)
         IPreferenceStore preferenceStoreDebug = new ScopedPreferenceStore(InstanceScope.INSTANCE, ECLIPSE_DEBUG_UI);
         // This is to capture the changes of the hyperlink color
         IPreferenceStore preferenceStoreWorkbench = new ScopedPreferenceStore(InstanceScope.INSTANCE, ECLIPSE_UI_WORKBENCH);
 
-        preferenceStoreWorkbench.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );
-        preferenceStoreDebug.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh() );
+        preferenceStoreWorkbench.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh());
+        preferenceStoreDebug.addPropertyChangeListener(evt -> AnsiConsolePreferenceUtils.refresh());
     }
 
     private AnsiConsolePreferenceUtils() {

@@ -90,7 +90,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
 
         if (text.length() > 0) {
             showWarning = false;
-            Display.getDefault().asyncExec(new Runnable( ) {
+            Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
                     showDialog("Ansi Console", "CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + text);
                 }

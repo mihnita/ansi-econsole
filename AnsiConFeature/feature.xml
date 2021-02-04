@@ -2,8 +2,9 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.4.3.qualifier"
-      provider-name="Mihai Nita">
+      version="1.4.4.qualifier"
+      provider-name="Mihai Nita"
+      plugin="net.mihai-nita.ansicon.plugin">
 
    <description url="https://github.com/mihnita/ansi-econsole">
       This Eclipse plugin interprets the ANSI escape sequences to color the console output.

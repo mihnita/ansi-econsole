@@ -2,8 +2,6 @@ package mnita.ansiconsole.preferences;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -22,7 +20,6 @@ import mnita.ansiconsole.commands.EnableDisableHandler;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsolePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-    private static final ILog LOGGER = Platform.getLog(AnsiConsolePreferencePage.class);
 
     public AnsiConsolePreferencePage() {
         super(GRID);
@@ -99,7 +96,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         try {
             handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
         } catch (Exception ex) {
-            LOGGER.error("Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
+            System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
         }
         return result;
     }

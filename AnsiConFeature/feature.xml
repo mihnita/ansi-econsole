@@ -17,7 +17,9 @@ Attributes like bold, italic, underline, invert, conceal, strike, framed.
 Unfortunately nothing that changes the content of the output (erase actions), or cursor positioning,
 because of the way the Eclipse console works.
 
-See https://en.wikipedia.org/wiki/ANSI_escape_code and https://www.mihai-nita.net/eclipse
+See https://github.com/mihnita/ansi-econsole/wiki
+Release notes: https://github.com/mihnita/ansi-econsole/wiki/Release-Notes
+Standard ANSI escape codes: https://en.wikipedia.org/wiki/ANSI_escape_code
 
 And it is open source: https://github.com/mihnita/ansi-econsole
 That&apos;s where you can file a bug, ask for a feature, contribute a fix, or just say hi.
@@ -43,9 +45,10 @@ limitations under the License.
 
    <url>
       <update label="Ansi Console for Eclipse" url="https://www.mihai-nita.net/eclipse"/>
-      <discovery label="Info about this Eclipse plug-in" url="https://www.mihai-nita.net/eclipse"/>
-      <discovery label="ANSI Escape Codes" url="https://en.wikipedia.org/wiki/ANSI_escape_code"/>
+      <discovery label="Info about this Eclipse plug-in" url="https://github.com/mihnita/ansi-econsole/wiki"/>
       <discovery label="GitHub: sources, bug tracking" url="https://github.com/mihnita/ansi-econsole"/>
+      <discovery label="Release notes" url="https://github.com/mihnita/ansi-econsole/wiki/Release-Notes"/>
+      <discovery label="ANSI Escape Codes" url="https://en.wikipedia.org/wiki/ANSI_escape_code"/>
    </url>
 
    <requires>

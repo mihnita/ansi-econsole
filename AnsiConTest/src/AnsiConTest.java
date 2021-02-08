@@ -143,7 +143,7 @@ public class AnsiConTest {
     public static void main(String[] args) {
         // allTestScrolling();
         // allKindOfTests();
-        // allTest256();
-        testCursorMovementConsumed();
+        allTest256();
+        // testCursorMovementConsumed();
     }
 }

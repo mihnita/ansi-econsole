@@ -9,6 +9,7 @@ Link: https://marketplace.eclipse.org/content/ansi-escape-console<br>
 You can of course mark it as “Favorite” to find it easier next time, or on a different machine :-)
 
 **Direct install:**
+* [Windows] In some cases it's necessary to **run eclipse as administrator** before plugin installation. 
 * In Eclipse select “Help” -> “Install New Software...” and click “Add...” to add the following URL:<br>
 `https://www.mihai-nita.net/eclipse`
 * You can then select the site in the “Work with” list and continue the installation like with any other plugin.

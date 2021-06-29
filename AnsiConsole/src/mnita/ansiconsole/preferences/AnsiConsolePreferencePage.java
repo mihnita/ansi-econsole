@@ -88,16 +88,4 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
             } catch (Exception e) {}
         });
     }
-
-    @Override
-    public boolean performOk() {
-        boolean result = super.performOk();
-        IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
-        try {
-            handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
-        } catch (Exception ex) {
-            System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
-        }
-        return result;
-    }
 }

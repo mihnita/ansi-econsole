@@ -12,7 +12,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.part.IPageBookViewPage;
-import org.eclipse.ui.services.IServiceLocator;
 
 import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.handlers.AnsiConsoleCopyHandler;
@@ -50,9 +49,8 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
             AnsiConsoleActivator.getDefault().addViewer(viewer, this);
 
             // Install copy handler, replacing the old one
-            IServiceLocator sloc = page.getSite().getActionBars().getServiceLocator();
-            ICommandService commandService = sloc.getService(ICommandService.class);
-            Command command = commandService.getCommand(ActionFactory.COPY.getId());
+            ICommandService commandService = page.getSite().getService(ICommandService.class);
+            Command command = commandService.getCommand(ActionFactory.COPY.getCommandId());
             if (command != null) {
                 command.setHandler(new AnsiConsoleCopyHandler(viewer));
             }

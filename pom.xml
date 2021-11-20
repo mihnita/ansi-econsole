@@ -33,6 +33,12 @@
     </repository>
   </repositories>
 
+  <scm>
+    <connection>scm:git:https://github.com/mihnita/ansi-econsole.git</connection>
+    <developerConnection>scm:git:https://github.com/mihnita/ansi-econsole</developerConnection>
+    <url>https://github.com/mihnita/ansi-econsole</url>
+  </scm>
+
   <build>
     <pluginManagement>
       <plugins>

@@ -45,10 +45,6 @@ limitations under the License.
 
    <url>
       <update label="Ansi Console for Eclipse" url="https://www.mihai-nita.net/eclipse"/>
-      <discovery label="Info about this Eclipse plug-in" url="https://github.com/mihnita/ansi-econsole/wiki"/>
-      <discovery label="GitHub: sources, bug tracking" url="https://github.com/mihnita/ansi-econsole"/>
-      <discovery label="Release notes" url="https://github.com/mihnita/ansi-econsole/wiki/Release-Notes"/>
-      <discovery label="ANSI Escape Codes" url="https://en.wikipedia.org/wiki/ANSI_escape_code"/>
    </url>
 
    <requires>

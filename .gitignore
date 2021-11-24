@@ -1,3 +1,11 @@
+# Maven
 bin/
 target/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# IntelliJ
 .idea/

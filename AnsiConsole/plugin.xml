@@ -33,6 +33,13 @@
 	</command>
 	<command
 			categoryId="AnsiConsole.command.categoryid"
+			defaultHandler="mnita.ansiconsole.commands.CopyWithoutEscapesHandler"
+			description="Copy the console content to clipboard, removing the escape sequences"
+			id="AnsiConsole.command.copy_without_escapes"
+			name="Copy text without escapes">
+	</command>
+	<command
+			categoryId="AnsiConsole.command.categoryid"
 			defaultHandler="mnita.ansiconsole.commands.EnableDisableHandler"
 			description="Enable / disable Ansi Console"
 			id="AnsiConsole.command.enable_disable"
@@ -72,6 +79,33 @@
 				style="push">
 		</command>
 	</menuContribution>
+</extension>
+<extension
+      point="org.eclipse.ui.bindings">
+   <key
+         commandId="AnsiConsole.command.copy_without_escapes"
+         contextId="org.eclipse.ui.console.ConsoleView"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="M1+C">
+   </key>
+   <key
+         commandId="AnsiConsole.command.copy_without_escapes"
+         contextId="org.eclipse.ui.console.ConsoleView"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="M1+Insert">
+   </key>
+   <key
+         commandId="AnsiConsole.command.copy_with_escapes"
+         contextId="org.eclipse.ui.console.ConsoleView"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="M1+M3+C">
+   </key>
+   <key
+         commandId="AnsiConsole.command.copy_with_escapes"
+         contextId="org.eclipse.ui.console.ConsoleView"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="M1+M3+Insert">
+   </key>
 </extension>
 
 </plugin>

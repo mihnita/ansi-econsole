@@ -186,12 +186,21 @@
             </dependency>
           </dependencies>
         </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-versions-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

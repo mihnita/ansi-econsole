@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
@@ -22,6 +23,11 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
 
     private static AnsiConsoleActivator plugin;
     private static boolean showWarning = true;
+
+    private static final String PLUGIN_NAME = "net.mihai-nita.ansicon.plugin";
+    public static final boolean DEBUG = Platform.getDebugBoolean(PLUGIN_NAME + "/debug");
+    public static final boolean PERF = Platform.getDebugBoolean(PLUGIN_NAME + "/perf");
+    public static final boolean PERF_SUCCESS = Platform.getDebugBoolean(PLUGIN_NAME + "/perf/success");
 
     @Override
     public void start(BundleContext context) throws Exception {

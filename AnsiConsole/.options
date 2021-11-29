@@ -1,0 +1,10 @@
+# Debugging options for the net.mihai-nita.ansicon.plugin plugin
+
+# Turn on general debugging for the net.mihai-nita.ansicon.plugin plugin.
+net.mihai-nita.ansicon.plugin/debug=false
+
+# Captures performance event information (See net.mihai-nita.ansicon.plugin.PerformanceStats)
+net.mihai-nita.ansicon.plugin/perf=false
+
+# Tracks performance events that run within an acceptable duration
+net.mihai-nita.ansicon.plugin/perf/success=false

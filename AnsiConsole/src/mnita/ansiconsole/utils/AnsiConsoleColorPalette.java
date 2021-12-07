@@ -2,6 +2,7 @@ package mnita.ansiconsole.utils;
 
 import java.util.HashMap;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 
 public class AnsiConsoleColorPalette {
@@ -243,19 +244,16 @@ public class AnsiConsoleColorPalette {
     }
 
     public static String getBestPaletteForOS() {
-        String os = System.getProperty("os.name");
+        String os = SWT.getPlatform();
         String osVer = System.getProperty("os.version");
 
-        if (os == null)
-            return PALETTE_VGA;
-        if (os.startsWith("Windows")) {
-            if (osVer == null || !osVer.startsWith("10."))
-                return PALETTE_WINXP;
-            else
-                return PALETTE_WIN10;
+        switch (os) {
+            case "win32": return (osVer == null || !osVer.startsWith("10."))
+                    ? PALETTE_WINXP
+                    : PALETTE_WIN10;
+            case "cocoa": return PALETTE_MAC;
+            case "gtk": return PALETTE_XTERM;
+            default: return PALETTE_VGA;
         }
-        if (os.startsWith("Mac"))
-            return PALETTE_MAC;
-        return PALETTE_XTERM;
     }
 }

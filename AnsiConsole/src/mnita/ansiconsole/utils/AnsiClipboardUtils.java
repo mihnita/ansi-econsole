@@ -1,32 +1,65 @@
 package mnita.ansiconsole.utils;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.RTFTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Display;
 
 import mnita.ansiconsole.AnsiConsoleUtils;
+import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
-public class AnsiClipboardUtils implements ClipboardOwner {
+public class AnsiClipboardUtils {
 
     public static void textToClipboard(StyledText styledText, boolean removeEscapeSeq) {
-        String text = styledText.getSelectionText();
-        if (text.isEmpty()) {
-            text = styledText.getText();
-        }
-        if (removeEscapeSeq) {
-            text = text.replaceAll(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX, "");
-        }
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection stringSelection = new StringSelection(text);
-        clipboard.setContents(stringSelection, new AnsiClipboardUtils());
-    }
+        Clipboard clipboard = new Clipboard(Display.getDefault());
 
-    @Override
-    public void lostOwnership(Clipboard clipboard, Transferable transferable) {
-        // Nothing to do, but we are forced to implement it for IViewActionDelegate
+        clipboard.clearContents();
+        styledText.copy(); // copy to clipboard using the default Eclipse behavior
+
+        List<Object> clipboardData = new ArrayList<>(2);
+        List<Transfer> clipboardTransfers = new ArrayList<>(2);
+
+        TextTransfer textTransfer = TextTransfer.getInstance();
+        Object textData = clipboard.getContents(textTransfer);
+        if (textData != null && textData instanceof String) {
+            String plainText = (String) textData;
+            if (removeEscapeSeq) {
+                plainText = AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX_TXT
+                        .matcher(plainText)
+                        .replaceAll("");
+            }
+            clipboardData.add(plainText);
+            clipboardTransfers.add(textTransfer);
+        }
+
+        if (AnsiConsolePreferenceUtils.putRtfInClipboard()) {
+            RTFTransfer rtfTransfer = RTFTransfer.getInstance();
+            Object rtfData = clipboard.getContents(rtfTransfer);
+            if (rtfData != null && rtfData instanceof String) {
+                String rtfText = (String) rtfData;
+                if (removeEscapeSeq) {
+                    rtfText = AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX_RTF
+                            .matcher(rtfText)
+                            .replaceAll("");
+                }
+                // The Win version of MS Word, and Write, understand \chshdng and \chcbpat, but not \cb
+                // The MacOS tools seem to understand \cb, but not \chshdng and \chcbpat
+                // But using both seems to work fine, both systems just ignore the tags they don't understand.
+                rtfText = AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX_RTF_FIX_SRC
+                        .matcher(rtfText)
+                        .replaceAll(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX_RTF_FIX_TRG);
+                clipboardData.add(rtfText);
+                clipboardTransfers.add(rtfTransfer);
+            }
+        }
+
+        clipboard.setContents(clipboardData.toArray(), clipboardTransfers.toArray(new Transfer[0]));
+
+        clipboard.dispose();
     }
 }

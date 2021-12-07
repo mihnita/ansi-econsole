@@ -7,6 +7,7 @@ public class AnsiConsolePreferenceConstants {
     public static final String PREF_SHOW_ESCAPES = "booleanShowEscapes";
     public static final String PREF_COLOR_PALETTE = "choiceColorPalette";
     public static final String PREF_KEEP_STDERR_COLOR = "booleanKeepStderrColor";
+    public static final String PREF_PUT_RTF_IN_CLIPBOARD = "booleanPutRtfInClipboard";
 
     private AnsiConsolePreferenceConstants() {
         // Utility class, should not be instantiated

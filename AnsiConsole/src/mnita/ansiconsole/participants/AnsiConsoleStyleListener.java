@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
@@ -27,7 +26,6 @@ import mnita.ansiconsole.utils.AnsiConsoleAttributes;
 import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpdater {
-    private static final Pattern PATTERN = Pattern.compile(AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX);
     private static final Font MONO_FONT = new Font(null, "Monospaced", 6, SWT.NORMAL);
 
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
@@ -142,7 +140,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     private static List<AnsiPosition> findPositions(int offset, String currentText) {
         final List<AnsiPosition> result = new ArrayList<>();
-        final Matcher matcher = PATTERN.matcher(currentText);
+        final Matcher matcher = AnsiConsoleUtils.ESCAPE_SEQUENCE_REGEX_TXT.matcher(currentText);
         while (matcher.find()) {
             int start = matcher.start();
             String group = matcher.group();

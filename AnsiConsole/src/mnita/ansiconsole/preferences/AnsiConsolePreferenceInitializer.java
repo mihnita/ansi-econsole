@@ -17,5 +17,6 @@ public class AnsiConsolePreferenceInitializer extends AbstractPreferenceInitiali
         store.setDefault(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING, false);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR, true);
         store.setDefault(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, AnsiConsoleColorPalette.getPalette());
+        store.setDefault(AnsiConsolePreferenceConstants.PREF_PUT_RTF_IN_CLIPBOARD, true);
     }
 }

@@ -46,6 +46,9 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
                 "&Try using the standard error color setting for stderr output", parent));
 
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_PUT_RTF_IN_CLIPBOARD,
+                "Put &RTF in Clipboard. You will be able to paste styled text in some applications.", parent));
+
         addField(new ComboFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette:",
                 new String[][] {
                         { "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },

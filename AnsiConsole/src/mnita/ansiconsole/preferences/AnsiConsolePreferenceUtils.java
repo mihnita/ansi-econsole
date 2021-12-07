@@ -56,6 +56,7 @@ public class AnsiConsolePreferenceUtils {
     private static boolean showAnsiEscapes = false;
     private static boolean tryPreservingStdErrColor = true;
     private static boolean isAnsiConsoleEnabled = true;
+    private static boolean clipboardPutRtf = true;
 
     static {
         refresh();
@@ -105,19 +106,20 @@ public class AnsiConsolePreferenceUtils {
         return debugConsoleBgColor;
     }
 
-
     public static Color getDebugConsoleFgColor() {
         return debugConsoleFgColor;
     }
-
 
     public static Color getDebugConsoleErrorColor() {
         return debugConsoleErrorColor;
     }
 
-
     public static Color getHyperlinkColor() {
         return hyperlinkColor;
+    }
+
+    public static boolean putRtfInClipboard() {
+        return clipboardPutRtf;
     }
 
     // This is not cached, because it can change from both Preferences and the icon on console
@@ -195,5 +197,6 @@ public class AnsiConsolePreferenceUtils {
         showAnsiEscapes = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES);
         tryPreservingStdErrColor = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR);
         isAnsiConsoleEnabled = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED);
+        clipboardPutRtf = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_PUT_RTF_IN_CLIPBOARD);
     }
 }

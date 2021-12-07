@@ -63,7 +63,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (!showWarning) return;
         if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) return;
 
-        StringBuffer where = new StringBuffer(isMacOs()
+        StringBuffer where = new StringBuffer(AnsiConsoleUtils.isMacOS()
                 ? "Main menu \u2192 Eclipse \u2192 Preferences... \u2192 Run Debug \u2192 Console\n"
                 : "Main menu \u2192 Window \u2192 Preferences \u2192 Run/Debug \u2192 Console\n");
         StringBuffer text = new StringBuffer();
@@ -105,10 +105,5 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (dlg.open() == 1) {
             AnsiConsolePreferenceUtils.setEnablePerformanceWarning(false);
         }
-    }
-
-    private static boolean isMacOs() {
-        final String os = System.getProperty("os.name");
-        return os != null && os.startsWith("Mac");
     }
 }

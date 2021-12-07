@@ -11,7 +11,7 @@ Which versions are eligible for security patches:
 
 | Version   | Released | Supported          | Platform   |
 | :-------: | :------: | :----------------: | ---------- |
-| 1.4.3     | Dec 2020 | :white_check_mark: | This runs on Eclipse 4.6 (Neon) (released Jun 2016) and newer, Java 8 JRE/JDK and newer. |
+| >= 1.4.3  | After Dec 2020 | :white_check_mark: | This runs on Eclipse 4.6 (Neon) (released Jun 2016) and newer, <br>Java 8 JRE/JDK and newer. |
 | < 1.4.3   | Feb 2020 | :x:                |            |
 
 ## Reporting a Vulnerability

@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.mihnita</groupId>
     <artifactId>ansiconsole</artifactId>
-    <version>1.4.5-SNAPSHOT</version>
+    <version>1.4.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>net.mihai-nita.ansicon.plugin</artifactId>

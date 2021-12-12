@@ -3,7 +3,7 @@
    <description name="Mihai&apos;s Eclipse plugins" url="https://www.mihai-nita.net/eclipse">
       Hosting my Eclipse plugins.
    </description>
-   <feature url="features/net.mihai-nita.ansicon_1.4.5.qualifier.jar" id="net.mihai-nita.ansicon" version="1.4.5.qualifier">
+   <feature url="features/net.mihai-nita.ansicon_1.4.6.qualifier.jar" id="net.mihai-nita.ansicon" version="1.4.6.qualifier">
       <category name="ansicon"/>
    </feature>
    <category-def name="ansicon" label="Ansi Console"/>

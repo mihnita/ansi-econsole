@@ -3,7 +3,7 @@ Automatic-Module-Name: net.mihai-nita.ansicon.plugin
 Bundle-ManifestVersion: 2
 Bundle-Name: Ansi Console
 Bundle-SymbolicName: net.mihai-nita.ansicon.plugin; singleton:=true
-Bundle-Version: 1.4.5.qualifier
+Bundle-Version: 1.4.6.qualifier
 Bundle-Activator: mnita.ansiconsole.AnsiConsoleActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

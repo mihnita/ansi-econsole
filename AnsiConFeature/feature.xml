@@ -2,7 +2,7 @@
 <feature
       id="net.mihai-nita.ansicon"
       label="Ansi Console"
-      version="1.4.5.qualifier"
+      version="1.4.6.qualifier"
       provider-name="Mihai Nita"
       plugin="net.mihai-nita.ansicon.plugin">
 

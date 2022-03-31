@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GlyphMetrics;
@@ -30,16 +31,24 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     private final DefaultPositionUpdater defaultPositionUpdater = new DefaultPositionUpdater(AnsiPosition.POSITION_NAME);
     private final HashMap<Integer, List<StyleRange>> offsetToStyleRangeCache = new HashMap<>();
-    private final IDocument document;
+    private IDocument document;
     private boolean documentEverScanned = false;
+    private int oldEventTime;
+
 
     private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes();
 
     public AnsiConsoleStyleListener(IDocument document) {
+        setDocument(document);
+        AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
+    }
+
+    private void setDocument(IDocument document) {
+        offsetToStyleRangeCache.clear();
+        documentEverScanned = false;
         this.document = document;
         this.document.addPositionCategory(AnsiPosition.POSITION_NAME);
         this.document.addPositionUpdater(this);
-        AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
     }
 
     private static void addRange(List<StyleRange> ranges, int start, int length,
@@ -59,6 +68,16 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
+    	// if user select another project (for new versions of Eclipse)
+    	if (oldEventTime != event.time && event.getSource() instanceof StyledText) {
+    		oldEventTime = event.time;    		  		
+    		StyledText text = (StyledText) event.getSource();  		
+    		IDocument newDocument = AnsiConsolePageParticipant.getDocument(text);
+    		if (!newDocument.equals(document)) {
+    			setDocument(newDocument);
+    		}
+    	}
+
         if (event == null || event.lineText == null || event.lineText.length() == 0)
             return;
 

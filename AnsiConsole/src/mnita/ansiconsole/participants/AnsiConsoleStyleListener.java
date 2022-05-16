@@ -35,7 +35,6 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private boolean documentEverScanned = false;
     private int oldEventTime;
 
-
     private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes();
 
     public AnsiConsoleStyleListener(IDocument document) {
@@ -43,12 +42,20 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         AnsiConsoleColorPalette.setPalette(AnsiConsolePreferenceUtils.getPreferredPalette());
     }
 
-    private void setDocument(IDocument document) {
+    private void setDocument(IDocument newDocument) {
         offsetToStyleRangeCache.clear();
         documentEverScanned = false;
-        this.document = document;
-        this.document.addPositionCategory(AnsiPosition.POSITION_NAME);
-        this.document.addPositionUpdater(this);
+        document = newDocument;
+        document.addPositionCategory(AnsiPosition.POSITION_NAME);
+        if (!hasPositionUpdater(this))
+            document.addPositionUpdater(this);
+    }
+
+    public boolean hasPositionUpdater(IPositionUpdater updater) {
+        for (IPositionUpdater posUpdater : document.getPositionUpdaters())
+            if (posUpdater == updater)
+                return true;
+        return false;
     }
 
     private static void addRange(List<StyleRange> ranges, int start, int length,
@@ -68,16 +75,6 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
-    	// if user select another project (for new versions of Eclipse)
-    	if (oldEventTime != event.time && event.getSource() instanceof StyledText) {
-    		oldEventTime = event.time;    		  		
-    		StyledText text = (StyledText) event.getSource();  		
-    		IDocument newDocument = AnsiConsolePageParticipant.getDocument(text);
-    		if (!newDocument.equals(document)) {
-    			setDocument(newDocument);
-    		}
-    	}
-
         if (event == null || event.lineText == null || event.lineText.length() == 0)
             return;
 
@@ -86,6 +83,16 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
         if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
             return;
+
+        // If user selected another project (for new versions of Eclipse)
+        if (oldEventTime != event.time && event.getSource() instanceof StyledText) {
+            oldEventTime = event.time;
+            StyledText text = (StyledText) event.getSource();
+            IDocument newDocument = AnsiConsolePageParticipant.getDocument(text);
+            if (!newDocument.equals(document)) {
+                setDocument(newDocument);
+            }
+        }
 
         final int eventOffset = event.lineOffset;
         final int eventLength = event.lineText.length();

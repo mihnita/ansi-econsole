@@ -48,7 +48,7 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
     }
 
     // Find the document associated with the viewer
-    private static IDocument getDocument(StyledText viewer) {
+    public static IDocument getDocument(StyledText viewer) {
         for (Listener listener : viewer.getListeners(ST.LineGetStyle)) {
             if (listener instanceof TypedListener) {
                 Object evenListener = ((TypedListener) listener).getEventListener();

@@ -62,7 +62,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 },
                 parent));
 
-        createLink(parent, true, true, "<a href=\"https://mihai-nita.net/2013/06/03/eclipse-plugin-ansi-in-console/\">Home page</a>:"
+        createLink(parent, true, true, "<a href=\"https://github.com/mihnita/ansi-econsole/wiki/\">Home page</a>:"
                 + " some documentation, release notes, etc.");
         createLink(parent, false, false, "<a href=\"https://github.com/mihnita/ansi-econsole/\">GitHub page</a>:"
                 + " source code, report issues, etc.");
@@ -88,7 +88,11 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         link.addListener(SWT.Selection, event -> {
             try {
                 PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                System.out.println("AnsiConsole: error opening url in browser."
+                        + "URL: " + event.text
+                        + "Error: " + e.getMessage());
+            }
         });
     }
 

@@ -91,6 +91,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (text.length() > 0) {
             showWarning = false;
             Display.getDefault().asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     showDialog("Ansi Console", "CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + text);
                 }
@@ -98,7 +99,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         }
     }
 
-    private void showDialog(String title, String message) {
+    void showDialog(String title, String message) {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         final String[] buttons = { "Remind me later", "Never remind me again" };
         final MessageDialog dlg = new MessageDialog(window.getShell(), title, null, message, MessageDialog.WARNING, 0, buttons);

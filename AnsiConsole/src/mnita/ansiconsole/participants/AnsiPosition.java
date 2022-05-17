@@ -65,25 +65,17 @@ public class AnsiPosition extends Position {
     private static List<Integer> parseSemicolonSeparatedIntList(String text) {
         final List<Integer> result = new ArrayList<>(10);
         int crtValue = 0;
-        boolean parsed = false;
-        char ch;
         for (int i = 0; i < text.length(); i++) {
-            ch = text.charAt(i);
+            char ch = text.charAt(i);
             if (ch >= '0' && ch <= '9') {
                 crtValue *= 10;
                 crtValue += ch - '0';
-                parsed = true;
             } else {
-                if (parsed)
-                    result.add(crtValue);
-                parsed = false;
+                result.add(crtValue);
                 crtValue = 0;
             }
         }
-        if (parsed)
-            result.add(crtValue);
-        if (result.isEmpty())
-            result.add(0);
+        result.add(crtValue);
         return result;
     }
 

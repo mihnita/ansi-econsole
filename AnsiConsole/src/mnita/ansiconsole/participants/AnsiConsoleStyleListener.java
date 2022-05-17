@@ -89,7 +89,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
             oldEventTime = event.time;
             StyledText text = (StyledText) event.getSource();
             IDocument newDocument = AnsiConsolePageParticipant.getDocument(text);
-            if (!newDocument.equals(document)) {
+            if (newDocument != null && !newDocument.equals(document)) {
                 setDocument(newDocument);
             }
         }

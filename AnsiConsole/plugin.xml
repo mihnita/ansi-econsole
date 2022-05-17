@@ -108,4 +108,14 @@
    </key>
 </extension>
 
+<extension
+      point="org.eclipse.m2e.launching.mavenLaunchParticipants">
+   <mavenLaunchParticipant
+         class="mnita.ansiconsole.participants.AnsiConsoleMavenLaunchParticipant"
+         id="mnita.ansiconsole.participants.AnsiConsoleMavenLaunchParticipant"
+         modes="run,debug"
+         name="Force Maven colored output">
+   </mavenLaunchParticipant>
+</extension>
+
 </plugin>

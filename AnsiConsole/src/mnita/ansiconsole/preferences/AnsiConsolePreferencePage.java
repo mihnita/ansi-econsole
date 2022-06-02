@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -32,10 +33,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         final Composite parent = getFieldEditorParent();
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
-                "Enabled", parent));
-
-        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
-                "Enable performance check", parent));
+                "Plugin enabled", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
                 "Use &Windows color mapping (bold => intense, italic => reverse)", parent));
@@ -62,11 +60,21 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 },
                 parent));
 
-        createLink(parent, true, true, "<a href=\"https://github.com/mihnita/ansi-econsole/wiki/\">Home page</a>:"
+        createSeparator(parent, SWT.TOP, false);
+
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
+                "Enable performance check", parent));
+
+        addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING,
+                "Enable check for M2e Chromatic Core", parent));
+
+        createSeparator(parent, SWT.BOTTOM, true);
+
+        createLink(parent, true, "<a href=\"https://github.com/mihnita/ansi-econsole/wiki/\">Home page</a>:"
                 + " some documentation, release notes, etc.");
-        createLink(parent, false, false, "<a href=\"https://github.com/mihnita/ansi-econsole/\">GitHub page</a>:"
+        createLink(parent, false, "<a href=\"https://github.com/mihnita/ansi-econsole/\">GitHub page</a>:"
                 + " source code, report issues, etc.");
-        createLink(parent, true, false, "<a href=\"https://marketplace.eclipse.org/content/ansi-escape-console\">Eclipse Marketplace</a>:"
+        createLink(parent, false, "<a href=\"https://marketplace.eclipse.org/content/ansi-escape-console\">Eclipse Marketplace</a>:"
                 + " give it a star / review if you like it :-).");
     }
 
@@ -75,16 +83,20 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         // Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
     }
 
-    private void createLink(Composite parent, boolean fillGap, boolean endAlign, String text) {
+    private void createSeparator(Composite parent, int verticalAlignment, boolean grabExcessVerticalSpace) {
+        new Label(parent, SWT.NONE);
+    }
+
+    private void createLink(Composite parent, boolean fillGap, String text) {
         Link link = new Link(parent, SWT.WRAP);
         link.setText(text);
+
         GridData gridData = new GridData();
         gridData.horizontalSpan = 2;
-        if (fillGap) {
-            gridData.grabExcessVerticalSpace = true;
-            gridData.verticalAlignment = endAlign ? SWT.END : SWT.TOP;
-        }
+    	gridData.grabExcessVerticalSpace = fillGap;
+        gridData.verticalAlignment = SWT.BOTTOM;
         link.setLayoutData(gridData);
+
         link.addListener(SWT.Selection, event -> {
             try {
                 PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));

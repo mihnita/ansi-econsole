@@ -7,11 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -66,11 +62,11 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         StringBuffer where = new StringBuffer(AnsiConsoleUtils.isMacOS()
                 ? "Main menu \u2192 Eclipse \u2192 Preferences... \u2192 Run Debug \u2192 Console\n"
                 : "Main menu \u2192 Window \u2192 Preferences \u2192 Run/Debug \u2192 Console\n");
-        StringBuffer text = new StringBuffer();
+        StringBuffer message = new StringBuffer();
         int wattermarkLevel = AnsiConsolePreferenceUtils.getWattermarkLevel();
         if (wattermarkLevel < 150_000) {
             NumberFormat nf = NumberFormat.getInstance();
-            text.append(String.format("\n"
+            message.append(String.format("\n"
                     + "Console buffer size too low (%s). About 2 times slower.\n\n"
                     + where
                     + "\u00a0\u00a0\u00a0\u00a0\u2022 Check \"Limit console output\"\n"
@@ -82,29 +78,16 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
                     nf.format(wattermarkLevel), nf.format(1_000_000), nf.format(1_000_000)));
         }
         if (AnsiConsolePreferenceUtils.isWordWrapEnabled()) {
-            text.append("\n"
+        	message.append("\n"
                     + "Word wrap enabled. Up to 20 times slower!!!\n\n"
                     + where
                     + "\u00a0\u00a0\u00a0\u00a0\u2022 Uncheck \"Enable word wrap\"\n");
         }
 
-        if (text.length() > 0) {
+        if (message.length() > 0) {
             showWarning = false;
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    showDialog("Ansi Console", "CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + text);
-                }
-            });
-        }
-    }
-
-    void showDialog(String title, String message) {
-        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        final String[] buttons = { "Remind me later", "Never remind me again" };
-        final MessageDialog dlg = new MessageDialog(window.getShell(), title, null, message, MessageDialog.WARNING, 0, buttons);
-        if (dlg.open() == 1) {
-            AnsiConsolePreferenceUtils.setEnablePerformanceWarning(false);
+            AnsiConsoleUtils.showDialogAsync("CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + message,
+            		AnsiConsolePreferenceUtils::setEnablePerformanceWarning);
         }
     }
 }

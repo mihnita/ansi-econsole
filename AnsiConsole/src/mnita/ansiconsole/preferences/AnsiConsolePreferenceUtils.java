@@ -171,6 +171,14 @@ public class AnsiConsolePreferenceUtils {
         PREF_STORE.setValue(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING, newValue);
     }
 
+    public static boolean isM2eChromaticCoreWarningEnabled() {
+        return PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING);
+    }
+
+    public static void setEnableM2eChromaticCoreWarning(boolean newValue) {
+        PREF_STORE.setValue(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING, newValue);
+    }
+
     public static void refresh() {
         final IPreferencesService prefServices = Platform.getPreferencesService();
 

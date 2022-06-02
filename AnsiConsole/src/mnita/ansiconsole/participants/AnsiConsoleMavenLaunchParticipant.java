@@ -3,22 +3,28 @@ package mnita.ansiconsole.participants;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 import org.eclipse.m2e.internal.launch.IMavenLaunchParticipant;
 
+import mnita.ansiconsole.AnsiConsoleUtils;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
+// Force in code what was done by hand here:
+//   https://mihai-nita.net/2020/08/23/force-maven-colors-in-eclipse-console/
 @SuppressWarnings("restriction")
 public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipant {
-    // Force in code what was done by hand here:
-    //   https://mihai-nita.net/2020/08/23/force-maven-colors-in-eclipse-console/
+
+    private static boolean showM2eChromaticCoreWarning = true;
 
     @Override
     public String getProgramArguments(
     		ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
+    	checkM2eChromaticCoreInstalled();
     	return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Dstyle.color=always" : "";
     }
 
@@ -32,5 +38,26 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
     public String getVMArguments(
     		ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
     	return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Djansi.passthrough=true" : "";
+    }
+
+    // Check some of the console settings that I know are bad for performance
+    private void checkM2eChromaticCoreInstalled() {
+        if (!showM2eChromaticCoreWarning) return;
+        if (!AnsiConsolePreferenceUtils.isM2eChromaticCoreWarningEnabled()) return;
+
+        IExtension[] m2eExt = Platform.getExtensionRegistry().getExtensions("m2e.chromatic.core");
+        if (m2eExt.length > 0) {
+        	showM2eChromaticCoreWarning = false;
+            String message = ""
+                    + "We detected that you have M2e Chromatic Core Plugin installed.\n"
+                    + "\n"
+                    + "Now Ansi Console implements the same functionality (force Maven to output color).\n"
+                    + "So M2e Chromatic Core is redundant.\n"
+                    + "\n"
+                    + "You should uninstall it, otherwise there might be some interferences:\n"
+                    + "\u00a0\u00a0\u00a0\u00a0Main menu \u2192 Help \u2192 About Eclipse \u2192 Installation Details\n"
+            		+ "\u00a0\u00a0\u00a0\u00a0select \u201cM2e Chromatic Core\u201d \u2192 click \u201cUninstall...\u201d";
+        	AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning);
+        }
     }
 }

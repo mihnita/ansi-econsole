@@ -151,9 +151,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                 prevAttr = apos.attributes;
             }
         }
-        addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
 
         if (!ranges.isEmpty()) {
+        	addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
             // Copy the links that might already exist
             for (StyleRange range : event.styles) {
                 if (AnsiConsolePreferenceUtils.getHyperlinkColor().equals(range.foreground))

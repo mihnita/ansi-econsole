@@ -41,8 +41,9 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
             if (document == null) {
                 return;
             }
-            AnsiConsoleStyleListener myListener = new AnsiConsoleStyleListener(document);
-            viewer.addLineStyleListener(myListener);
+  
+            viewer.removeLineStyleListener(AnsiConsoleStyleListener.INSTANCE);
+            viewer.addLineStyleListener(AnsiConsoleStyleListener.INSTANCE);
             AnsiConsoleActivator.getDefault().addViewer(viewer, this);
         }
     }

@@ -23,21 +23,21 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
 
     @Override
     public String getProgramArguments(
-    		ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
-    	checkM2eChromaticCoreInstalled();
-    	return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Dstyle.color=always" : "";
+            ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
+        checkM2eChromaticCoreInstalled();
+        return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Dstyle.color=always" : "";
     }
 
     @Override
     public List<ISourceLookupParticipant> getSourceLookupParticipants(
-    		ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
+            ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
         return new ArrayList<>();
     }
 
     @Override
     public String getVMArguments(
-    		ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
-    	return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Djansi.passthrough=true" : "";
+            ILaunchConfiguration launchCfg, ILaunch launch, IProgressMonitor progMonitor) {
+        return AnsiConsolePreferenceUtils.isAnsiConsoleEnabled() ? "-Djansi.passthrough=true" : "";
     }
 
     // Check some of the console settings that I know are bad for performance
@@ -47,7 +47,7 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
 
         IExtension[] m2eExt = Platform.getExtensionRegistry().getExtensions("m2e.chromatic.core");
         if (m2eExt.length > 0) {
-        	showM2eChromaticCoreWarning = false;
+            showM2eChromaticCoreWarning = false;
 
             String indent = "\u00a0\u00a0\u00a0\u00a0";
             String where = AnsiConsoleUtils.isMacOS()
@@ -61,8 +61,8 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
                     + "\n"
                     + "You should uninstall it, otherwise there might be some interferences:\n"
                     + indent + where
-            		+ indent + "Select \u201cM2E Chromatic Feature\u201d \u2192 click \u201cUninstall...\u201d";
-        	AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning);
+                    + indent + "Select \u201cM2E Chromatic Feature\u201d \u2192 click \u201cUninstall...\u201d";
+            AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning);
         }
     }
 }

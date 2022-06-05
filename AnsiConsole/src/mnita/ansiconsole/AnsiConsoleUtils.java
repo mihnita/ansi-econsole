@@ -37,15 +37,15 @@ public class AnsiConsoleUtils {
     }
 
     public static void showDialogAsync(String message, java.util.function.Consumer<Boolean> func) {
-    	Display.getDefault().asyncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
                 final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                 final MessageDialog dlg = new MessageDialog(window.getShell(),
-                		DLG_TITLE, /*image*/ null, message,
-                		MessageDialog.WARNING, 0, DLG_BUTTONS);
+                        DLG_TITLE, /*image*/ null, message,
+                        MessageDialog.WARNING, 0, DLG_BUTTONS);
                 if (dlg.open() == 1)
-            		func.accept(false);
+                    func.accept(false);
             }
         });
     }

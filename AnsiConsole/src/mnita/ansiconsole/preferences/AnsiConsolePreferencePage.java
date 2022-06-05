@@ -84,7 +84,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
     }
 
     @SuppressWarnings("unused")
-	private static void createSeparator(Composite parent) {
+    private static void createSeparator(Composite parent) {
         new Label(parent, SWT.NONE);
     }
 
@@ -94,7 +94,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 
         GridData gridData = new GridData();
         gridData.horizontalSpan = 2;
-    	gridData.grabExcessVerticalSpace = fillGap;
+        gridData.grabExcessVerticalSpace = fillGap;
         gridData.verticalAlignment = SWT.BOTTOM;
         link.setLayoutData(gridData);
 

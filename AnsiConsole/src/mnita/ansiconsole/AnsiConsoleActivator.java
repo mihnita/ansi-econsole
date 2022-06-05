@@ -79,7 +79,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
                     nf.format(wattermarkLevel), nf.format(1_000_000), nf.format(1_000_000)));
         }
         if (AnsiConsolePreferenceUtils.isWordWrapEnabled()) {
-        	message.append("\n"
+            message.append("\n"
                     + "Word wrap enabled. Up to 20 times slower!!!\n\n"
                     + indent + where
                     + indent + "\u2022 Uncheck \u201cEnable word wrap\u201d\n");
@@ -88,7 +88,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (message.length() > 0) {
             showWarning = false;
             AnsiConsoleUtils.showDialogAsync("CONSOLE PERFORMANCE WARNING (from Ansi Console)!\n" + message,
-            		AnsiConsolePreferenceUtils::setEnablePerformanceWarning);
+                    AnsiConsolePreferenceUtils::setEnablePerformanceWarning);
         }
     }
 }

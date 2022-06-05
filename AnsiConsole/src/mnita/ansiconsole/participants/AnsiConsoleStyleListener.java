@@ -60,42 +60,30 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 			}
 		}
 
+		// no position means nothing to do
+		if (positions.length == 0)
+			return;
+
 		List<StyleRange> styles = new ArrayList<>(4);
 
 		// keep existing styles if any
-		if (event.styles != null)
+		if (event.styles != null && AnsiConsolePreferenceUtils.tryPreservingStdErrColor())
 			Collections.addAll(styles, event.styles);
 
-		// process positions that overlap with the current line
-		if (processPositions(styles, event.lineOffset, event.lineText.length(), positions))
-			// update event styles
-			event.styles = styles.toArray(new StyleRange[styles.size()]);
-
-	}
-
-	/**
-	 * Process the positions overlapping the given range
-	 *
-	 * @param styles    the result list of StyleRange
-	 * @param offset    the offset of the range
-	 * @param length    the length of the range
-	 * @param positions the positions to search
-	 */
-	private boolean processPositions(List<StyleRange> styles, int offset, int length, Position[] positions) {
-
-		if (positions.length == 0)
-			return false;
+		int offset = event.lineOffset;
+		int length = event.lineText.length();
 
 		int rangeEnd = offset + length;
 		int left = 0;
 		int right = positions.length - 1;
-		int mid = 0;
+
+		int mid;
 		Position position;
 
+		// find the first overlapping position
 		while (left < right) {
 
 			mid = (left + right) / 2;
-
 			position = positions[mid];
 			if (rangeEnd < position.getOffset()) {
 				if (left == mid) {
@@ -112,6 +100,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 			} else {
 				left = right = mid;
 			}
+
 		}
 
 		int index = left - 1;
@@ -127,6 +116,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 		index++;
 		position = positions[index];
 		boolean found = false;
+
+		// process positions that overlap with the current line
 		while (index < positions.length && (position.getOffset() < rangeEnd)) {
 			styles.add(((AnsiPosition) position).range);
 			found = true;
@@ -135,7 +126,10 @@ public class AnsiConsoleStyleListener implements LineStyleListener {
 				position = positions[index];
 			}
 		}
-		return found;
+
+		// update event styles if found an overlapping position
+		if (found)
+			event.styles = styles.toArray(new StyleRange[styles.size()]);
 
 	}
 

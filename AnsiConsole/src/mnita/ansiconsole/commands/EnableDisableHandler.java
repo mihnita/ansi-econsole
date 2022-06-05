@@ -46,7 +46,7 @@ public class EnableDisableHandler extends AbstractHandler implements IElementUpd
 
     // If I executed the command "by hand" from the properties dialog
     // it has a "dummy" event that I've created.
-    private boolean wasMyEvent(ExecutionEvent executionEvent) {
+    private static boolean wasMyEvent(ExecutionEvent executionEvent) {
         Object trigger = executionEvent.getTrigger();
         if (trigger instanceof Event) {
             Event internalEvent = (Event) trigger;

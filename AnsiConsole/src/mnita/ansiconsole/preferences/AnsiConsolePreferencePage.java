@@ -60,7 +60,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
                 },
                 parent));
 
-        createSeparator(parent, SWT.TOP, false);
+        createSeparator(parent);
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
                 "Enable performance check (\u201cConsole buffer size\u201d)", parent));
@@ -68,7 +68,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING,
                 "Enable check for the \u201cM2E Chromatic Core Plugin\u201d", parent));
 
-        createSeparator(parent, SWT.BOTTOM, true);
+        createSeparator(parent);
 
         createLink(parent, true, "<a href=\"https://github.com/mihnita/ansi-econsole/wiki/\">Home page</a>:"
                 + " some documentation, release notes, etc.");
@@ -83,11 +83,12 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         // Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
     }
 
-    private void createSeparator(Composite parent, int verticalAlignment, boolean grabExcessVerticalSpace) {
+    @SuppressWarnings("unused")
+	private static void createSeparator(Composite parent) {
         new Label(parent, SWT.NONE);
     }
 
-    private void createLink(Composite parent, boolean fillGap, String text) {
+    private static void createLink(Composite parent, boolean fillGap, String text) {
         Link link = new Link(parent, SWT.WRAP);
         link.setText(text);
 
@@ -114,7 +115,7 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
         try {
             handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
-        } catch (Exception ex) {
+        } catch (@SuppressWarnings("unused") Exception ex) {
             System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
         }
         return result;

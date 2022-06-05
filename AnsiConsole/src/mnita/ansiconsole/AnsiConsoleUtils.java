@@ -15,8 +15,8 @@ public class AnsiConsoleUtils {
     public static final Pattern ESCAPE_SEQUENCE_REGEX_RTF_FIX_SRC = Pattern.compile("\\\\chshdng\\d+\\\\chcbpat(\\d+)");
     public static final String ESCAPE_SEQUENCE_REGEX_RTF_FIX_TRG = "$0\\\\cb$1";
 
-    private static final String[] DLG_BUTTONS = { "Remind me later", "Never remind me again" };
     private static final String DLG_TITLE = "Ansi Console";
+    static final String[] DLG_BUTTONS = { "Remind me later", "Never remind me again" };
 
     public static final char ESCAPE_SGR = 'm';
 

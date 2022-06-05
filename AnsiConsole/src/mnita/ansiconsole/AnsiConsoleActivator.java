@@ -55,7 +55,7 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
     }
 
     // Check some of the console settings that I know are bad for performance
-    private void checkConsolePerformanceSettings() {
+    private static void checkConsolePerformanceSettings() {
         if (!showWarning) return;
         if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) return;
 

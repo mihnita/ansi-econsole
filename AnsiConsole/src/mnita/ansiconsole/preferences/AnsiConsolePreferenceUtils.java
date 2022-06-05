@@ -52,7 +52,7 @@ public class AnsiConsolePreferenceUtils {
     private static Color debugConsoleFgColor = null;
     private static Color debugConsoleErrorColor = null;
     private static Color hyperlinkColor = null;
-    private static Color cdtForegroundColor = null;
+    private static Color cdtInfoStreamColor = null;
     private static String getPreferredPalette = AnsiConsoleColorPalette.getBestPaletteForOS();
     private static boolean useWindowsMapping = false;
     private static boolean showAnsiEscapes = false;
@@ -99,7 +99,7 @@ public class AnsiConsolePreferenceUtils {
 
         try {
             return Integer.parseInt(text);
-        } catch (NumberFormatException e) {
+        } catch (@SuppressWarnings("unused") NumberFormatException e) {
             return -1;
         }
     }
@@ -120,8 +120,8 @@ public class AnsiConsolePreferenceUtils {
         return hyperlinkColor;
     }
 
-    public static Color getCdtForegroundColor() {
-        return cdtForegroundColor;
+    public static Color getCdtInfoStreamColor() {
+        return cdtInfoStreamColor;
     }
 
     public static boolean putRtfInClipboard() {
@@ -207,7 +207,7 @@ public class AnsiConsolePreferenceUtils {
 
         value = prefServices.getString(ECLIPSE_CDT_UI,
                 "buildConsoleInfoStreamColor", "", null);
-        cdtForegroundColor = value.isEmpty() ? null : colorFromStringRgb(value);
+        cdtInfoStreamColor = value.isEmpty() ? null : colorFromStringRgb(value);
 
         // My own settings
         useWindowsMapping = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);

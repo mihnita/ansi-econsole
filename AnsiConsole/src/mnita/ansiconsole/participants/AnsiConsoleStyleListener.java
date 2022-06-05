@@ -114,7 +114,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         Position[] positions;
         try {
             positions = document.getPositions(AnsiPosition.POSITION_NAME);
-        } catch (BadPositionCategoryException e) {
+        } catch (@SuppressWarnings("unused") BadPositionCategoryException e) {
             return;
         }
 
@@ -163,7 +163,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                         ranges.add(range);
                     }
                     // We preserve the C/C++ build console colors
-                    if (isCdtBuildConsole && range.foreground.equals(AnsiConsolePreferenceUtils.getCdtForegroundColor())) {
+                    if (isCdtBuildConsole && range.foreground.equals(AnsiConsolePreferenceUtils.getCdtInfoStreamColor())) {
                         ranges.add(range);
                     }
                 }
@@ -201,8 +201,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
      * @param text          For insert / append, this is the new text. For delete, empty string.
      */
     private void calculateDocumentAnsiPositions(IDocument eventDocument, int offset, int length, String text) {
-        if (text == null)
+        if (text == null) {
             text = eventDocument.get();
+        }
 
         if (length != 0) { // This is the length of the text replaced. If not zero then this is not append, is replace.
             return;

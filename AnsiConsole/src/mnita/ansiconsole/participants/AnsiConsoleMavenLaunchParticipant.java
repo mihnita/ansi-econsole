@@ -49,14 +49,14 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
         if (m2eExt.length > 0) {
         	showM2eChromaticCoreWarning = false;
             String message = ""
-                    + "We detected that you have M2e Chromatic Core Plugin installed.\n"
+                    + "We detected that you have the \u201cM2E Chromatic Core Plugin\u201d installed.\n"
                     + "\n"
                     + "Now Ansi Console implements the same functionality (force Maven to output color).\n"
-                    + "So M2e Chromatic Core is redundant.\n"
+                    + "So M2E Chromatic Core is redundant.\n"
                     + "\n"
                     + "You should uninstall it, otherwise there might be some interferences:\n"
-                    + "\u00a0\u00a0\u00a0\u00a0Main menu \u2192 Help \u2192 About Eclipse \u2192 Installation Details\n"
-            		+ "\u00a0\u00a0\u00a0\u00a0select \u201cM2e Chromatic Core\u201d \u2192 click \u201cUninstall...\u201d";
+                    + "\u00a0\u00a0\u00a0\u00a0Main menu \u2192 \u201cHelp\u201d \u2192 \u201cAbout Eclipse\u201d \u2192 \u201cInstallation Details\u201d\n"
+            		+ "\u00a0\u00a0\u00a0\u00a0Select \u201cM2E Chromatic Feature\u201d \u2192 click \u201cUninstall...\u201d";
         	AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning);
         }
     }

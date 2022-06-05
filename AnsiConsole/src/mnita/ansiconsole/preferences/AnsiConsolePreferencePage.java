@@ -63,10 +63,10 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
         createSeparator(parent, SWT.TOP, false);
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
-                "Enable performance check", parent));
+                "Enable performance check (\u201cConsole buffer size\u201d)", parent));
 
         addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING,
-                "Enable check for M2e Chromatic Core", parent));
+                "Enable check for the \u201cM2E Chromatic Core Plugin\u201d", parent));
 
         createSeparator(parent, SWT.BOTTOM, true);
 

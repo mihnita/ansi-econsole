@@ -37,6 +37,7 @@ public class AnsiConsolePreferenceUtils {
     private static final String ECLIPSE_UI_WORKBENCH = "org.eclipse.ui.workbench";
     private static final String ECLIPSE_UI_CONSOLE = "org.eclipse.ui.console";
     private static final String ECLIPSE_DEBUG_UI = "org.eclipse.debug.ui";
+    private static final String ECLIPSE_CDT_UI = "org.eclipse.cdt.ui";
 
     private static final String DEBUG_CONSOLE_FALLBACK_BKCOLOR = "47,47,47"; // Default dark background
     private static final String DEBUG_CONSOLE_FALLBACK_FGCOLOR = "192,192,192";
@@ -51,6 +52,7 @@ public class AnsiConsolePreferenceUtils {
     private static Color debugConsoleFgColor = null;
     private static Color debugConsoleErrorColor = null;
     private static Color hyperlinkColor = null;
+    private static Color cdtForegroundColor = null;
     private static String getPreferredPalette = AnsiConsoleColorPalette.getBestPaletteForOS();
     private static boolean useWindowsMapping = false;
     private static boolean showAnsiEscapes = false;
@@ -116,6 +118,10 @@ public class AnsiConsolePreferenceUtils {
 
     public static Color getHyperlinkColor() {
         return hyperlinkColor;
+    }
+
+    public static Color getCdtForegroundColor() {
+        return cdtForegroundColor;
     }
 
     public static boolean putRtfInClipboard() {
@@ -198,6 +204,10 @@ public class AnsiConsolePreferenceUtils {
         value = prefServices.getString(ECLIPSE_UI_WORKBENCH,
                 "HYPERLINK_COLOR", DEBUG_CONSOLE_FALLBACK_LINK_COLOR, null);
         hyperlinkColor = colorFromStringRgb(value);
+
+        value = prefServices.getString(ECLIPSE_CDT_UI,
+                "buildConsoleInfoStreamColor", "", null);
+        cdtForegroundColor = value.isEmpty() ? null : colorFromStringRgb(value);
 
         // My own settings
         useWindowsMapping = PREF_STORE.getBoolean(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING);

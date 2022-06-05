@@ -33,6 +33,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     private final HashMap<Integer, List<StyleRange>> offsetToStyleRangeCache = new HashMap<>();
     private IDocument document;
     private boolean documentEverScanned = false;
+    private boolean isCdtBuildConsole = false;
     private int oldEventTime;
 
     private AnsiConsoleAttributes lastVisibleAttribute = new AnsiConsoleAttributes();
@@ -46,6 +47,7 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         offsetToStyleRangeCache.clear();
         documentEverScanned = false;
         document = newDocument;
+        isCdtBuildConsole = document.getClass().getSimpleName().equals("BuildConsoleDocument");
         document.addPositionCategory(AnsiPosition.POSITION_NAME);
         if (!hasPositionUpdater(this))
             document.addPositionUpdater(this);
@@ -151,13 +153,20 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                 prevAttr = apos.attributes;
             }
         }
+        addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
 
         if (!ranges.isEmpty()) {
-        	addRange(ranges, prevPos, eventOffset + eventLength - prevPos, prevAttr, foregroundColor, false);
             // Copy the links that might already exist
             for (StyleRange range : event.styles) {
-                if (AnsiConsolePreferenceUtils.getHyperlinkColor().equals(range.foreground))
-                    ranges.add(range);
+                if (range.foreground != null) {
+                    if (range.foreground.equals(AnsiConsolePreferenceUtils.getHyperlinkColor())) {
+                        ranges.add(range);
+                    }
+                    // We preserve the C/C++ build console colors
+                    if (isCdtBuildConsole && range.foreground.equals(AnsiConsolePreferenceUtils.getCdtForegroundColor())) {
+                        ranges.add(range);
+                    }
+                }
             }
             offsetToStyleRangeCache.put(eventOffset, ranges);
             event.styles = ranges.toArray(new StyleRange[0]);

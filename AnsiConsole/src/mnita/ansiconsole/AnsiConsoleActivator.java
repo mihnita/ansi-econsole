@@ -59,9 +59,10 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         if (!showWarning) return;
         if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) return;
 
-        StringBuffer where = new StringBuffer(AnsiConsoleUtils.isMacOS()
+        String indent = "\u00a0\u00a0\u00a0\u00a0";
+        String where = AnsiConsoleUtils.isMacOS()
                 ? "Main menu \u2192 \u201cEclipse\u201d \u2192 \u201cPreferences...\u201d \u2192 \u201cRun Debug\u201d \u2192 \u201cConsole\u201d\n"
-                : "Main menu \u2192 \u201cWindow\u201d \u2192 \u201cPreferences\u201d \u2192 \u201cRun/Debug\u201d \u2192 \u201cConsole\u201d\n");
+                : "Main menu \u2192 \u201cWindow\u201d \u2192 \u201cPreferences\u201d \u2192 \u201cRun/Debug\u201d \u2192 \u201cConsole\u201d\n";
         StringBuffer message = new StringBuffer();
         int wattermarkLevel = AnsiConsolePreferenceUtils.getWattermarkLevel();
         if (wattermarkLevel < 150_000) {
@@ -69,19 +70,19 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
             message.append(String.format("\n"
                     + "Console buffer size too low (%s). About 2 times slower.\n\n"
                     + where
-                    + "\u00a0\u00a0\u00a0\u00a0\u2022 Check \u201cLimit console output\u201d\n"
-                    + "\u00a0\u00a0\u00a0\u00a0\u2022 Set \u201cConsole buffer size (characters)\u201d to a bigger value.\n"
-                    + "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0The sweet spot seems to be around %s\n"
+                    + indent + "\u2022 Check \u201cLimit console output\u201d\n"
+                    + indent + "\u2022 Set \u201cConsole buffer size (characters)\u201d to a bigger value.\n"
+                    + indent + "\u00a0\u00a0\u00a0The sweet spot seems to be around %s\n"
                     + "or\n"
-                    + "\u00a0\u00a0\u00a0\u00a0\u2022 Uncheck \u201cLimit console output\u201d\n"
-                    + "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0No noticeable performance difference compared to %s\n",
+                    + indent + "\u2022 Uncheck \u201cLimit console output\u201d\n"
+                    + indent + "\u00a0\u00a0\u00a0No noticeable performance difference compared to %s\n",
                     nf.format(wattermarkLevel), nf.format(1_000_000), nf.format(1_000_000)));
         }
         if (AnsiConsolePreferenceUtils.isWordWrapEnabled()) {
         	message.append("\n"
                     + "Word wrap enabled. Up to 20 times slower!!!\n\n"
-                    + where
-                    + "\u00a0\u00a0\u00a0\u00a0\u2022 Uncheck \u201cEnable word wrap\u201d\n");
+                    + indent + where
+                    + indent + "\u2022 Uncheck \u201cEnable word wrap\u201d\n");
         }
 
         if (message.length() > 0) {

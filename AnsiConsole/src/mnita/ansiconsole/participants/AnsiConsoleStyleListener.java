@@ -162,8 +162,8 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
                     if (range.foreground.equals(AnsiConsolePreferenceUtils.getHyperlinkColor())) {
                         ranges.add(range);
                     }
-                    // We preserve the C/C++ build console colors
-                    if (isCdtBuildConsole && range.foreground.equals(AnsiConsolePreferenceUtils.getCdtInfoStreamColor())) {
+                    // We preserve the C/C++ build console colors (all except regular output)
+                    if (isCdtBuildConsole && !range.foreground.equals(AnsiConsolePreferenceUtils.getCdtOutputStreamColor())) {
                         ranges.add(range);
                     }
                 }

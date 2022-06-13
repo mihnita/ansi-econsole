@@ -86,8 +86,14 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
             return;
 
-        // If user selected another project (for new versions of Eclipse)
-        if (oldEventTime != event.time && event.getSource() instanceof StyledText) {
+        /* If user selected another C/C++ project (for new versions of Eclipse) the console is reused, but not the document.
+         * Since AnsiConsolePageParticipant.getDocument iterates the listeners, it might be time consuming to do on each line.
+         * So we try to avoid the execution of this "if" as much as possible.
+         * When you "Build All" all events from several C++ projects have the same time-stamp, but still change the document.
+         * We want to still execute the if in that case, hence the test on isCdtBuildConsole.
+         * Might make it a bit slower, but at least it is only for the CDT BuildConsole.
+         */
+        if ((oldEventTime != event.time || isCdtBuildConsole) && event.getSource() instanceof StyledText) {
             oldEventTime = event.time;
             StyledText text = (StyledText) event.getSource();
             IDocument newDocument = AnsiConsolePageParticipant.getDocument(text);

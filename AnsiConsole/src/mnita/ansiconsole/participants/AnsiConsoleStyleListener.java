@@ -230,12 +230,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         }
         documentEverScanned = true;
         try {
-            final int lineCount = eventDocument.getNumberOfLines(offset, length);
-            for (int i = 0; i < lineCount; i++) {
-                List<AnsiPosition> newPos = findPositions(offset, text);
-                for (AnsiPosition apos : newPos) {
-                    eventDocument.addPosition(AnsiPosition.POSITION_NAME, apos);
-                }
+            List<AnsiPosition> newPos = findPositions(offset, text);
+            for (AnsiPosition apos : newPos) {
+                eventDocument.addPosition(AnsiPosition.POSITION_NAME, apos);
             }
         } catch (BadPositionCategoryException | BadLocationException e) {
             e.printStackTrace();

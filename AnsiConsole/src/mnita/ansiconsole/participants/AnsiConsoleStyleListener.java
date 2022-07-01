@@ -59,14 +59,17 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         document = newDocument;
         isCdtBuildConsole = document.getClass().getSimpleName().equals("BuildConsoleDocument");
         document.addPositionCategory(AnsiPosition.POSITION_NAME);
-        if (!hasPositionUpdater(this))
+        if (!hasPositionUpdater(this)) {
             document.addPositionUpdater(this);
+        }
     }
 
     public boolean hasPositionUpdater(IPositionUpdater updater) {
-        for (IPositionUpdater posUpdater : document.getPositionUpdaters())
-            if (posUpdater == updater)
+        for (IPositionUpdater posUpdater : document.getPositionUpdaters()) {
+            if (posUpdater == updater) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -87,14 +90,15 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
-        if (event == null || event.lineText == null || event.lineText.length() == 0)
+        if (event == null || event.lineText == null || event.lineText.length() == 0) {
             return;
-
-        if (document == null)
+        }
+        if (document == null) {
             return;
-
-        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
+        }
+        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled()) {
             return;
+        }
 
         /* If user selected another C/C++ project (for new versions of Eclipse) the console is reused, but not the document.
          * Since AnsiConsolePageParticipant.getDocument iterates the listeners, it might be time consuming to do on each line.
@@ -134,8 +138,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
             return;
         }
 
-        if (positions.length == 0)
+        if (positions.length == 0) {
             return;
+        }
 
         final Color errorColor = AnsiConsolePreferenceUtils.getDebugConsoleErrorColor();
         Color foregroundColor = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
@@ -154,8 +159,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
 
         for (Position position : positions) {
             AnsiPosition apos = (AnsiPosition) position;
-            if (apos.getOffset() > eventOffset + eventLength) // we passed the end of line, stop searching
+            if (apos.getOffset() > eventOffset + eventLength) { // we passed the end of line, stop searching
                 break;
+            }
             if (apos.overlapsWith(eventOffset, eventLength)) {
                 if (apos.offset != prevPos) {
                     addRange(ranges, prevPos, apos.offset - prevPos, prevAttr, foregroundColor, false);
@@ -242,8 +248,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
     @Override
     public void update(DocumentEvent event) {
         // Make sure we don't do anything if disabled
-        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled())
+        if (!AnsiConsolePreferenceUtils.isAnsiConsoleEnabled()) {
             return;
+        }
 
         final IDocument eventDocument = event.getDocument();
 
@@ -253,8 +260,9 @@ public class AnsiConsoleStyleListener implements LineStyleListener, IPositionUpd
         try {
             if (offset == 0 && length != 0) { // This removes the beginning. We scan to find and save the last style.
                 for (Position pos : eventDocument.getPositions(AnsiPosition.POSITION_NAME)) {
-                    if (pos.offset >= length)
+                    if (pos.offset >= length) {
                         break;
+                    }
                     AnsiConsoleAttributes attributes = ((AnsiPosition) pos).attributes;
                     if (attributes != null) {
                         lastVisibleAttribute = attributes;

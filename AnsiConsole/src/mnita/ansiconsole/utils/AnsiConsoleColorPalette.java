@@ -198,9 +198,15 @@ public class AnsiConsoleColorPalette {
     }
 
     public static int hackRgb(int r, int g, int b) {
-        if (!isValidIndex(r)) return -1;
-        if (!isValidIndex(g)) return -1;
-        if (!isValidIndex(b)) return -1;
+        if (!isValidIndex(r)) {
+            return -1;
+        }
+        if (!isValidIndex(g)) {
+            return -1;
+        }
+        if (!isValidIndex(b)) {
+            return -1;
+        }
         return TRUE_RGB_FLAG | r << 16 | g << 8 | b;
     }
 
@@ -210,8 +216,9 @@ public class AnsiConsoleColorPalette {
     }
 
     public static RGB getColor(Integer index) {
-        if (null == index)
+        if (null == index) {
             return null;
+        }
 
         if (index >= TRUE_RGB_FLAG) {
             int red = index >> 16 & 0xff;
@@ -220,8 +227,9 @@ public class AnsiConsoleColorPalette {
             return new RGB(red, green, blue);
         }
 
-        if (index >= 0 && index < palette.length) // basic, 16 color palette
+        if (index >= 0 && index < palette.length) { // basic, 16 color palette
             return palette[index];
+        }
 
         if (index >= 16 && index < 232) { // 6x6x6 color matrix
             int color = index - 16;

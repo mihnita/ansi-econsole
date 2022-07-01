@@ -140,8 +140,9 @@ public class AnsiPosition extends Position {
                     int nMustBe2or5 = iter.hasNext() ? iter.next() : -1;
                     if (nMustBe2or5 == 5) { // 256 colors
                         color = iter.hasNext() ? iter.next() : -1;
-                        if (!AnsiConsoleColorPalette.isValidIndex(color))
+                        if (!AnsiConsoleColorPalette.isValidIndex(color)) {
                             color = -1;
+                        }
                     } else if (nMustBe2or5 == 2) { // rgb colors
                         int r = iter.hasNext() ? iter.next() : -1;
                         int g = iter.hasNext() ? iter.next() : -1;
@@ -149,24 +150,26 @@ public class AnsiPosition extends Position {
                         color = AnsiConsoleColorPalette.hackRgb(r, g, b);
                     }
                     if (color != -1) {
-                        if (nCmd == COMMAND_HICOLOR_FOREGROUND)
+                        if (nCmd == COMMAND_HICOLOR_FOREGROUND) {
                             current.currentFgColor = color;
-                        else
+                        } else {
                             current.currentBgColor = color;
+                        }
                     }
                     break;
 
                 case -1: break; // do nothing
 
                 default:
-                    if (nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST) // text color
+                    if (nCmd >= COMMAND_COLOR_FOREGROUND_FIRST && nCmd <= COMMAND_COLOR_FOREGROUND_LAST) { // text color
                         current.currentFgColor = nCmd - COMMAND_COLOR_FOREGROUND_FIRST;
-                    else if (nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST) // background color
+                    } else if (nCmd >= COMMAND_COLOR_BACKGROUND_FIRST && nCmd <= COMMAND_COLOR_BACKGROUND_LAST) { // background color
                         current.currentBgColor = nCmd - COMMAND_COLOR_BACKGROUND_FIRST;
-                    else if (nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST) // text color
+                    } else if (nCmd >= COMMAND_HICOLOR_FOREGROUND_FIRST && nCmd <= COMMAND_HICOLOR_FOREGROUND_LAST) { // text color
                         current.currentFgColor = nCmd - COMMAND_HICOLOR_FOREGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
-                    else if (nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST) // background color
+                    } else if (nCmd >= COMMAND_HICOLOR_BACKGROUND_FIRST && nCmd <= COMMAND_HICOLOR_BACKGROUND_LAST) { // background color
                         current.currentBgColor = nCmd - COMMAND_HICOLOR_BACKGROUND_FIRST + COMMAND_COLOR_INTENSITY_DELTA;
+                    }
             }
         }
     }

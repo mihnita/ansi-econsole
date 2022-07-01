@@ -23,7 +23,7 @@ public class ShowQuickPrefsHandler extends AbstractHandler {
     private static final String[] PREFS_PAGES_TO_SHOW = {
             PREF_PAGE_NAME,
             "org.eclipse.debug.ui.DebugPreferencePage",
-            "org.eclipse.debug.ui.ConsolePreferencePage",
+            "org.eclipse.debug.ui.ConsolePreferencePage"
     };
 
     @Override

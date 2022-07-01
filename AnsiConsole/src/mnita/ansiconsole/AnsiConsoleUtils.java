@@ -54,8 +54,9 @@ public class AnsiConsoleUtils {
                 final MessageDialog dlg = new MessageDialog(window.getShell(),
                         DLG_TITLE, /*image*/ null, message,
                         MessageDialog.WARNING, 0, DLG_BUTTONS);
-                if (dlg.open() == 1)
+                if (dlg.open() == 1) {
                     func.accept(false);
+                }
             }
         });
     }

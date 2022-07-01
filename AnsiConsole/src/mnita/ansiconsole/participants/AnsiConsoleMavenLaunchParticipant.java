@@ -52,8 +52,12 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
 
     // Check some of the console settings that I know are bad for performance
     private static void checkM2eChromaticCoreInstalled() {
-        if (!showM2eChromaticCoreWarning) return;
-        if (!AnsiConsolePreferenceUtils.isM2eChromaticCoreWarningEnabled()) return;
+        if (!showM2eChromaticCoreWarning) {
+            return;
+        }
+        if (!AnsiConsolePreferenceUtils.isM2eChromaticCoreWarningEnabled()) {
+            return;
+        }
 
         IExtension[] m2eExt = Platform.getExtensionRegistry().getExtensions("m2e.chromatic.core");
         if (m2eExt.length > 0) {

@@ -68,28 +68,53 @@ public class AnsiConsoleAttributes {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        if (currentBgColor != null) result.append("Bg" + currentBgColor);
-        if (currentFgColor != null) result.append("Fg" + currentFgColor);
-        if (underline != UNDERLINE_NONE) result.append("_");
-        if (bold) result.append("B");
-        if (italic) result.append("I");
-        if (invert) result.append("!");
-        if (conceal) result.append("H");
-        if (strike) result.append("-");
-        if (framed) result.append("[]");
+        if (currentBgColor != null) {
+            result.append("Bg" + currentBgColor);
+        }
+        if (currentFgColor != null) {
+            result.append("Fg" + currentFgColor);
+        }
+        if (underline != UNDERLINE_NONE) {
+            result.append("_");
+        }
+        if (bold) {
+            result.append("B");
+        }
+        if (italic) {
+            result.append("I");
+        }
+        if (invert) {
+            result.append("!");
+        }
+        if (conceal) {
+            result.append("H");
+        }
+        if (strike) {
+            result.append("-");
+        }
+        if (framed) {
+            result.append("[]");
+        }
         return result.toString();
     }
 
     private static Color hiliteRgbColor(Color color) {
-        if (color == null)
+        if (color == null) {
             return ColorCache.get(new RGB(0xff, 0xff, 0xff));
+        }
         int red = color.getRed() * 2;
         int green = color.getGreen() * 2;
         int blue = color.getBlue() * 2;
 
-        if (red > 0xff)   red = 0xff;
-        if (green > 0xff) green = 0xff;
-        if (blue > 0xff)  blue = 0xff;
+        if (red > 0xff) {
+            red = 0xff;
+        }
+        if (green > 0xff) {
+            green = 0xff;
+        }
+        if (blue > 0xff) {
+            blue = 0xff;
+        }
 
         return ColorCache.get(new RGB(red, green, blue)); // here
     }
@@ -97,8 +122,9 @@ public class AnsiConsoleAttributes {
     // This function maps from the current attributes as "described" by escape sequences to real,
     // Eclipse console specific attributes (resolving color palette, default colors, etc.)
     public static void updateRangeStyle(StyleRange range, AnsiConsoleAttributes attribute) {
-        if (attribute == null)
+        if (attribute == null) {
             return;
+        }
 
         AnsiConsoleAttributes tempAttrib = AnsiConsoleAttributes.from(attribute);
 
@@ -124,46 +150,54 @@ public class AnsiConsoleAttributes {
                 range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
                 range.foreground = hiliteRgbColor(range.foreground);
             } else {
-                if (tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA)
+                if (tempAttrib.currentFgColor < COMMAND_COLOR_INTENSITY_DELTA) {
                     range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor + COMMAND_COLOR_INTENSITY_DELTA));
-                else
+                } else {
                     range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
+                }
             }
         } else {
-            if (tempAttrib.currentFgColor != null)
+            if (tempAttrib.currentFgColor != null) {
                 range.foreground = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentFgColor));
+            }
         }
 
         // Prepare the background color
-        if (tempAttrib.currentBgColor != null)
+        if (tempAttrib.currentBgColor != null) {
             range.background = ColorCache.get(AnsiConsoleColorPalette.getColor(tempAttrib.currentBgColor));
+        }
 
         // These two still mess with the foreground/background colors
         // We need to solve them before we use them for strike/underline/frame colors
         if (tempAttrib.invert) {
-            if (range.foreground == null)
+            if (range.foreground == null) {
                 range.foreground = AnsiConsolePreferenceUtils.getDebugConsoleFgColor();
-            if (range.background == null)
+            }
+            if (range.background == null) {
                 range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
+            }
             Color tmp = range.background;
             range.background = range.foreground;
             range.foreground = tmp;
         }
 
         if (tempAttrib.conceal) {
-            if (range.background == null)
+            if (range.background == null) {
                 range.background = AnsiConsolePreferenceUtils.getDebugConsoleBgColor();
+            }
             range.foreground = range.background;
         }
 
         range.font = null;
         range.fontStyle = SWT.NORMAL;
         // Prepare the rest of the attributes
-        if (tempAttrib.bold)
+        if (tempAttrib.bold) {
             range.fontStyle |= SWT.BOLD;
+        }
 
-        if (tempAttrib.italic)
+        if (tempAttrib.italic) {
             range.fontStyle |= SWT.ITALIC;
+        }
 
         if (tempAttrib.underline != UNDERLINE_NONE) {
             range.underline = true;

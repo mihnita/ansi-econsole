@@ -39,7 +39,7 @@ public class EnableDisableHandler extends AbstractHandler implements IElementUpd
         } else {
             // Update the icon state state.
             // toggleCommandState returns the previous value
-            boolean value = ! HandlerUtil.toggleCommandState(event.getCommand());
+            boolean value = !HandlerUtil.toggleCommandState(event.getCommand());
             // Also update the preferences
             AnsiConsolePreferenceUtils.setAnsiConsoleEnabled(value);
         }

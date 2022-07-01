@@ -104,8 +104,9 @@ public class AnsiConsolePreferenceUtils {
     }
 
     public static int tryParseInteger(String text) {
-        if ("".equals(text))
+        if ("".equals(text)) {
             return -1;
+        }
 
         try {
             return Integer.parseInt(text);

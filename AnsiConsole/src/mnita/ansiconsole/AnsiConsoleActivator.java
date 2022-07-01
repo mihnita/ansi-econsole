@@ -56,18 +56,24 @@ public class AnsiConsoleActivator extends AbstractUIPlugin {
         Set<StyledText> toRemove = new HashSet<>();
 
         for (Entry<StyledText, IConsolePageParticipant> entry : viewers.entrySet()) {
-            if (entry.getValue() == participant)
+            if (entry.getValue() == participant) {
                 toRemove.add(entry.getKey());
+            }
         }
 
-        for (StyledText viewer : toRemove)
+        for (StyledText viewer : toRemove) {
             viewers.remove(viewer);
+        }
     }
 
     // Check some of the console settings that I know are bad for performance
     private static void checkConsolePerformanceSettings() {
-        if (!showWarning) return;
-        if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) return;
+        if (!showWarning) {
+            return;
+        }
+        if (!AnsiConsolePreferenceUtils.isPerformanceWarningEnabled()) {
+            return;
+        }
 
         String indent = "\u00a0\u00a0\u00a0\u00a0";
         String where = AnsiConsoleUtils.isMacOS()

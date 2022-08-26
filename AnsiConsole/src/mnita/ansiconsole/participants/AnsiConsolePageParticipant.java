@@ -40,11 +40,17 @@ public class AnsiConsolePageParticipant implements IConsolePageParticipant {
 
 	@Override
 	public void dispose() {
+		if (AnsiConsoleActivator.isDisabled()) {
+			return;
+		}
 		AnsiConsoleActivator.getDefault().removeViewerWithPageParticipant(this);
 	}
 
 	@Override
 	public void init(IPageBookViewPage page, IConsole console) {
+		if (AnsiConsoleActivator.isDisabled()) {
+			return;
+		}
 		if (page.getControl() instanceof StyledText) {
 			StyledText viewer = (StyledText) page.getControl();
 			IDocument document = getDocument(viewer);

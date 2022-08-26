@@ -76,7 +76,7 @@ public class AnsiConsoleMavenLaunchParticipant implements IMavenLaunchParticipan
 					+ "You should uninstall it, otherwise there might be some interferences:\n"
 					+ indent + where
 					+ indent + "Select \u201cM2E Chromatic Feature\u201d \u2192 click \u201cUninstall...\u201d";
-			AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning);
+			AnsiConsoleUtils.showDialogAsync(message, AnsiConsolePreferenceUtils::setEnableM2eChromaticCoreWarning, false);
 		}
 	}
 }

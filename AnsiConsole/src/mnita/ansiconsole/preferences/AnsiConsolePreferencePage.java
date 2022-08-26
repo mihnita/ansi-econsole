@@ -15,6 +15,7 @@ import java.net.URL;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -32,6 +33,15 @@ import mnita.ansiconsole.utils.AnsiConsoleColorPalette;
 
 public class AnsiConsolePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
+	private BooleanFieldEditor fAnsiEnabled;
+	private BooleanFieldEditor fWindowsMapping;
+	private BooleanFieldEditor fShowEscapes;
+	private BooleanFieldEditor fKeepStderrColor;
+	private BooleanFieldEditor fRtfInClipboard;
+	private ComboFieldEditor fColorPalette;
+	private BooleanFieldEditor fCheckPerformance;
+	private BooleanFieldEditor fCheckM2e;
+
 	public AnsiConsolePreferencePage() {
 		super(GRID);
 		setPreferenceStore(AnsiConsoleActivator.getDefault().getPreferenceStore());
@@ -42,41 +52,54 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 	public void createFieldEditors() {
 		final Composite parent = getFieldEditorParent();
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
-				"Plugin enabled", parent));
+		fAnsiEnabled = new BooleanFieldEditor(
+				AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
+				"Plugin enabled", parent);
+		addField(fAnsiEnabled);
+		if (AnsiConsoleActivator.isDisabled()) {
+			fAnsiEnabled.setEnabled(false, parent);
+		}
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
-				"Use &Windows color mapping (bold => intense, italic => reverse)", parent));
+		fWindowsMapping = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
+				"Use &Windows color mapping (bold => intense, italic => reverse)", parent);
+		addField(fWindowsMapping);
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES,
-				"&Show the escape sequences", parent));
+		fShowEscapes = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_SHOW_ESCAPES,
+				"&Show the escape sequences", parent);
+		addField(fShowEscapes);
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
-				"&Try using the standard error color setting for stderr output", parent));
+		fKeepStderrColor = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_KEEP_STDERR_COLOR,
+				"&Try using the standard error color setting for stderr output", parent);
+		addField(fKeepStderrColor);
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_PUT_RTF_IN_CLIPBOARD,
-				"Put &RTF in Clipboard. You will be able to paste styled text in some applications.", parent));
+		fRtfInClipboard = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_PUT_RTF_IN_CLIPBOARD,
+				"Put &RTF in Clipboard. You will be able to paste styled text in some applications.", parent);
+		addField(fRtfInClipboard);
 
-		addField(new ComboFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE, "&Color palette:",
+		fColorPalette = new ComboFieldEditor(AnsiConsolePreferenceConstants.PREF_COLOR_PALETTE,
+				"&Color palette:",
 				new String[][] {
-						{ "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
-						{ "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
-						{ "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
-						{ "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
-						{ "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
-						{ "xterm", AnsiConsoleColorPalette.PALETTE_XTERM },
-						{ "mIRC", AnsiConsoleColorPalette.PALETTE_MIRC },
-						{ "Ubuntu", AnsiConsoleColorPalette.PALETTE_UBUNTU }
+					{ "Standard VGA colors", AnsiConsoleColorPalette.PALETTE_VGA },
+					{ "Windows XP command prompt", AnsiConsoleColorPalette.PALETTE_WINXP },
+					{ "Windows 10 command prompt", AnsiConsoleColorPalette.PALETTE_WIN10 },
+					{ "Mac OS X Terminal.app", AnsiConsoleColorPalette.PALETTE_MAC },
+					{ "PuTTY", AnsiConsoleColorPalette.PALETTE_PUTTY },
+					{ "xterm", AnsiConsoleColorPalette.PALETTE_XTERM },
+					{ "mIRC", AnsiConsoleColorPalette.PALETTE_MIRC },
+					{ "Ubuntu", AnsiConsoleColorPalette.PALETTE_UBUNTU }
 				},
-				parent));
+				parent);
+		addField(fColorPalette);
 
 		createSeparator(parent);
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
-				"Enable performance check (\u201cConsole buffer size\u201d)", parent));
+		fCheckPerformance = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_PERFORMANCE_WARNING,
+				"Enable performance check (\u201cConsole buffer size\u201d)", parent);
+		addField(fCheckPerformance);
 
-		addField(new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING,
-				"Enable check for the \u201cM2E Chromatic Core Plugin\u201d", parent));
+		fCheckM2e = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_ENABLE_M2ECHROMATICCORE_WARNING,
+				"Enable check for the \u201cM2E Chromatic Core Plugin\u201d", parent);
+		addField(fCheckM2e);
 
 		createSeparator(parent);
 
@@ -91,6 +114,15 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	public void init(IWorkbench workbench) {
 		// Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
+		if (AnsiConsoleActivator.isDisabled()) {
+			this.noDefaultAndApplyButton();
+		}
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+		enableDisableAll();
 	}
 
 	@SuppressWarnings("unused")
@@ -122,12 +154,36 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	public boolean performOk() {
 		boolean result = super.performOk();
-		IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
-		try {
-			handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
-		} catch (@SuppressWarnings("unused") Exception ex) {
-			System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
+		if (!AnsiConsoleActivator.isDisabled()) {
+			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+			try {
+				handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
+			} catch (@SuppressWarnings("unused") Exception ex) {
+				System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
+			}
 		}
 		return result;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		super.propertyChange(event);
+
+		Object source = event.getSource();
+		if (source != null && source.equals(fAnsiEnabled)) {
+			enableDisableAll();
+		}
+	}
+
+	private void enableDisableAll() {
+		final Composite parent = getFieldEditorParent();
+		final boolean enable = fAnsiEnabled.getBooleanValue();
+		fWindowsMapping.setEnabled(enable, parent);
+		fShowEscapes.setEnabled(enable, parent);
+		fKeepStderrColor.setEnabled(enable, parent);
+		fRtfInClipboard.setEnabled(enable, parent);
+		fColorPalette.setEnabled(enable, parent);
+		fCheckPerformance.setEnabled(enable, parent);
+		fCheckM2e.setEnabled(enable, parent);
 	}
 }

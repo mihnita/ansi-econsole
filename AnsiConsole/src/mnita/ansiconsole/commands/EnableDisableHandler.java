@@ -25,6 +25,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.menus.UIElement;
 
+import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.preferences.AnsiConsolePreferenceUtils;
 
 public class EnableDisableHandler extends AbstractHandler implements IElementUpdater {
@@ -33,15 +34,24 @@ public class EnableDisableHandler extends AbstractHandler implements IElementUpd
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if (wasMyEvent(event)) {
-			// The preferences are saved, just update the icon state
-			boolean value = AnsiConsolePreferenceUtils.isAnsiConsoleEnabled();
-			event.getCommand().getState(RegistryToggleState.STATE_ID).setValue(value);
+			if (AnsiConsoleActivator.isDisabled()) {
+				event.getCommand().getState(RegistryToggleState.STATE_ID).setValue(false);
+				AnsiConsolePreferenceUtils.setAnsiConsoleEnabled(false);
+			} else {
+				// The preferences are saved, just update the icon state
+				boolean value = AnsiConsolePreferenceUtils.isAnsiConsoleEnabled();
+				event.getCommand().getState(RegistryToggleState.STATE_ID).setValue(value);
+			}
 		} else {
-			// Update the icon state state.
-			// toggleCommandState returns the previous value
-			boolean value = !HandlerUtil.toggleCommandState(event.getCommand());
-			// Also update the preferences
-			AnsiConsolePreferenceUtils.setAnsiConsoleEnabled(value);
+			if (AnsiConsoleActivator.isDisabled()) {
+				AnsiConsolePreferenceUtils.setAnsiConsoleEnabled(false);
+			} else {
+				// Update the icon state state.
+				// toggleCommandState returns the previous value
+				boolean value = !HandlerUtil.toggleCommandState(event.getCommand());
+				// Also update the preferences
+				AnsiConsolePreferenceUtils.setAnsiConsoleEnabled(value);
+			}
 		}
 		return null;
 	}

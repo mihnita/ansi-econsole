@@ -10,6 +10,7 @@
  */
 package mnita.ansiconsole;
 
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,6 +28,7 @@ public class AnsiConsoleUtils {
 
 	private static final String DLG_TITLE = "Ansi Console";
 	static final String[] DLG_BUTTONS = { "Remind me later", "Never remind me again" };
+	static final String[] DLG_BUTTONS_OK = { "OK" };
 
 	public static final char ESCAPE_SGR = 'm';
 
@@ -46,15 +48,15 @@ public class AnsiConsoleUtils {
 		return "gtk".equals(SWT.getPlatform());
 	}
 
-	public static void showDialogAsync(String message, java.util.function.Consumer<Boolean> func) {
+	public static void showDialogAsync(String message, Consumer<Boolean> func, boolean onlyOkButton) {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				final MessageDialog dlg = new MessageDialog(window.getShell(),
 						DLG_TITLE, /*image*/ null, message,
-						MessageDialog.WARNING, 0, DLG_BUTTONS);
-				if (dlg.open() == 1) {
+						MessageDialog.WARNING, 0, onlyOkButton ? DLG_BUTTONS_OK : DLG_BUTTONS);
+				if (dlg.open() == 1 && func != null) {
 					func.accept(false);
 				}
 			}

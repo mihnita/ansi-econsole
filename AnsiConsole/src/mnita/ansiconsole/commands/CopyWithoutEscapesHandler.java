@@ -20,11 +20,16 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.PageBookView;
 
+import mnita.ansiconsole.AnsiConsoleActivator;
 import mnita.ansiconsole.utils.AnsiClipboardUtils;
 
 public class CopyWithoutEscapesHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		if (AnsiConsoleActivator.isDisabled()) {
+			return null;
+		}
+
 		final IWorkbenchPart part = HandlerUtil.getActivePart(event);
 		if (part != null) {
 			if (part instanceof PageBookView) {

@@ -56,9 +56,6 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 				AnsiConsolePreferenceConstants.PREF_ANSI_CONSOLE_ENABLED,
 				"Plugin enabled", parent);
 		addField(fAnsiEnabled);
-		if (AnsiConsoleActivator.isDisabled()) {
-			fAnsiEnabled.setEnabled(false, parent);
-		}
 
 		fWindowsMapping = new BooleanFieldEditor(AnsiConsolePreferenceConstants.PREF_WINDOWS_MAPPING,
 				"Use &Windows color mapping (bold => intense, italic => reverse)", parent);
@@ -114,9 +111,6 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	public void init(IWorkbench workbench) {
 		// Nothing to do, but we are forced to implement it for IWorkbenchPreferencePage
-		if (AnsiConsoleActivator.isDisabled()) {
-			this.noDefaultAndApplyButton();
-		}
 	}
 
 	@Override
@@ -154,13 +148,11 @@ public class AnsiConsolePreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	public boolean performOk() {
 		boolean result = super.performOk();
-		if (!AnsiConsoleActivator.isDisabled()) {
-			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
-			try {
-				handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
-			} catch (@SuppressWarnings("unused") Exception ex) {
-				System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
-			}
+		IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+		try {
+			handlerService.executeCommand(EnableDisableHandler.COMMAND_ID, new Event());
+		} catch (@SuppressWarnings("unused") Exception ex) {
+			System.out.println("AnsiConsole: Command '" + EnableDisableHandler.COMMAND_ID + "' not found");
 		}
 		return result;
 	}
